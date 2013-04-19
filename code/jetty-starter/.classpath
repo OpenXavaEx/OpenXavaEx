@@ -15,5 +15,10 @@
 	<classpathentry kind="lib" path="lib/jetty/jetty-http-7.6.10.v20130312.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jetty-security-7.6.10.v20130312.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jetty-xml-7.6.10.v20130312.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jsp/org.apache.taglibs.standard.glassfish-1.2.0.v201112081803.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jsp/javax.servlet.jsp.jstl-1.2.0.v201105211821.jar"/>
+	<classpathentry kind="lib" path="lib/hsql/hsqldb.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/OpenXava"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TestApp"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

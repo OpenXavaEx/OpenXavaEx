@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.jasper.servlet.JspServlet;
+import org.directwebremoting.servlet.DwrServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -13,10 +14,11 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.FileResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.openxava.web.servlets.ModuleServlet;
 
 public class ContextApp {
 	private static final int HTTP_PORT = 8080;
-	private static final String CTX_PATH = "/ox";
+	private static final String CTX_PATH = "/TestApp";		//In OpenXava, the context path is also the application name
 
 	public static void main(String[] args) throws Exception {
 		//Prepare system properties for logging
@@ -33,7 +35,9 @@ public class ContextApp {
         ctx.setClassLoader(ContextApp.class.getClassLoader());
         //Allow find resource in multi-folder
         Resource res = new ResourceCollection(
-        		buildFolderResource("/war-base"), buildFolderResource("/war-base2")
+        		buildFolderResource("war-base"), buildFolderResource("war-patch"),
+        		buildFolderResource("../OpenXava/web"),
+        		buildFolderResource("../OpenXava/xava")/*For taglib only*/
         );
         ctx.setBaseResource(res);
         
@@ -41,6 +45,10 @@ public class ContextApp {
         ctx.addServlet(DefaultServlet.class, "/");
         //JSP servlet
         ctx.addServlet(JspServlet.class, "*.jsp");
+        
+        //OpenXava Servlets
+        ctx.addServlet(ModuleServlet.class, "/modules/*");
+        ctx.addServlet(DwrServlet.class, "/dwr/*");
 
         server.start();
         System.out.println(server.dump());
@@ -51,7 +59,7 @@ public class ContextApp {
         //Detect the war's position
         URL binUrl = ContextApp.class.getResource("/");
         String bin = binUrl.getFile();
-        String war = (new File(bin)).getParent() + folderName;
+        String war = (new File(bin)).getParent() + "/" + folderName;
         File f = new File(war);
         f = new File(f.getCanonicalPath());
         Resource r = new FileResource(f.toURI().toURL());

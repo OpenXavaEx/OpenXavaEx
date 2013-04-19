@@ -946,10 +946,10 @@
 	<target name="updateOX">
 		<antcall target="copyDTDs"/>
 		<copy todir="../${project}/web/xava" overwrite="true" >
-			<fileset dir="../OpenXava/web" excludes="WEB-INF/**,style/custom.css"/>
+			<fileset dir="../OpenXava/web/xava" excludes="WEB-INF/**,style/custom.css"/>
 		</copy>
 		<copy todir="../${project}/web/xava/style" overwrite="false">
-			<fileset file="../OpenXava/web/style/custom.css"/>
+			<fileset file="../OpenXava/web/xava/style/custom.css"/>
 		</copy>
 		<copy todir="../${project}/web/WEB-INF" overwrite="true">
 			<fileset dir="../OpenXava/web/WEB-INF"/>
