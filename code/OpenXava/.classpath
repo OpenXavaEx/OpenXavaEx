@@ -14,7 +14,7 @@
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/asm.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/jasperreports.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/antlr.jar"/>
-	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate3.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate3.jar" sourcepath="lib-src/hibernate-3.6.10.Final-core-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate-validator.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/javassist.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-validator.jar"/>

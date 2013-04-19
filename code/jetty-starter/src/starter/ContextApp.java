@@ -22,6 +22,7 @@ import org.eclipse.jetty.util.resource.FileResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.hsqldb.persist.HsqlProperties;
+import org.openxava.ex.tools.SchemaUpdateServlet;
 import org.openxava.web.servlets.ModuleServlet;
 
 public class ContextApp {
@@ -61,6 +62,9 @@ public class ContextApp {
         //OpenXava Servlets
         ctx.addServlet(ModuleServlet.class, "/modules/*");
         ctx.addServlet(DwrServlet.class, "/dwr/*");
+        
+        //Schema Update Servlet
+        ctx.addServlet(SchemaUpdateServlet.class, "/schema-update");
 
         server.start();
         System.out.println(server.dump());

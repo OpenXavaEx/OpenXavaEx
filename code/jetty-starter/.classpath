@@ -24,5 +24,6 @@
 	<classpathentry kind="lib" path="lib/dbcp/commons-pool-1.6.jar" sourcepath="lib/dbcp/commons-pool-1.6-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OpenXava"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TestApp"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/OpenXavaEx"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
