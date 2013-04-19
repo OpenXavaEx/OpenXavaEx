@@ -22,6 +22,7 @@
 	<classpathentry kind="lib" path="lib/jetty/jetty-plus-7.6.10.v20130312.jar" sourcepath="lib/jetty-src/jetty-plus-src.zip"/>
 	<classpathentry kind="lib" path="lib/dbcp/commons-dbcp-1.4.jar" sourcepath="lib/dbcp/commons-dbcp-1.4-sources.jar"/>
 	<classpathentry kind="lib" path="lib/dbcp/commons-pool-1.6.jar" sourcepath="lib/dbcp/commons-pool-1.6-sources.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jsp/org.eclipse.jdt.core-3.7.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OpenXava"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TestApp"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OpenXavaEx"/>

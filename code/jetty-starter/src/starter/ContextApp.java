@@ -30,7 +30,7 @@ public class ContextApp {
 	private static final String CTX_PATH = "/TestApp";		//In OpenXava, the context path is also the application name
 
 	public static void main(String[] args) throws Exception {
-		//Prepare system properties for logging
+		//System properties for logging
 		System.setProperty("org.eclipse.jetty.LEVEL", "ALL");
 		System.setProperty("org.eclipse.jetty.util.log.SOURCE", "false");
 		
@@ -57,6 +57,7 @@ public class ContextApp {
         //Default servlet
         ctx.addServlet(DefaultServlet.class, "/");
         //JSP servlet
+        System.setProperty("org.apache.jasper.compiler.disablejsr199", "true");
         ctx.addServlet(JspServlet.class, "*.jsp");
         
         //OpenXava Servlets
