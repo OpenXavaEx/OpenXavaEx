@@ -19,17 +19,6 @@ public class Teacher {
 	
 	@Column(length=40) @Required
 	private String name;
-	
-	@Column(length=20)
-	private String code;
-	
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
 
 	public String getId() {
 		return id;

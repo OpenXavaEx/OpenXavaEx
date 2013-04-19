@@ -64,7 +64,7 @@ public class ContextApp {
         ctx.addServlet(DwrServlet.class, "/dwr/*");
         
         //Schema Update Servlet
-        ctx.addServlet(SchemaUpdateServlet.class, "/schema-update");
+        ctx.addServlet(SchemaUpdateServlet.class, "/schema-update/*");
 
         server.start();
         System.out.println(server.dump());

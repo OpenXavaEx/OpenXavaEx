@@ -1,10 +1,7 @@
 package org.openxava.ex.tools;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +38,12 @@ import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 public class SchemaUpdateServlet extends HttpServlet{
 	private static final long serialVersionUID = 20130420L;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String url = req.getRequestURI();
+		boolean doUpdate = (url.endsWith("/update"));
+		
         ////// 1. Prepare the configuration (connection parameters to the DB, ect.)
         // Empty map. We add no additional property, everything is already in the persistence.xml
         Map<String,Object> map=new HashMap<String,Object>();   
@@ -55,38 +56,28 @@ public class SchemaUpdateServlet extends HttpServlet{
         PrintStream initOut = System.out;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024);
         PrintStream newOut = new PrintStream(outputStream);
-        System.setOut(newOut);
-
-        //The update is executed in script mode only
-        schemaUpdate.execute(true, false);
-
-        //We reset the original out
-        System.setOut(initOut);
-
-        ////// 3. Prints that SQL at the console with a good format (adding a ";" after each line).
-        System.out.println("--*******************************************Begin of SQL********************************************");
-        BufferedReader ouReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(outputStream.toByteArray())));
-        String str = ouReader.readLine();
-        while(str != null){  // For each (sometimes multiline) SQL statement
-            // now, str equals "".
-            str = ouReader.readLine();  // 
-            while (str != null && !str.trim().equals("")) { // for each line of the same statement
-                System.out.println();  // previous line is finished.
-                System.out.print(str.toLowerCase());
-                str = ouReader.readLine();
-            }
-            // Statement is now finished
-            System.out.println(";");
+        try{
+            System.setOut(newOut);
+            //The update is executed in script mode only
+            schemaUpdate.execute(true, doUpdate);
+        }finally{
+            //We reset the original out
+            System.setOut(initOut);
         }
-        System.out.println("--*******************************************End of SQL********************************************");
+
+        ////// 3. Output the console output text ...
+        String out = outputStream.toString("UTF-8");
+        if ("".equals(out)) out = "N/A";
+        this.getServletContext().log("SchemaUpdate output"+ (doUpdate?"(Update)":"") +": \n--------\n" + out + "\n--------\n");
+        resp.getWriter().write((doUpdate?"Update schema":"Update schema sql preview") + ": \n--------\n" + out);
 
         ////// 4. Print eventual exceptions.
         //If some exception occurred we display them
         if(!schemaUpdate.getExceptions().isEmpty()){
-            System.out.println();
-            System.out.println("SOME EXCEPTIONS OCCURED WHILE GENERATING THE UPDATE SCRIPT:");
+        	resp.getWriter().write("SOME EXCEPTIONS OCCURED WHILE GENERATING THE UPDATE SCRIPT ...\n\n");
             for (Exception e: (List<Exception>)schemaUpdate.getExceptions()) {
-                System.out.println(e.getMessage());
+            	this.getServletContext().log(e.getMessage(), e);
+            	e.printStackTrace(resp.getWriter());
             }
         }
     }	
