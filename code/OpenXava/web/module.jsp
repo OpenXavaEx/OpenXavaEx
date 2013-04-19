@@ -76,8 +76,8 @@
 
 	Module.setPortlet(isPortlet);
 	String version = org.openxava.controller.ModuleManager.getVersion();
-	String realPath = request.getSession().getServletContext()
-			.getRealPath("/");			
+	//"getRealPath" can't support the multi-resource container setting
+	//String realPath = request.getSession().getServletContext().getRealPath("/");			
 %>
 <jsp:include page="execute.jsp"/>
 <%
@@ -141,7 +141,8 @@
 		%>	
 	<script type='text/javascript' src='<%=contextPath%>/xava/js/calendar.js?ox=<%=version%>'></script>
 	<%
-		if (new File(realPath + "/xava/js/custom-editors.js").exists()) {
+		//if (new File(realPath + "/xava/js/custom-editors.js").exists()) {
+		if (application.getResource("/xava/js/custom-editors.js")!=null) {
 	%>
 	<script type='text/javascript' src='<%=contextPath%>/xava/js/custom-editors.js?ox=<%=version%>'></script>
 	<%
@@ -157,8 +158,9 @@
 	<script type="text/javascript" src="<%=contextPath%>/xava/js/jquery-ui.js?ox=<%=version%>"></script>	
 	<script type="text/javascript" src="<%=contextPath%>/xava/js/jquery.bgiframe.js?ox=<%=version%>"></script>
 	<%
-		File jsEditorsFolder = new File(realPath + "/xava/editors/js");		
-		String[] jsEditors = jsEditorsFolder.list();
+		//File jsEditorsFolder = new File(realPath + "/xava/editors/js");		
+		//String[] jsEditors = jsEditorsFolder.list();
+		String[] jsEditors = (String[])application.getResourcePaths("/xava/editors/js").toArray(new String[0]);
 		Arrays.sort(jsEditors);
 		for (int i = 0; i < jsEditors.length; i++) {
 			if (jsEditors[i].endsWith(".js")) {
