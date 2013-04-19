@@ -80,11 +80,13 @@ public class ContextApp {
 	
 	private static void startHsqlServer(){
 	    HsqlProperties p = new HsqlProperties();
-	    p.setProperty("server.database.0","file:../TestAppHsqlDB/data");
-	    p.setProperty("server.dbname.0","TestAppDB");
+	    //p.setProperty("server.database.0","file:../TestAppHsqlDB/data");
+	    //p.setProperty("server.dbname.0","TestAppDB");
 
 	    org.hsqldb.Server server = new org.hsqldb.Server();
 	    server.setProperties(p);
+	    server.setDatabaseName(0, "TestAppDB");
+	    server.setDatabasePath(0, "file:../TestAppHsqlDB/data");
 	    server.setLogWriter(null); // can use custom writer
 	    server.setErrWriter(null); // can use custom writer
 	    server.start();
@@ -114,7 +116,7 @@ public class ContextApp {
 			p.put("url", "jdbc:hsqldb:hsql://localhost/TestAppDB");
 			p.put("username", "SA");
 			p.put("password", "");
-			p.put("validationQuery", "SELECT 1");
+			p.put("validationQuery", "Select COUNT(*) As X From INFORMATION_SCHEMA.SYSTEM_USERS Where 1=0");
 			DataSource ds = BasicDataSourceFactory.createDataSource(p);
 			
 			NamingUtil.bind(envContext, "jdbc/TestAppDS", ds);
