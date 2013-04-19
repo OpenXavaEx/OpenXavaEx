@@ -1,8 +1,10 @@
 package org.openxava.school.model;
 
-import java.util.*;
-import javax.persistence.*;
-import org.openxava.annotations.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import org.openxava.annotations.Required;
 
 /**
  * 

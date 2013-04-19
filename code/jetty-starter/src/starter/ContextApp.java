@@ -4,9 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Properties;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp.BasicDataSourceFactory;
 import org.apache.jasper.servlet.JspServlet;
 import org.directwebremoting.servlet.DwrServlet;
+import org.eclipse.jetty.jndi.NamingUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -14,6 +21,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.FileResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.hsqldb.persist.HsqlProperties;
 import org.openxava.web.servlets.ModuleServlet;
 
 public class ContextApp {
@@ -26,6 +34,10 @@ public class ContextApp {
 		System.setProperty("org.eclipse.jetty.util.log.SOURCE", "false");
 		
         Server server = new Server(HTTP_PORT);
+        
+        //Init the hsql database and the connection pool
+        startHsqlServer();
+        prepareDataSource(server);
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         server.setHandler(contexts);
@@ -64,5 +76,48 @@ public class ContextApp {
         f = new File(f.getCanonicalPath());
         Resource r = new FileResource(f.toURI().toURL());
         return r;
+	}
+	
+	private static void startHsqlServer(){
+	    HsqlProperties p = new HsqlProperties();
+	    p.setProperty("server.database.0","file:../TestAppHsqlDB/data");
+	    p.setProperty("server.dbname.0","TestAppDB");
+
+	    org.hsqldb.Server server = new org.hsqldb.Server();
+	    server.setProperties(p);
+	    server.setLogWriter(null); // can use custom writer
+	    server.setErrWriter(null); // can use custom writer
+	    server.start();
+	}
+	
+	/**
+	 * ref: http://www.junlu.com/list/96/481920.html - setting up JNDI in embedded Jetty
+	 * @param server
+	 * @throws Exception
+	 */
+	private static void prepareDataSource(Server server) throws Exception {
+		Context envContext = null;
+		
+		ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+		Thread.currentThread().setContextClassLoader(server.getClass().getClassLoader());
+		try {
+			Context context = new InitialContext();
+			Context compContext = (Context) context.lookup ("java:comp");
+			envContext = compContext.createSubcontext("env");
+		} finally {
+			Thread.currentThread().setContextClassLoader(oldLoader);
+		}
+
+		if (null != envContext){
+			Properties p = new Properties();
+			p.put("driverClassName", "org.hsqldb.jdbcDriver");
+			p.put("url", "jdbc:hsqldb:hsql://localhost/TestAppDB");
+			p.put("username", "SA");
+			p.put("password", "");
+			p.put("validationQuery", "SELECT 1");
+			DataSource ds = BasicDataSourceFactory.createDataSource(p);
+			
+			NamingUtil.bind(envContext, "jdbc/TestAppDS", ds);
+		}
 	}
 }
