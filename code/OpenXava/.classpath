@@ -14,7 +14,7 @@
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/asm.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/jasperreports.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/antlr.jar"/>
-	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate3.jar" sourcepath="lib-src/hibernate-3.6.10.Final-core-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate3.jar" sourcepath="lib-src/hibernate-3.6.10.Final-core_envers_entitymanager-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate-validator.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/javassist.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-validator.jar"/>
@@ -32,7 +32,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/dwr.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/slf4j-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/slf4j-jdk14.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
