@@ -31,7 +31,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jsp-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/dwr.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/dwr.jar" sourcepath="lib-src/dwr-2.0.5-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/slf4j-jdk14.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
@@ -61,5 +61,6 @@
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/autobizlogic.jar"/>
 	<classpathentry kind="lib" path="lib/pdfbox.jar"/>
 	<classpathentry kind="lib" path="lib/fontbox.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/OpenXavaExBase"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

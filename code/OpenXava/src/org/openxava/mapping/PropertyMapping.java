@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.apache.commons.logging.*;
 import org.openxava.converters.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.model.meta.*;
 import org.openxava.util.*;
 import org.openxava.util.meta.*;
@@ -116,7 +117,8 @@ public class PropertyMapping extends MetaSetsContainer {
 	private IConverter createConverter() throws XavaException {
 		try {
 			if (!hasConverter()) return null;
-			IConverter conversor = (IConverter) Class.forName(converterClassName).newInstance();
+			//IConverter conversor = (IConverter) Class.forName(converterClassName).newInstance();
+			IConverter conversor = (IConverter) ClassLoaderUtil.forName(getClass(), converterClassName).newInstance();
 			if (containsMetaSets()) {
 				assignPropertiesValues(conversor);
 			}						
@@ -135,7 +137,9 @@ public class PropertyMapping extends MetaSetsContainer {
 	private IMultipleConverter createMultipleConverter() throws XavaException {
 		try {
 			if (!hasMultipleConverter()) return null;
-			IMultipleConverter conversor = (IMultipleConverter) Class.forName(multipleConverterClassName).newInstance();
+			//IMultipleConverter conversor = (IMultipleConverter) Class.forName(multipleConverterClassName).newInstance();
+			IMultipleConverter conversor =
+					(IMultipleConverter) ClassLoaderUtil.forName(getClass(), multipleConverterClassName).newInstance();
 			if (containsMetaSets()) {
 				assignPropertiesValues(conversor);
 			}						

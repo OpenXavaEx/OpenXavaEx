@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.jpa.*;
 
 /**
@@ -18,7 +19,8 @@ public class PersistenceXml {
 	 *  Returns the URL of the persistence.xml to be used in this application. <p>
 	 */
 	public static URL getResource() throws IOException {  
-		Enumeration e = XPersistence.class.getClassLoader().getResources("META-INF/persistence.xml");
+		//Enumeration e = XPersistence.class.getClassLoader().getResources("META-INF/persistence.xml");
+		Enumeration e = ClassLoaderUtil.getClassLoader(XPersistence.class).getResources("META-INF/persistence.xml");
 		URL url = null;
 		while (e.hasMoreElements()) {
 			url = (URL) e.nextElement();

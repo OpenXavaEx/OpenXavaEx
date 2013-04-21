@@ -6,6 +6,7 @@ import java.util.*;
 
 
 import org.apache.commons.logging.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 
 /**
@@ -49,7 +50,8 @@ public class MetaObject {
 	
 	public Object createObject() throws XavaException {
 		try {		
-			Class clase = Class.forName(this.className);
+			//Class clase = Class.forName(this.className);
+			Class clase = ClassLoaderUtil.forName(getClass(), this.className);
 			if (Is.emptyString(value)) {
 				if (this.className.equals("java.util.Map"))
 					return new HashMap();

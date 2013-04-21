@@ -3,6 +3,7 @@ package org.openxava.converters.typeadapters;
 import java.util.*;
 
 import org.hibernate.usertype.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 
 /**
  * Base class for adapters for using Hibernate composite types as converters in OpenXava.
@@ -19,7 +20,8 @@ abstract public class HibernateTypeBaseConverter {
 	
 	protected Object getHibernateType() throws Exception {
 		if (hibernateType == null) {			
-			hibernateType = Class.forName(type).newInstance();
+			//hibernateType = Class.forName(type).newInstance();
+			hibernateType = ClassLoaderUtil.forName(getClass(), type).newInstance();
 			if (this.parameters != null && hibernateType instanceof ParameterizedType) {
 				((ParameterizedType) hibernateType).setParameterValues(parameters);
 			}

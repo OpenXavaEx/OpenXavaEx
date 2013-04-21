@@ -4,7 +4,6 @@
  */
 package org.openxava.ex.cl.impl;
 
-import java.io.InputStream;
 
 
 /**
@@ -13,17 +12,17 @@ import java.io.InputStream;
  */
 public class ClassFileVO {
     private String sourceFile;	//Always, source file should be a *.class file or *.jar file
-    private InputStream classInputStream;
+    private byte[] classBytes;
 	private Long timestamp;
     
-    public ClassFileVO(String sourceFile, InputStream classIs, Long timestamp){
+    public ClassFileVO(String sourceFile, byte[] classBytes, Long timestamp){
         this.sourceFile = sourceFile;
-        this.classInputStream = classIs;
         this.timestamp = timestamp;
+        this.classBytes = classBytes;
     }
 
-    public InputStream getClassInputStream() {
-		return classInputStream;
+    public byte[] getClassBytes() {
+		return classBytes;
 	}
 	public String getSourceFile() {
 		return sourceFile;

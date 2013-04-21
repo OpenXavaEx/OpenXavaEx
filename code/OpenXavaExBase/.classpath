@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/OpenXava"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/OpenXavaExBase"/>
+	<classpathentry kind="lib" path="/OpenXava/web/WEB-INF/lib/slf4j-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

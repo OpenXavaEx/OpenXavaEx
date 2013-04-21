@@ -17,11 +17,15 @@ import org.eclipse.jetty.jndi.NamingUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.FilterHolder;
+import org.eclipse.jetty.servlet.FilterMapping;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.FileResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.hsqldb.persist.HsqlProperties;
+import org.openxava.ex.tools.DynamicLoaderFilter;
 import org.openxava.ex.tools.SchemaUpdateServlet;
 import org.openxava.web.servlets.ModuleServlet;
 
@@ -37,7 +41,14 @@ public class ContextApp {
         Server server = new Server(HTTP_PORT);
         
         //Init the hsql database and the connection pool
-        startHsqlServer();
+        final org.hsqldb.Server hsqlSrv = startHsqlServer();
+        Runtime.getRuntime().addShutdownHook(new Thread(){
+			@Override
+			public void run() {
+				int errcode = hsqlSrv.stop();
+			    System.out.println("HSQLDB stop: " + errcode);
+			}
+        });
         prepareDataSource(server);
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
@@ -48,9 +59,9 @@ public class ContextApp {
         ctx.setClassLoader(ContextApp.class.getClassLoader());
         //Allow find resource in multi-folder
         Resource res = new ResourceCollection(
-        		buildFolderResource("war-base"), buildFolderResource("war-patch"),
-        		buildFolderResource("../OpenXava/web"),
-        		buildFolderResource("../OpenXava/xava")/*For taglib only*/
+        		buildFolderResource("jetty-starter/war-base"), buildFolderResource("jetty-starter/war-patch"),
+        		buildFolderResource("OpenXava/web"),
+        		buildFolderResource("OpenXava/xava")/*For taglib only*/
         );
         ctx.setBaseResource(res);
         
@@ -65,25 +76,61 @@ public class ContextApp {
         ctx.addServlet(DwrServlet.class, "/dwr/*");
         
         //Schema Update Servlet
-        ctx.addServlet(SchemaUpdateServlet.class, "/schema-update/*");
+        ServletHolder susSh = new ServletHolder(SchemaUpdateServlet.class);
+        susSh.setInitParameter(SchemaUpdateServlet.PERSISTENCE_UNIT_LIST, "default");	//default;junit
+		ctx.addServlet(susSh, "/schema-update/*");
+        
+        //Dynamic class load filter, only for development
+        FilterHolder fh = new FilterHolder(DynamicLoaderFilter.class);
+        fh.setInitParameter(DynamicLoaderFilter.INIT_PARAM_NAME_CLASSPATH,
+        		getAppClassPathList("TestApp")
+        );
+        ctx.addFilter(fh, "*", FilterMapping.REQUEST);
 
         server.start();
         System.out.println(server.dump());
         server.join();
 	}
 
-	private static final Resource buildFolderResource(String folderName) throws IOException, URISyntaxException {
-        //Detect the war's position
-        URL binUrl = ContextApp.class.getResource("/");
+	/**
+	 * Get the parent folder path of current project, based the directory structure
+	 * @return
+	 */
+	private static final String getProjectParent() {
+		URL binUrl = ContextApp.class.getResource("/");
         String bin = binUrl.getFile();
-        String war = (new File(bin)).getParent() + "/" + folderName;
+        String parent = (new File(bin)).getParent();
+        parent = (new File(parent)).getParent();
+		return parent;
+	}
+	private static final String getAppClassPathList(String... appNames){
+		StringBuffer buf = new StringBuffer();
+		String parent = getProjectParent();
+		for(int i=0; i<appNames.length; i++){
+			String app = appNames[i];
+			if (i>0) buf.append(";");
+			//FIXME: Now you can only complie App's class into it's /web/WEB-INF/classes folder
+			buf.append(parent + "/" + app + "/bin");
+		}
+		return buf.toString();
+	}
+	/**
+	 * Get the resource of specified web content folder
+	 * @param warFolderName
+	 * @return
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
+	private static final Resource buildFolderResource(String warFolderName) throws IOException, URISyntaxException {
+        String parent = getProjectParent();
+		String war = parent + "/" + warFolderName;
         File f = new File(war);
         f = new File(f.getCanonicalPath());
         Resource r = new FileResource(f.toURI().toURL());
         return r;
 	}
 	
-	private static void startHsqlServer(){
+	private static org.hsqldb.Server startHsqlServer(){
 	    HsqlProperties p = new HsqlProperties();
 	    //p.setProperty("server.database.0","file:../TestAppHsqlDB/data");
 	    //p.setProperty("server.dbname.0","TestAppDB");
@@ -94,7 +141,10 @@ public class ContextApp {
 	    server.setDatabasePath(0, "file:../TestAppHsqlDB/data");
 	    server.setLogWriter(null); // can use custom writer
 	    server.setErrWriter(null); // can use custom writer
-	    server.start();
+	    int errcode = server.start();
+	    System.out.println("HSQLDB start: " + errcode);
+	    
+	    return server;
 	}
 	
 	/**

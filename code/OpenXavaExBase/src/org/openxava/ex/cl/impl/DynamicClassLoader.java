@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,36 +30,43 @@ import org.slf4j.LoggerFactory;
  */
 public class DynamicClassLoader extends ClassLoader {
 	private final static Logger logger = LoggerFactory.getLogger( DynamicClassLoader.class );
-	private final static String PATH_SEPARATOR = ";" ;
-
-    private String classpath;
-	private List<File> baseElements = new ArrayList<File>();    			//List<File>
-    private Map<String, URL> resourceCache = new HashMap<String, URL>();    //Map<String, URL>
+	
+	private List<File> classpath = new ArrayList<File>();    							//List<File>
+    private Map<String, List<URL>> resourcesCache = new HashMap<String, List<URL>>();   //Map<String, URL>
     private ClassModifyChecker checker;
+    private String classpath4Disp;		//Just for display in log
 
     /**
      * Create the dynamic classloader
      * @param parent
-     * @param classpath	The CLASSPATH to search the class, use ";" to separate multiple path
+     * @param classpath	The CLASSPATH to search the class
      * @param checker
      */
-	public DynamicClassLoader(ClassLoader parent, String classpath, ClassModifyChecker checker) {
+	public DynamicClassLoader(ClassLoader parent, List<File> classpath, ClassModifyChecker checker) {
 		super(parent);
         this.checker = checker;
         this.classpath = classpath;
-        //Parse classpaths
-        String[] sa = classpath.split(PATH_SEPARATOR);
-        int len = sa.length;
-        for (int i = 0; i < len; i++) {
-            File file = new File(sa[i].trim());
-			this.baseElements.add(file);
-		}
+        
+        refreshClassPath4Display(classpath);
 	}
 
-	public ClassModifyChecker getClassModifyChecker(){
-		return this.checker;
+	private void refreshClassPath4Display(List<File> classpath) {
+		StringBuffer buf = new StringBuffer();
+        for(File f: classpath){
+        	try {
+				buf.append(f.getCanonicalPath()).append(";");
+			} catch (IOException e) {
+				logger.error("getCanonicalPath error", e);
+			}
+        }
+        this.classpath4Disp = buf.toString();
+	}
+
+	public boolean needReload(){
+		return this.checker.isNeedReload();
 	}
 	
+	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		logger.debug("findClass " + name + " ...");
 		byte[] bytes = loadClassBytes(name);
@@ -72,32 +81,35 @@ public class DynamicClassLoader extends ClassLoader {
 			ClassFileVO classFile = getClassInputStream(className);
             if (null==classFile){
                 throw new ClassNotFoundException(
-                        "Can't find ["+className+"] in ["+this.classpath+"]");
+                        "Can't find ["+className+"] in ["+this.classpath4Disp+"]");
             }
             checker.rememberFile(classFile.getSourceFile(), classFile.getTimestamp());
-            InputStream is = new BufferedInputStream(classFile.getClassInputStream());
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			while (true) {
-				int i = is.read();
-				if (i == -1) {
-					break;
-				}
-                baos.write(i);
-			}
-			is.close();
-			return baos.toByteArray();
+            return classFile.getClassBytes();
 		} catch (IOException ex) {
 			throw new ClassNotFoundException(className, ex);
 		}
 	}
 
+	private byte[] readBytes(InputStream in) throws IOException{
+        InputStream is = new BufferedInputStream(in);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		while (true) {
+			int i = is.read();
+			if (i == -1) {
+				break;
+			}
+            baos.write(i);
+		}
+		is.close();
+		return baos.toByteArray();
+	}
     private ClassFileVO getClassInputStream(String className) throws IOException {
         ClassFileVO vo = null;
         String classFileName = className.replace('.', File.separatorChar) + ".class";
         String classZipName = className.replace('.', '/') + ".class";
-        int len = this.baseElements.size();
+        int len = this.classpath.size();
         for (int i=0; i<len; i++){
-            File path = (File)this.baseElements.get(i);
+            File path = (File)this.classpath.get(i);
             if (path.isDirectory()){
                 String pathRoot = path.getCanonicalPath();
                 StringBuffer sb = new StringBuffer(pathRoot);
@@ -106,7 +118,8 @@ public class DynamicClassLoader extends ClassLoader {
                 if (classFile.exists()){
                     logger.debug("Class [" + className + "] found, in ["+pathRoot+"]");
                     InputStream is = new FileInputStream(classFile);
-                    vo = new ClassFileVO(classFile.getCanonicalPath(), is, classFile.lastModified());
+                    vo = new ClassFileVO(classFile.getCanonicalPath(), readBytes(is), classFile.lastModified());
+                    is.close();
                 }
             }else{  //Jar File
                 if (path.exists()){
@@ -116,48 +129,69 @@ public class DynamicClassLoader extends ClassLoader {
                         String jarFilePath = path.getCanonicalPath();
                         logger.debug("Class [" + className + "] found, in ["+jarFilePath+"]");
                         InputStream is = zipFile.getInputStream(en);
-                        vo = new ClassFileVO(jarFilePath, is, path.lastModified());
+                        vo = new ClassFileVO(jarFilePath, readBytes(is), path.lastModified());
+                        is.close();
                     }
-                    //zipFile.close(); //FIXME: CAN'T Close, because we can't close the related InputStream
+                    zipFile.close();
                 }
             }
         }
         return vo;
     }
 
+
+	@Override
+	protected Enumeration<URL> findResources(String name) throws IOException {
+		logger.debug("findResources " + name + " ...");
+		
+		//The result of default implementation
+		Enumeration<URL> baseRes = super.findResources(name);
+		
+		List<URL> foundRes;
+		//Find in cache
+		foundRes = resourcesCache.get(name);
+		if (null==foundRes){
+			//Find in file system or jar
+			foundRes = getResourceUrls(name);
+			resourcesCache.put(name, foundRes);
+		}
+		
+		//Merge all result
+		List<URL> result = new ArrayList<URL>(foundRes);
+		while(baseRes.hasMoreElements()){
+			URL u = baseRes.nextElement();
+			result.add(u);
+		}
+		
+		if (result.size()>0){
+			logger.debug("Resource URL [" + name + "] was found with " + result.size() + " instances.");
+		}else{
+			logger.error("Can't find ["+name+"] in ["+this.classpath4Disp+"]");
+		}
+
+		return Collections.enumeration(result);
+	}
+    
+	@Override
 	protected URL findResource(String name) {
-		logger.debug("findResource " + name + " ...");
 		try {
-			URL url = super.findResource(name);
-			if (null!=url){
-                return url;
-            }
-            //Find in Cache first
-            url = (URL)this.resourceCache.get(name);
-            if (null!=url){
-                logger.debug("Resource URL [" + name + "] was found in cache");
-                return url;
-            }
-            //Find in file system or jar
-            url = getResourceUrl(name);
-            if (null==url){
-                logger.error("Can't find ["+name+"] in ["+this.classpath+"]");
-                return null;
-            }else{
-                this.resourceCache.put(name, url);
-			    return url;
-            }
+			Enumeration<URL> urls = this.findResources(name);
+			if (urls.hasMoreElements()){
+				return urls.nextElement();
+			}else{
+				return null;
+			}
         } catch (IOException ex) {
             logger.error("findResource error: " + ex.getMessage(), ex);
             return null;
 		}
 	}
 
-    private URL getResourceUrl(String name) throws IOException {
-        URL url = null;
-        int len = this.baseElements.size();
+    private List<URL> getResourceUrls(String name) throws IOException {
+        List<URL> urls = new ArrayList<URL>();
+        int len = this.classpath.size();
         for (int i=0; i<len; i++){
-            File path = (File)this.baseElements.get(i);
+            File path = (File)this.classpath.get(i);
             if (path.isDirectory()){
                 String pathRoot = path.getCanonicalPath();
                 StringBuffer sb = new StringBuffer(pathRoot);
@@ -165,7 +199,8 @@ public class DynamicClassLoader extends ClassLoader {
                 File resourceFile = new File(sb.toString());
                 if (resourceFile.exists()){
                     logger.debug("Resource [" + name + "] found, in ["+pathRoot+"]");
-                    url = new URL("file:///" + resourceFile.getCanonicalPath());
+                    URL url = new URL("file:///" + resourceFile.getCanonicalPath());
+                    urls.add(url);
                 }
             }else{  //Jar File
                 if (path.exists()){
@@ -175,12 +210,13 @@ public class DynamicClassLoader extends ClassLoader {
                         String jarFileUrl = "file:///" + path.getCanonicalPath();
                         String jarUrl = "jar:"+jarFileUrl+"!/"+name;
                         logger.debug("Resource [" + name + "] found, in ["+jarUrl+"]");
-                        url = new URL(jarUrl);
+                        URL url = new URL(jarUrl);
+                        urls.add(url);
                     }
-                    zipFile.close();    //MUST close here
+                    zipFile.close();
                 }
             }
         }
-        return url;
+        return urls;
     }
 }

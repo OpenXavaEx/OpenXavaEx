@@ -12,6 +12,7 @@ import org.apache.commons.fileupload.portlet.*;
 import org.apache.commons.logging.*;
 
 import org.openxava.controller.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 import org.openxava.web.*;
 import org.openxava.web.style.*;
@@ -235,7 +236,8 @@ public class XavaPortlet extends GenericPortlet {
 				else if (portal.indexOf("jetspeed") >= 0) styleClass = preferences.getJetSpeed2StyleClass();
 				else style = Style.getInstance();
 				
-				if (style == null) style = (Style) XObjects.execute(Class.forName(styleClass), "getInstance"); 
+				//if (style == null) style = (Style) XObjects.execute(Class.forName(styleClass), "getInstance"); 
+				if (style == null) style = (Style) XObjects.execute(ClassLoaderUtil.forName(getClass(), styleClass), "getInstance"); 
 				
 				style.setInsidePortal(true); 				
 			}			

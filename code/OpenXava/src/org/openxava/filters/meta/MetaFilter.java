@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import org.apache.commons.logging.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.filters.*;
 import org.openxava.util.*;
 import org.openxava.util.meta.*;
@@ -29,7 +30,8 @@ public class MetaFilter implements Serializable {
 	
 	public IFilter createFilter() throws XavaException {
 		try {
-			Object o = Class.forName(getClassName()).newInstance();
+			//Object o = Class.forName(getClassName()).newInstance();
+			Object o = ClassLoaderUtil.forName(getClass(), getClassName()).newInstance();
 			if (!(o instanceof IFilter)) {
 				throw new XavaException("implements_required", getClassName(), IFilter.class.getName());
 			}
