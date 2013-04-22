@@ -11,6 +11,7 @@ In OpenXava you only have to write the domain classes in plain Java to get a web
 Reference
 --------
 OpenXava Document: http://openxava.org/doc
+
 Reference Guide: http://openxava.wikispaces.com/reference_en , http://openxava.wikispaces.com/reference_zh_cn
 
 
