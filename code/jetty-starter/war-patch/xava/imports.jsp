@@ -1,3 +1,3 @@
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="/META-INF/taglib.tld" prefix="xava" %>
+<%@ taglib uri="/taglib/jstl/c.tld" prefix="c" %>
+<%@ taglib uri="/taglib/jstl/fmt.tld" prefix="fmt" %>
+<%@ taglib uri="/taglib/openxava.tld" prefix="xava" %>

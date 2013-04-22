@@ -19,9 +19,9 @@ public class Teacher {
 	
 	@Column(length=40) @Required
 	private String name;
-
-	@Column(length=40) @Required
-	private String code;
+	
+	@Column(length=255)
+	private String remarks;
 
 	public String getId() {
 		return id;
@@ -39,12 +39,11 @@ public class Teacher {
 		this.name = name;
 	}
 
-	public String getCode() {
-		return code;
+	public String getRemarks() {
+		return remarks;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
-
 }

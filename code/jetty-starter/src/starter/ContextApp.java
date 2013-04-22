@@ -60,8 +60,7 @@ public class ContextApp {
         //Allow find resource in multi-folder
         Resource res = new ResourceCollection(
         		buildFolderResource("jetty-starter/war-base"), buildFolderResource("jetty-starter/war-patch"),
-        		buildFolderResource("OpenXava/web"),
-        		buildFolderResource("OpenXava/xava")/*For taglib only*/
+        		buildFolderResource("OpenXava/web")
         );
         ctx.setBaseResource(res);
         
