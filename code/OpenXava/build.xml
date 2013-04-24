@@ -533,6 +533,9 @@
 	<target name="createLibJars">
 		<!-- openxava.jar -->
 		<jar jarfile="${dist.dir}/lib/openxava.jar" basedir="../OpenXava/bin"/>
+		<!-- openxava-ex*.jar -->
+		<jar jarfile="${dist.dir}/lib/openxava-ex.jar" basedir="../OpenXavaEx/bin"/>
+		<jar jarfile="${dist.dir}/lib/openxava-exbase.jar" basedir="../OpenXavaExBase/bin"/>
 		<!-- server-properties.jar -->
 		<mkdir dir="${server.properties.dir}"/>
 		<copy 	toDir="${server.properties.tmp.dir}" overwrite="yes">
@@ -641,12 +644,16 @@
 		<echo file="../${project}/web/WEB-INF/classes/editors-js.properties">${editorsjs.files}</echo>
 	</target>
 
-	<target name="prepareWar" depends="createDist, updateDataSourceInfo, configureJNDI">
-		<copy todir="../${project}/web/xava" overwrite="true">
+	<target name="prepareWar" depends="updateDataSourceInfo, configureJNDI">
+		<delete dir="../${project}/web/xava"/>
+        <delete includeemptydirs="true">
+		    <fileset dir="../${project}/web/WEB-INF" excludes="classes/*"/>
+        </delete>
+		<copy todir="../${project}/web" overwrite="true">
 			<fileset dir="../OpenXava/web" excludes="WEB-INF/**,style/custom.css"/>
 		</copy>
 		<copy todir="../${project}/web/xava/style" overwrite="false">
-			<fileset file="../OpenXava/web/style/custom.css"/>
+			<fileset file="../OpenXava/web/xava/style/custom.css"/>
 		</copy>
 		<copy todir="../${project}/web/WEB-INF" overwrite="true">
 			<fileset dir="../OpenXava/web/WEB-INF"/>
@@ -671,6 +678,9 @@
 			tofile="../${project}/${classes.dir}/Etiquetas${project}.properties"
 			failonerror="false"/>
 		<jar jarfile="../${project}/web/WEB-INF/lib/openxava.jar" basedir="../OpenXava/bin"/>
+		<!-- openxava-ex*.jar -->
+		<jar jarfile="../${project}/web/WEB-INF/lib/openxava-ex.jar" basedir="../OpenXavaEx/bin"/>
+		<jar jarfile="../${project}/web/WEB-INF/lib/openxava-exbase.jar" basedir="../OpenXavaExBase/bin"/>
 	</target>
 
 	<target name="createWar" depends="prepareWar">
@@ -689,6 +699,7 @@
 		<!-- Commented in order to run Tutorial fine
 		<delete file="${deploy.dir}/${name.war}.war" failonerror="false"/>
 		-->
+		<delete dir="${deploy.dir}/${name.war}${war.dir.suffix}" failonerror="false"/>
 		<mkdir dir="${deploy.dir}/${name.war}${war.dir.suffix}"/>
 		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}" preservelastmodified="true">
 			<fileset dir="../${project}/web"/>

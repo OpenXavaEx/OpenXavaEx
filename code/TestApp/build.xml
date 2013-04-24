@@ -12,7 +12,7 @@
 	-->
 	<target name="compile"> 
 		<ant antfile="../OpenXava/build.xml" target="compile"/>
-	</target>	    	
+	</target>
 	
 	<!-- Build and deploy the application in war format -->	
 	<target name="deployWar">
