@@ -109,7 +109,7 @@ public class ContextApp {
 			String app = appNames[i];
 			if (i>0) buf.append(";");
 			//FIXME: Now you can only complie App's class into it's /web/WEB-INF/classes folder
-			buf.append(parent + "/" + app + "/bin");
+			buf.append(parent + "/" + app + "/web/WEB-INF/classes");
 		}
 		return buf.toString();
 	}
