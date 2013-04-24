@@ -21,7 +21,7 @@ public class Teacher {
 	private String name;
 	
 	@Column(length=255)
-	private String remarks;
+	private String descr;
 
 	public String getId() {
 		return id;
@@ -39,11 +39,11 @@ public class Teacher {
 		this.name = name;
 	}
 
-	public String getRemarks() {
-		return remarks;
+	public String getDescr() {
+		return descr;
 	}
 
-	public void setRemarks(String remarks) {
-		this.remarks = remarks;
+	public void setDescr(String remarks) {
+		this.descr = remarks;
 	}
 }
