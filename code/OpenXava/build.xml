@@ -647,7 +647,7 @@
 	<target name="prepareWar" depends="updateDataSourceInfo, configureJNDI">
 		<delete dir="../${project}/web/xava"/>
         <delete includeemptydirs="true">
-		    <fileset dir="../${project}/web/WEB-INF" excludes="classes/*"/>
+		    <fileset dir="../${project}/web/WEB-INF" excludes="classes/**"/>
         </delete>
 		<copy todir="../${project}/web" overwrite="true">
 			<fileset dir="../OpenXava/web" excludes="WEB-INF/**,style/custom.css"/>
