@@ -8,6 +8,10 @@ import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSourceFactory;
@@ -25,6 +29,7 @@ import org.eclipse.jetty.util.resource.FileResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.hsqldb.persist.HsqlProperties;
+import org.openxava.ex.json.JsonViewerServlet;
 import org.openxava.ex.tools.DynamicLoaderFilter;
 import org.openxava.ex.tools.SchemaUpdateServlet;
 import org.openxava.web.servlets.ModuleServlet;
@@ -33,12 +38,21 @@ public class ContextApp {
 	private static final int HTTP_PORT = 8080;
 	private static final String CTX_PATH = "/TestApp";		//In OpenXava, the context path is also the application name
 
+	@SuppressWarnings("serial")
 	public static void main(String[] args) throws Exception {
 		//System properties for logging
 		System.setProperty("org.eclipse.jetty.LEVEL", "ALL");
 		System.setProperty("org.eclipse.jetty.util.log.SOURCE", "false");
 		
-        Server server = new Server(HTTP_PORT);
+        //Try to stop the previous server instance
+        URL stop = new URL("http://127.0.0.1:" + HTTP_PORT + "/STOP");
+        try{
+            stop.openStream();
+        }catch(Exception ex){
+            //Ignore it
+        }
+		
+		final Server server = new Server(HTTP_PORT);
         
         //Init the hsql database and the connection pool
         final org.hsqldb.Server hsqlSrv = startHsqlServer();
@@ -53,6 +67,24 @@ public class ContextApp {
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         server.setHandler(contexts);
+
+        //The ROOT web app
+        ServletContextHandler root = new ServletContextHandler(contexts, "/", ServletContextHandler.SESSIONS);
+        root.setBaseResource(buildFolderResource("jetty-starter/war-root"));
+        root.addServlet(DefaultServlet.class, "/");    //Default servlet
+        root.addServlet(new ServletHolder(new HttpServlet() {    //The stop servlet
+            @Override
+            public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
+                try {
+                    System.err.println(">>> Stop server request from /STOP ...");
+                    server.stop();
+                    System.err.println(">>> Server stopped .");
+                } catch (Exception e) {
+                    System.err.println(">>> Server stop error: " + e.getMessage() + ", force exit -1.");
+                    System.exit(-1);
+                }
+            }
+        }), "/STOP");
 
         ServletContextHandler ctx = new ServletContextHandler(contexts, CTX_PATH, ServletContextHandler.SESSIONS);
         //FIXME: org.eclipse.jetty.servlet.ServletHolder.initJspServlet() need it - InitParameter "com.sun.appserv.jsp.classpath"
@@ -78,6 +110,9 @@ public class ContextApp {
         ServletHolder susSh = new ServletHolder(SchemaUpdateServlet.class);
         susSh.setInitParameter(SchemaUpdateServlet.PERSISTENCE_UNIT_LIST, "default");	//default;junit
 		ctx.addServlet(susSh, "/schema-update/*");
+		
+		//JsonViewer Servlet
+		ctx.addServlet(JsonViewerServlet.class, "/json");
         
         //Dynamic class load filter, only for development
         FilterHolder fh = new FilterHolder(DynamicLoaderFilter.class);
