@@ -12,7 +12,7 @@ persistence.xml.
 <hibernate-configuration>
 	<session-factory>
 
-		<!-- Tomcat + Hypersonic -->		<property name="hibernate.connection.datasource">java:comp/env/jdbc/TestAppDS</property>		<property name="hibernate.dialect">org.hibernate.dialect.HSQLDialect</property>
+		<!-- Tomcat + Hypersonic -->		<property name="hibernate.connection.datasource">${PROP_DATASOURCE_JNDI_NAME}</property>		<property name="hibernate.dialect">${PROP_HIBERNATE_DIALECT}</property>
 		<property name="hibernate.jdbc.use_get_generated_keys">false</property>		
 		<property name="hibernate.show_sql">false</property>
 				

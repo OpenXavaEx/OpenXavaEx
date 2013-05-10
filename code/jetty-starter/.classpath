@@ -23,7 +23,9 @@
 	<classpathentry kind="lib" path="lib/dbcp/commons-dbcp-1.4.jar" sourcepath="lib/dbcp/commons-dbcp-1.4-sources.jar"/>
 	<classpathentry kind="lib" path="lib/dbcp/commons-pool-1.6.jar" sourcepath="lib/dbcp/commons-pool-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jsp/org.eclipse.jdt.core-3.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/jdbc/oracle-11.2.0/ojdbc6.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OpenXava"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OpenXavaEx"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/OpenXavaExBase"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

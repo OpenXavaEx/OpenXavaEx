@@ -9,6 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.hibernate.ejb.Ejb3Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
@@ -35,7 +38,7 @@ import org.hibernate.tool.hbm2ddl.SchemaUpdate;
  * for example, if you add @Column(nullable=false), it will not generates an 
  * additional DB constraint.
  * 
- * @author C¨¦dric Fieux & John Rizzo & Aymeric Levaux
+ * @author Cï¿½ï¿½dric Fieux & John Rizzo & Aymeric Levaux
  *
  */
 //http://stackoverflow.com/questions/2645255/how-to-use-hibernate-schemaupdate-class-with-a-jpa-persistence-xml/12403549#12403549
@@ -62,7 +65,7 @@ public class SchemaUpdateServlet extends HttpServlet{
 		String url = req.getRequestURI();
 		boolean doUpdate = (url.endsWith("/update"));
 		
-
+		resp.setContentType("text/plain;charset=UTF-8");
 		String[] units = persistenceUnitList;
 		for (int i = 0; i < units.length; i++) {
 			String persistenceUnit = units[i];
@@ -74,13 +77,26 @@ public class SchemaUpdateServlet extends HttpServlet{
 		}
     }
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	private static StringWriter updateSchema(String persistenceUnit, boolean doUpdate) throws UnsupportedEncodingException {
 		////// 1. Prepare the configuration (connection parameters to the DB, ect.)
         // Empty map. We add no additional property, everything is already in the persistence.xml
-        Map<String,Object> map=new HashMap<String,Object>();   
+        Map<String,Object> map=new HashMap<String,Object>();
         // Get the config from the persistence.xml file, with the unit name as parameter.
         Ejb3Configuration conf =  new Ejb3Configuration().configure(persistenceUnit, map);
+        
+        //Replace hibernate.* properties with variable(for example: <property name="hibernate.dialect" value="${PROP_HIBERNATE_DIALECT}"/>)
+        Properties properties = conf.getHibernateConfiguration().getProperties();
+        for(@SuppressWarnings("rawtypes") Entry p: properties.entrySet()){
+        	String key = (String) p.getKey();
+        	if (null!=key && key.startsWith("hibernate.")){
+            	String value = (String) p.getValue();
+            	value = StrSubstitutor.replaceSystemProperties(value);
+            	properties.setProperty(key, value);
+        	}
+        }
+        conf.getHibernateConfiguration().setProperties(properties);
+        
         SchemaUpdate schemaUpdate =new SchemaUpdate(conf.getHibernateConfiguration());
 
         /////// 2. Get the SQL

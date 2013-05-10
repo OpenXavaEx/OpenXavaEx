@@ -1,20 +1,21 @@
 package org.openxava.school.model;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Query;
 import javax.persistence.Table;
 
 import org.openxava.annotations.DefaultValueCalculator;
+import org.openxava.annotations.ReadOnly;
 import org.openxava.annotations.Required;
 import org.openxava.calculators.CurrentDateCalculator;
-import org.openxava.calculators.ICalculator;
 import org.openxava.calculators.IJDBCCalculator;
-import org.openxava.jpa.XPersistence;
 import org.openxava.util.IConnectionProvider;
 
 /**
@@ -26,7 +27,7 @@ import org.openxava.util.IConnectionProvider;
 @Table(name="M_Teacher")
 public class Teacher {
 	
-	@Id @Column(length=5) @Required
+	@Id @Column(length=20) @Required @ReadOnly
 	@DefaultValueCalculator(AutoNo.class)
 	private String id;
 	
@@ -80,11 +81,22 @@ public class Teacher {
 			this.provider = provider;
 		}
 		
-		@SuppressWarnings("unchecked")
 		public Object calculate() throws Exception {
-			Query q = XPersistence.getManager().createQuery("SELECT MAX(ID) as _max, COUNT(*) as _count FROM M_Teacher");
-			List<Object> res = q.getResultList();
-			return null;
+			Connection conn = this.provider.getConnection();
+			Statement stmt = null;
+			ResultSet rs = null;
+			try {
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery("SELECT MAX(REPLACE(ID, 'TH', '')) as the_next, COUNT(*) as the_count FROM M_Teacher");
+				rs.next();
+				Integer id = rs.getInt("the_next");
+				
+				DecimalFormat df = new DecimalFormat("0000000000"); 
+				return "TH" + df.format(id+1);
+			} finally {
+				if (null!=rs)rs.close();
+				if (null!=stmt)stmt.close();
+			}
 		}
 
 	}

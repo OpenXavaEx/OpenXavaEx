@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSourceFactory;
 import org.apache.jasper.servlet.JspServlet;
-import org.directwebremoting.servlet.DwrServlet;
 import org.eclipse.jetty.jndi.NamingUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -28,42 +27,48 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.FileResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.hsqldb.persist.HsqlProperties;
+import org.openxava.ex.dwr.ForceUtf8DwrServlet;
 import org.openxava.ex.json.JsonViewerServlet;
 import org.openxava.ex.tools.DynamicLoaderFilter;
 import org.openxava.ex.tools.SchemaUpdateServlet;
 import org.openxava.web.servlets.ModuleServlet;
 
+/**
+ * The jetty server to start development workspace.<br/>
+ * Run this application with following environment variables:
+ * <pre>
+ *  - HTTP_PORT: http port, default is 8080
+ *  - CTX_PATH:  context path, default TestApp
+ *  - JDBC_URL:  jdbc url
+ *  - DB_USER:   username of database
+ *  - DB_PASS:   password of database
+ * </pre>
+ * @author root
+ *
+ */
 public class ContextApp {
-	private static final int HTTP_PORT = 8080;
-	private static final String CTX_PATH = "/TestApp";		//In OpenXava, the context path is also the application name
+	private static final String DEFAULT_HTTP_PORT = "8080";
+	private static final String DEFAULT_CTX_PATH = "TestApp";		//In OpenXava, the context path is also the application name
 
 	@SuppressWarnings("serial")
 	public static void main(String[] args) throws Exception {
+		EnvSettings es = readEnv();
+		
 		//System properties for logging
 		System.setProperty("org.eclipse.jetty.LEVEL", "ALL");
 		System.setProperty("org.eclipse.jetty.util.log.SOURCE", "false");
 		
         //Try to stop the previous server instance
-        URL stop = new URL("http://127.0.0.1:" + HTTP_PORT + "/STOP");
-        try{
-            stop.openStream();
-        }catch(Exception ex){
-            //Ignore it
-        }
+        URL stop = new URL("http://127.0.0.1:" + es.httpPort + "/STOP");
+        try{ stop.openStream(); }catch(Exception ex){ /*Ignore it*/}
 		
-		final Server server = new Server(HTTP_PORT);
+		final Server server = new Server(es.httpPort);
         
-        //Init the hsql database and the connection pool
-        final org.hsqldb.Server hsqlSrv = startHsqlServer();
-        Runtime.getRuntime().addShutdownHook(new Thread(){
-			@Override
-			public void run() {
-				int errcode = hsqlSrv.stop();
-			    System.out.println("HSQLDB stop: " + errcode);
-			}
-        });
-        prepareDataSource(server);
+        prepareDataSource(server, es);
+        //Properties for persistence.xml and hibernate.cfg.xml
+        System.setProperty("PROP_DATASOURCE_JNDI_NAME", "java:comp/env/" + es.getJndiName());
+        System.setProperty("PROP_HIBERNATE_DIALECT", es.getHibernateDialect());
+        System.setProperty("PROP_HIBERNATE_DEFAULT_SCHEMA", es.getDefaultSchema());
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         server.setHandler(contexts);
@@ -75,18 +80,12 @@ public class ContextApp {
         root.addServlet(new ServletHolder(new HttpServlet() {    //The stop servlet
             @Override
             public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
-                try {
-                    System.err.println(">>> Stop server request from /STOP ...");
-                    server.stop();
-                    System.err.println(">>> Server stopped .");
-                } catch (Exception e) {
-                    System.err.println(">>> Server stop error: " + e.getMessage() + ", force exit -1.");
-                    System.exit(-1);
-                }
+                System.err.println(">>> Stop server request from /STOP ...");
+                System.exit(0);
             }
         }), "/STOP");
 
-        ServletContextHandler ctx = new ServletContextHandler(contexts, CTX_PATH, ServletContextHandler.SESSIONS);
+        ServletContextHandler ctx = new ServletContextHandler(contexts, "/" + es.ctxPath, ServletContextHandler.SESSIONS);
         //FIXME: org.eclipse.jetty.servlet.ServletHolder.initJspServlet() need it - InitParameter "com.sun.appserv.jsp.classpath"
         ctx.setClassLoader(ContextApp.class.getClassLoader());
         //Allow find resource in multi-folder
@@ -104,7 +103,7 @@ public class ContextApp {
         
         //OpenXava Servlets
         ctx.addServlet(ModuleServlet.class, "/modules/*");
-        ctx.addServlet(DwrServlet.class, "/dwr/*");
+        ctx.addServlet(ForceUtf8DwrServlet.class, "/dwr/*");
         
         //Schema Update Servlet
         ServletHolder susSh = new ServletHolder(SchemaUpdateServlet.class);
@@ -164,29 +163,12 @@ public class ContextApp {
         return r;
 	}
 	
-	private static org.hsqldb.Server startHsqlServer(){
-	    HsqlProperties p = new HsqlProperties();
-	    //p.setProperty("server.database.0","file:../TestAppHsqlDB/data");
-	    //p.setProperty("server.dbname.0","TestAppDB");
-
-	    org.hsqldb.Server server = new org.hsqldb.Server();
-	    server.setProperties(p);
-	    server.setDatabaseName(0, "TestAppDB");
-	    server.setDatabasePath(0, "file:../TestAppHsqlDB/data");
-	    server.setLogWriter(null); // can use custom writer
-	    server.setErrWriter(null); // can use custom writer
-	    int errcode = server.start();
-	    System.out.println("HSQLDB start: " + errcode);
-	    
-	    return server;
-	}
-	
 	/**
 	 * ref: http://www.junlu.com/list/96/481920.html - setting up JNDI in embedded Jetty
 	 * @param server
 	 * @throws Exception
 	 */
-	private static void prepareDataSource(Server server) throws Exception {
+	private static void prepareDataSource(Server server, EnvSettings es) throws Exception {
 		Context envContext = null;
 		
 		ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
@@ -201,14 +183,123 @@ public class ContextApp {
 
 		if (null != envContext){
 			Properties p = new Properties();
-			p.put("driverClassName", "org.hsqldb.jdbcDriver");
-			p.put("url", "jdbc:hsqldb:hsql://localhost/TestAppDB");
-			p.put("username", "SA");
-			p.put("password", "");
-			p.put("validationQuery", "Select COUNT(*) As X From INFORMATION_SCHEMA.SYSTEM_USERS Where 1=0");
+			p.put("driverClassName", es.getJdbcDriver());
+			p.put("url", es.jdbcUrl);
+			p.put("username", es.dbUser);
+			p.put("password", es.dbPass);
+			p.put("validationQuery", es.getValidationQuery());
 			DataSource ds = BasicDataSourceFactory.createDataSource(p);
 			
-			NamingUtil.bind(envContext, "jdbc/TestAppDS", ds);
+			NamingUtil.bind(envContext, es.getJndiName(), ds);
+		}
+	}
+	
+	private static EnvSettings readEnv(){
+		EnvSettings es = new EnvSettings();
+		es.httpPort = Integer.valueOf(_readEnv("HTTP_PORT", DEFAULT_HTTP_PORT));
+		es.ctxPath = _readEnv("CTX_PATH", DEFAULT_CTX_PATH);
+		es.jdbcUrl = _readEnv("JDBC_URL", "Unknown_JDBC_URL");
+		es.dbUser = _readEnv("DB_USER", "Unknown_DB_USER");
+		es.dbPass = _readEnv("DB_PASS", "");
+		return es;
+	}
+	private static String _readEnv(String var, String defVal){
+		String v = System.getenv(var);
+		if (null==v){
+			v=defVal;
+		}
+		return v;
+	}
+	/**
+	 * Store the settings defined by environment variables
+	 * @author root
+	 *
+	 */
+	private static class EnvSettings{
+		private int httpPort;
+		private String ctxPath;
+		private String jdbcUrl;
+		private String dbUser;
+		private String dbPass;
+		
+		private String _jdbcUrl(){
+			return (null==this.jdbcUrl)?"":this.jdbcUrl;
+		}
+		/** jdbc:oracle:thin:@localhost:1521:XE */
+		private boolean isOracle(){
+			return _jdbcUrl().startsWith("jdbc:oracle:thin:");
+		}
+		/** jdbc:sqlserver://localhost:1433;databaseName=orderMgr */
+		private boolean isMSSQL(){
+			return _jdbcUrl().startsWith("jdbc:sqlserver://");
+		}
+		/** jdbc:jtds:sqlserver://localhost:1433/orderMgr */
+		private boolean isMSSQL_JTDS(){
+			return _jdbcUrl().startsWith("jdbc:jtds:sqlserver://");
+		}
+		/** jdbc:mysql://localhost:3306/orderMgr?useUnicode=true&amp;characterEncoding=UTF-8 */
+		private boolean isMySQL(){
+			return _jdbcUrl().startsWith("jdbc:mysql://");
+		}
+		/** jdbc:hsqldb:hsql://localhost/TestHSQLDB */
+		private boolean isHSQL(){
+			return _jdbcUrl().startsWith("jdbc:hsqldb:");
+		}
+		
+		private String getJndiName(){
+			return "jdbc/"+this.ctxPath+"_DS";
+		}
+		private String getDefaultSchema(){
+			if (isHSQL()){
+				return "PUBLIC";
+			}else{
+				return this.dbUser;
+			}
+		}
+		private String getJdbcDriver(){
+			if (isOracle()){
+				return "oracle.jdbc.driver.OracleDriver";
+			}else if (isMSSQL()){
+				return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+			}else if (isMSSQL_JTDS()){
+				return "net.sourceforge.jtds.jdbc.Driver";
+			}else if (isMySQL()){
+				return "com.mysql.jdbc.Driver";
+			}else if (isHSQL()){
+				return "org.hsqldb.jdbcDriver";
+			}else{
+				throw new RuntimeException("Unknown database type ["+this.jdbcUrl+"]");
+			}
+		}
+		private String getValidationQuery(){
+			if (isOracle()){
+				return "SELECT 1 From dual";
+			}else if (isMSSQL()){
+				return "Select 1";
+			}else if (isMSSQL_JTDS()){
+				return "Select 1";
+			}else if (isMySQL()){
+				return "Select 1";
+			}else if (isHSQL()){
+				return "Select COUNT(*) As X From INFORMATION_SCHEMA.SYSTEM_USERS Where 1=0";
+			}else{
+				throw new RuntimeException("Unknown database type ["+this.jdbcUrl+"]");
+			}
+		}
+		private String getHibernateDialect(){
+			if (isOracle()){
+				return "org.hibernate.dialect.Oracle10gDialect";
+			}else if (isMSSQL()){
+				return "org.hibernate.dialect.SQLServer2005Dialect";
+			}else if (isMSSQL_JTDS()){
+				return "org.hibernate.dialect.SQLServer2005Dialect";
+			}else if (isMySQL()){
+				return "org.hibernate.dialect.MySQL5Dialect";
+			}else if (isHSQL()){
+				return "org.hibernate.dialect.HSQLDialect";
+			}else{
+				throw new RuntimeException("Unknown database type ["+this.jdbcUrl+"]");
+			}
 		}
 	}
 }
