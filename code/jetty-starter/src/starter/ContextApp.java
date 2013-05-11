@@ -90,8 +90,12 @@ public class ContextApp {
         ctx.setClassLoader(ContextApp.class.getClassLoader());
         //Allow find resource in multi-folder
         Resource res = new ResourceCollection(
-        		buildFolderResource("jetty-starter/war-base"), buildFolderResource("jetty-starter/war-patch"),
-        		buildFolderResource("OpenXava/web")
+        		buildFolderResource("jetty-starter/war-patch"),
+        		buildFolderResource(es.ctxPath + "/web"),
+        		//buildFolderResource("jetty-starter/war-base"),
+        		buildFolderResource("OpenXavaEx/web"),
+        		buildFolderResource("OpenXava/web"),
+        		null
         );
         ctx.setBaseResource(res);
         
@@ -116,7 +120,7 @@ public class ContextApp {
         //Dynamic class load filter, only for development
         FilterHolder fh = new FilterHolder(DynamicLoaderFilter.class);
         fh.setInitParameter(DynamicLoaderFilter.INIT_PARAM_NAME_CLASSPATH,
-        		getAppClassPathList("TestApp")
+        		getAppClassPathList(es.ctxPath)
         );
         ctx.addFilter(fh, "*", FilterMapping.REQUEST);
 

@@ -1,0 +1,7 @@
+= Plan =
+ - Basic
+  - Single, Master-Detail, Reference
+  - ID Auto-no, ...
+ - Editor Customize
+ - Tab/View Customize
+ 
