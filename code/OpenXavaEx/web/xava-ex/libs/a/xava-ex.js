@@ -22,9 +22,20 @@
         };
     }
 
+    //Dynamic css file loader
+    var loadCSS = function(url){
+		var fileref = document.createElement("link");
+        fileref.setAttribute("rel", "stylesheet");
+        fileref.setAttribute("type", "text/css");
+        fileref.setAttribute("href", url);
+        if (typeof fileref != "undefined"){
+            document.getElementsByTagName("head")[0].appendChild(fileref)
+        }
+    }
 	
 	global.xavaEx = {
-			getWindowSize: getWindowSize
+			getWindowSize: getWindowSize,
+			loadCSS: loadCSS
 	};
 	
 })(this);

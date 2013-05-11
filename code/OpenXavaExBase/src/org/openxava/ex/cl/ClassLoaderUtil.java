@@ -11,6 +11,8 @@ import org.openxava.ex.cl.impl.DynamicClassLoader;
  * @author root
  */
 public class ClassLoaderUtil {
+	private static DynamicClassLoader currentDcl = null;
+	
 	/**
 	 * To replace the original class and resource load method in OpenXava, use Thread Context ClassLoader first
 	 * @param clazz
@@ -49,23 +51,21 @@ public class ClassLoaderUtil {
 		if (null==contextClassLoader){
 			return;
 		}
-		boolean needReload = checker.isNeedReload();
-		if (needReload){
+
+		if (null==currentDcl){				//First request ...
+			currentDcl = new DynamicClassLoader(contextClassLoader, initClassPath, checker);
+		}else if (checker.isFileChanged() || checker.isNewFiles()){	//Reload needed ...
 			if (null!=reloader){
 				reloader.doReload();
 			}
-		}
-		if (contextClassLoader instanceof DynamicClassLoader){
-			if (needReload){
-				DynamicClassLoader dcl = (DynamicClassLoader)contextClassLoader;
-				ClassLoader parent = dcl.getParent();
-				dcl = new DynamicClassLoader(parent, initClassPath, checker);
-				Thread.currentThread().setContextClassLoader(dcl);
+			if (contextClassLoader instanceof DynamicClassLoader){		//Avoid nested filter process
+				contextClassLoader = contextClassLoader.getParent();
 			}
-		}else{
-			DynamicClassLoader dcl = new DynamicClassLoader(contextClassLoader, initClassPath, checker);
-			Thread.currentThread().setContextClassLoader(dcl);
+			currentDcl = new DynamicClassLoader(contextClassLoader, initClassPath, checker);
 		}
+
+		//Set DynamicClassLoader as the new ContextClassLoader
+		Thread.currentThread().setContextClassLoader(currentDcl);
 	}
 	
 	public static interface WhenClassReload{

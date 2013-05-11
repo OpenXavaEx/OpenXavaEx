@@ -62,10 +62,6 @@ public class DynamicClassLoader extends ClassLoader {
         this.classpath4Disp = buf.toString();
 	}
 
-	public boolean needReload(){
-		return this.checker.isNeedReload();
-	}
-	
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		logger.debug("findClass " + name + " ...");
@@ -110,6 +106,15 @@ public class DynamicClassLoader extends ClassLoader {
         int len = this.classpath.size();
         for (int i=0; i<len; i++){
             File path = (File)this.classpath.get(i);
+            
+            //Remember the directory's mask
+            if (path.isDirectory()){
+            	this.checker.rememberTopFolder(path);
+            }
+            
+            if (null!=vo){
+            	continue;	//If class found, other classpath needn't search
+            }
             if (path.isDirectory()){
                 String pathRoot = path.getCanonicalPath();
                 StringBuffer sb = new StringBuffer(pathRoot);
@@ -129,7 +134,7 @@ public class DynamicClassLoader extends ClassLoader {
                         String jarFilePath = path.getCanonicalPath();
                         logger.debug("Class [" + className + "] found, in ["+jarFilePath+"]");
                         InputStream is = zipFile.getInputStream(en);
-                        vo = new ClassFileVO(jarFilePath, readBytes(is), path.lastModified());
+                        vo = new ClassFileVO(jarFilePath, readBytes(is), path.lastModified());		//Use the last modified time of jar file
                         is.close();
                     }
                     zipFile.close();
