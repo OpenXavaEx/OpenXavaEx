@@ -1,5 +1,7 @@
 package org.openxava.demoapp.base;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,7 +38,7 @@ public class BaseMasterDataModel {
 	private String descr;
 
 	@Version
-	private Integer version;
+	private Timestamp version;
 	
 	//FIXME: You can't use @ReadOnly here, that should cause always store FALSE to database
 	@Column
@@ -75,11 +77,11 @@ public class BaseMasterDataModel {
 		this.descr = desc;
 	}
 
-	public Integer getVersion() {
+	public Timestamp getVersion() {
 		return version;
 	}
 
-	public void setVersion(Integer version) {
+	public void setVersion(Timestamp version) {
 		this.version = version;
 	}
 

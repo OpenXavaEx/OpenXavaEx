@@ -196,6 +196,9 @@ public class ContextApp {
 			
 			NamingUtil.bind(envContext, es.getJndiName(), ds);
 		}
+		
+		System.out.println(">>> DataSource ["+es.getJndiName()+"] created:");
+		System.out.println(">>> \t url: " + es.jdbcUrl);
 	}
 	
 	private static EnvSettings readEnv(){
