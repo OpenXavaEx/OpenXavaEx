@@ -1,0 +1,12 @@
+<?xml version = "1.0" encoding = "ISO-8859-1"?>
+
+<!DOCTYPE editors SYSTEM "dtds/editors.dtd">
+
+<editors>
+
+	<!-- Override the default Date editor, use format YYYY/MM/DD -->
+	<editor name="DateCalendar" url="../../xava-ex/editors/dateCalendarEditor-yyyymmdd.jsp">
+		<formatter class="org.openxava.ex.formatter.DateFormatter" />		<for-type type="java.util.Date" />
+	</editor>
+									
+</editors>
