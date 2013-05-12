@@ -15,6 +15,7 @@ import org.openxava.demoapp.base.BaseMasterDataModel;
 
 @Entity
 @Table(name="MD_SKU")
+//BP: Can use a non-persistence in @Tab and @View
 @Tab(baseCondition = "enabled=true", properties="code, name, vender, uom.displayName, price, descr")
 public class SKU extends BaseMasterDataModel{
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
@@ -23,6 +24,10 @@ public class SKU extends BaseMasterDataModel{
 	
 	@Stereotype("MONEY")
 	private BigDecimal price;
+	
+	//BP: Use image field
+	@Stereotype("PHOTO")
+	private byte [] photo;
 	
 	@Column(length=64)
 	private String vender;
@@ -49,5 +54,13 @@ public class SKU extends BaseMasterDataModel{
 
 	public void setVender(String vender) {
 		this.vender = vender;
+	}
+
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
 	}
 }

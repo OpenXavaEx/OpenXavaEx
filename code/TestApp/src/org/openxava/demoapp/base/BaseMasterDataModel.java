@@ -12,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.openxava.annotations.DefaultValueCalculator;
 import org.openxava.annotations.Hidden;
 import org.openxava.annotations.Required;
+import org.openxava.annotations.Stereotype;
 import org.openxava.calculators.TrueCalculator;
 
 /**
@@ -34,7 +35,7 @@ public class BaseMasterDataModel {
 	@Required
 	private String name;
 
-	@Column(length=1024)
+	@Stereotype("MEMO")
 	private String descr;
 
 	@Version

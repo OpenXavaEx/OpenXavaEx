@@ -48,7 +48,8 @@
 		<for-model-property model="CustomReportColumn" property="booleanValue" />	
 	</editor>	
 	<editor name="DateCalendar" url="dateCalendarEditor.jsp">
-		<formatter class="org.openxava.formatters.DateFormatter" />		<for-type type="java.util.Date" />	</editor>
+		<formatter class="org.openxava.formatters.DateFormatter" />		<for-type type="java.util.Date" />
+	</editor>
 
 	<editor name="ValidValuesCombo" url="validValuesEditor.jsp">
 		<for-valid-values />

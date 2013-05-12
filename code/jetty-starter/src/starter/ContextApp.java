@@ -31,6 +31,7 @@ import org.openxava.ex.dwr.ForceUtf8DwrServlet;
 import org.openxava.ex.json.JsonViewerServlet;
 import org.openxava.ex.tools.DynamicLoaderFilter;
 import org.openxava.ex.tools.SchemaUpdateServlet;
+import org.openxava.web.servlets.ImagesServlet;
 import org.openxava.web.servlets.ModuleServlet;
 
 /**
@@ -108,6 +109,8 @@ public class ContextApp {
         //OpenXava Servlets
         ctx.addServlet(ModuleServlet.class, "/modules/*");
         ctx.addServlet(ForceUtf8DwrServlet.class, "/dwr/*");
+        ctx.addServlet(ImagesServlet.class, "/xava/ximage");
+        ctx.addServlet(ImagesServlet.class, "/ximage");
         
         //Schema Update Servlet
         ServletHolder susSh = new ServletHolder(SchemaUpdateServlet.class);

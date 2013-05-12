@@ -7,10 +7,12 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
+import org.openxava.annotations.Hidden;
 import org.openxava.annotations.Required;
 import org.openxava.annotations.Tab;
 import org.openxava.annotations.View;
 import org.openxava.demoapp.base.BaseMasterDataModel;
+import org.openxava.demoapp.etc._Link;
 import org.openxava.demoapp.model.md.enums.MeasureCatogory;
 
 /**
@@ -24,6 +26,8 @@ import org.openxava.demoapp.model.md.enums.MeasureCatogory;
 @View(name="CodeAndName", members="code, name")
 public class UOM extends BaseMasterDataModel{
 	
+	//BP: Save the first letter of Enum to database
+	//BP: Use constant (_Link.*) to improve readability and maintainability
 	@Type(type=_Link.EnumLetterType, parameters={
 			@Parameter(name="letters", value=MeasureCatogory.LETTERS),
 			@Parameter(name="enumType", value=_Link.MeasureCatogory)
@@ -39,7 +43,9 @@ public class UOM extends BaseMasterDataModel{
 		this.category = category;
 	}
 	
-	@Transient
+	//BP: Use @Transient to define the calculated field, and take no effect to object load and store
+	//BP: Use @Transient and @Hidden to hide the calculated field
+	@Transient @Hidden
 	public String getDisplayName(){
 		return this.getCode() + " - " + this.getName();
 	}

@@ -21,7 +21,7 @@ import org.openxava.ex.cl.impl.ClassModifyChecker;
 import org.openxava.jpa.XPersistence;
 
 /**
- * To make change without restart server(FIXME: Just for development)
+ * To make change without restart server, Just for development phase
  * @author root
  */
 public class DynamicLoaderFilter implements Filter {

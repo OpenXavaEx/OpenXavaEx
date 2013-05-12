@@ -1,4 +1,4 @@
-package org.openxava.demoapp.model.md;
+package org.openxava.demoapp.etc;
 
 /**
  * Some constants, especially for annotation usage
