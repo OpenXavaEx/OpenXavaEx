@@ -128,7 +128,10 @@ public class ContextApp {
         ctx.addFilter(fh, "*", FilterMapping.REQUEST);
 
         server.start();
-        System.out.println(server.dump());
+        //System.out.println(server.dump());
+        System.out.println("********************************************************************************");
+        System.out.println("Embeded Jetty("+Server.getVersion()+") Server started at port ["+es.httpPort+"].");
+        System.out.println("********************************************************************************");
         server.join();
 	}
 

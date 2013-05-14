@@ -1,0 +1,12 @@
+<?xml version = "1.0" encoding = "ISO-8859-1"?>
+
+<!DOCTYPE editors SYSTEM "dtds/editors.dtd">
+
+<editors>
+
+	<editor name="PR_RequireDate_Editor" url="../../xava-ex/editors/Shell.jsp">
+		<property name="xava-ex.editor.shell.class" value="org.openxava.demoapp.model.purchase.RequirementFormDetail$RequireDateEditor" />
+		<formatter class="org.openxava.ex.formatter.DateFormatter" />
+	</editor>
+									
+</editors>

@@ -2,26 +2,38 @@ package org.openxava.demoapp.model.md;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import org.openxava.annotations.DescriptionsList;
+import org.openxava.annotations.Hidden;
 import org.openxava.annotations.ReferenceView;
+import org.openxava.annotations.Required;
 import org.openxava.annotations.Stereotype;
 import org.openxava.annotations.Tab;
+import org.openxava.annotations.View;
 import org.openxava.demoapp.base.BaseMasterDataModel;
+import org.openxava.demoapp.model.purchase.RequirementFormDetail;
 
 @Entity
 @Table(name="MD_SKU")
 //BP: Can use a non-persistence in @Tab and @View
-@Tab(baseCondition = "enabled=true", properties="code, name, vender, uom.displayName, price, descr")
+@Tab(baseCondition = "enabled=true", properties="code, name, vendor.name, uom.displayName, price, descr")
+@View(name="V-SKU-code-name", members="code; nameWithUom")
 public class SKU extends BaseMasterDataModel{
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	@ReferenceView("CodeAndName")	//Code and name
+	@ReferenceView("V-UOM-code-name")	//Code and name
 	private UOM uom;
 	
+	@ManyToOne(fetch=FetchType.LAZY, optional=false)
+	//BP: use @DescriptionsList to present a combobox to select
+	@DescriptionsList(descriptionProperties="code, name")
+	@Required
+	private Vendor vendor;
+
 	@Stereotype("MONEY")
 	private BigDecimal price;
 	
@@ -29,9 +41,6 @@ public class SKU extends BaseMasterDataModel{
 	@Stereotype("PHOTO")
 	private byte [] photo;
 	
-	@Column(length=64)
-	private String vender;
-
 	public UOM getUom() {
 		return uom;
 	}
@@ -48,19 +57,25 @@ public class SKU extends BaseMasterDataModel{
 		this.price = price;
 	}
 
-	public String getVender() {
-		return vender;
-	}
-
-	public void setVender(String vender) {
-		this.vender = vender;
-	}
-
 	public byte[] getPhoto() {
 		return photo;
 	}
 
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
+	}
+
+	public Vendor getVendor() {
+		return vendor;
+	}
+
+	public void setVendor(Vendor vendor) {
+		this.vendor = vendor;
+	}
+
+	/** BP: Let @ReferenceView({@link RequirementFormDetail#sku}) display uom.name property (can't display uom.name directly) */ 
+	@Transient @Hidden
+	public String getNameWithUom(){
+		return this.getName() + " ("+this.getUom().getName()+")";
 	}
 }

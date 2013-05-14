@@ -23,7 +23,7 @@ import org.openxava.demoapp.model.md.enums.MeasureCatogory;
 @Entity
 @Table(name="MD_UOM")
 @Tab(baseCondition = "enabled=true", properties="code, name, category, descr")
-@View(name="CodeAndName", members="code, name")
+@View(name="V-UOM-code-name", members="code; name")
 public class UOM extends BaseMasterDataModel{
 	
 	//BP: Save the first letter of Enum to database
