@@ -8,5 +8,6 @@
 	<classpathentry kind="src" path="xava"/>
 	<classpathentry kind="src" path="i18n"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OpenXavaEx"/>
+	<classpathentry kind="lib" path="/OpenXavaExBase/lib/fastjson-1.1.30.jar" sourcepath="/OpenXavaExBase/lib/fastjson-1.1.30-sources.jar"/>
 	<classpathentry kind="output" path="web/WEB-INF/classes"/>
 </classpath>

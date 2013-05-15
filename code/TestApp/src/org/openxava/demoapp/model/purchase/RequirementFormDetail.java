@@ -1,7 +1,12 @@
 package org.openxava.demoapp.model.purchase;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -10,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.servlet.http.HttpServletRequest;
 
 import org.openxava.annotations.Depends;
 import org.openxava.annotations.Editor;
@@ -22,7 +28,10 @@ import org.openxava.demoapp.base.BaseBillDetailModel;
 import org.openxava.demoapp.model.md.SKU;
 import org.openxava.ex.editor.shell.IShellEditor;
 import org.openxava.ex.editor.shell.ShellEditorContext;
+import org.openxava.formatters.IFormatter;
 import org.openxava.jpa.XPersistence;
+
+import com.alibaba.fastjson.JSON;
 
 @Entity
 @Table(name="PO_PRD")
@@ -97,16 +106,85 @@ public class RequirementFormDetail extends BaseBillDetailModel{
 	}
 	
 	public static class RequireDateEditor implements IShellEditor{
+		private IFormatter fmt;
+		private HttpServletRequest request;
+		private ArrayList<Map<String, Object>> treeData;
+		private String rawValue;
+		private HashSet<String> monthSet;
+
+		private void init(ShellEditorContext ctx){
+			this.fmt = ctx.getPropertyFormatter();
+			this.request = ctx.getRequest();
+			this.monthSet = new HashSet<String>();
+			this.treeData = new ArrayList<Map<String,Object>>();
+			this.rawValue = ctx.getRawValue();
+		}
 		public String render(ShellEditorContext ctx) {
+			init(ctx);
+			
 			@SuppressWarnings("unchecked")
 			String skuId = ((Map<String,String>)ctx.getView().getValue("sku")).get("id");
+			if (null==skuId){
+				//BP: The editor should consider null data(always happened when add new)
+				return "<i>Please select SKU ...</i>";
+			}
 			SKU sku = XPersistence.getManager().find(SKU.class, skuId);
-			return "<div style='background-color:CornflowerBlue;width:240px;height:160px'>"+sku.getDescr()+"</div>";
+			int leadTime = sku.getVendor().getLeadTimeDays();
+
+			for(int i=0; i<30; i++){	//A month after leadTime
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(System.currentTimeMillis() + (leadTime+i)*24*60*60*1000L);
+				
+				createZTreeNode(cal);
+			}
+			Map<String, Object> datas = new HashMap<String, Object>();
+			
+			datas.put("nodes", JSON.toJSONString(this.treeData));
+			datas.put("vendor", sku.getVendor().getName());
+			datas.put("leadTime", leadTime);
+			String result = ctx.parseFtl("RequireDateEditor.ftl", datas, this.getClass());
+			
+			return result;
 		}
 
 		public String renderReadOnly(ShellEditorContext ctx) {
 			return ctx.getRawValue();
 		}
 		
+		private void createZTreeNode(Calendar date){
+			try {
+				//First month day as the tag of month 
+				Calendar month = Calendar.getInstance();
+				month.setTime(date.getTime());
+				month.set(Calendar.DAY_OF_MONTH, 1);
+				//ID for date
+				String value = fmt.format(request, date.getTime());
+				int weekDay = date.get(Calendar.DAY_OF_WEEK);
+				String dId = "D-" + value;
+				//ID for month
+				String mid = month.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
+						+ ", " + month.get(Calendar.YEAR);
+				
+				if (! this.monthSet.contains(mid)){
+					Map<String, Object> mData = new HashMap<String, Object>();
+					mData.put("id", mid);
+					mData.put("name", mid);
+					mData.put("open", true);
+					mData.put("nocheck", true);
+					this.monthSet.add(mid);
+					this.treeData.add(mData);
+				}
+				
+				Map<String, Object> data = new HashMap<String, Object>();
+				data.put("id", dId);
+				data.put("name", value);
+				data.put("pId", mid);
+				data.put("checked", value.equals(this.rawValue));
+				data.put("chkDisabled", !( weekDay >= Calendar.MONDAY && weekDay <= Calendar.FRIDAY ) );
+				this.treeData.add(data);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 }

@@ -1,3 +1,6 @@
+/**
+ * Some utility function
+ */
 (function(global){
     //Get size of window, from http://www.howtocreate.co.uk/tutorials/javascript/browserwindow
     var getWindowSize = function () {
@@ -32,10 +35,25 @@
             document.getElementsByTagName("head")[0].appendChild(fileref)
         }
     }
-	
+    
+    //Wrtite html into an IFrame, with init-parameters
+    var fillIFrame = function(iframeId, html, initParams){
+        if (null==initParams) initParams = {};
+        var theIframe = document.getElementById(iframeId);
+        var iFrameWindow = theIframe.contentWindow || theIframe.documentWindow;
+        var iframeDoc = iFrameWindow.document;
+        iframeDoc.open();
+        for (var o in initParams){
+            iFrameWindow[o] = initParams[o];
+        }
+        iframeDoc.write(html);
+        iframeDoc.close();
+    }
+
 	global.xavaEx = {
 			getWindowSize: getWindowSize,
-			loadCSS: loadCSS
+			loadCSS: loadCSS,
+			fillIFrame: fillIFrame
 	};
 	
 })(this);

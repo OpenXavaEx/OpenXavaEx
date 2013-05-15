@@ -14,7 +14,7 @@ import org.openxava.demoapp.base.BaseMasterDataModel;
  */
 @Entity
 @Table(name="MD_Vendor")
-@Tab(baseCondition = "enabled=true", properties="code, name, descr")
+@Tab(baseCondition = "enabled=true", properties="code, name, leadTimeDays, descr")
 public class Vendor extends BaseMasterDataModel{
 	@Column
 	private int leadTimeDays;

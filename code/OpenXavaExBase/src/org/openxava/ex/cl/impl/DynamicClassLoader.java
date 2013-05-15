@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -33,6 +35,7 @@ public class DynamicClassLoader extends ClassLoader {
 	
 	private List<File> classpath = new ArrayList<File>();    							//List<File>
     private Map<String, List<URL>> resourcesCache = new HashMap<String, List<URL>>();   //Map<String, URL>
+    private Set<File> syncedTopFolder = new HashSet<File>();	//Remember the TopFolder which is called by rememberTopFolder(...)
     private ClassModifyChecker checker;
     private String classpath4Disp;		//Just for display in log
 
@@ -108,8 +111,9 @@ public class DynamicClassLoader extends ClassLoader {
             File path = (File)this.classpath.get(i);
             
             //Remember the directory's mask
-            if (path.isDirectory()){
+            if ( (!syncedTopFolder.contains(path)) && path.isDirectory()){
             	this.checker.rememberTopFolder(path);
+            	syncedTopFolder.add(path);
             }
             
             if (null!=vo){

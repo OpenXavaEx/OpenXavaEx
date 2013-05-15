@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%@ include file="imports.jsp"%>
 
 <%@page import="java.io.File"%>
@@ -15,7 +16,11 @@
 <%@page import="org.openxava.web.servlets.Servlets"%>
 <%@page import="org.apache.commons.logging.LogFactory" %>
 <%@page import="org.apache.commons.logging.Log" %>
-
+<%
+response.setHeader("Pragma","No-cache");
+response.setHeader("Cache-Control","no-cache");
+response.setDateHeader("Expires", -10);
+%>
 <%!private static Log log = LogFactory.getLog("module.jsp");
 
 	private String getAdditionalParameters(HttpServletRequest request) {
@@ -84,10 +89,11 @@
 	if (!isPortlet) {
 %>
  
-<!DOCTYPE html>
-
 <head>
 	<title><%=managerHome.getModuleDescription()%></title>
+	
+	<!-- The bootstarp javascript libs -->
+	<script type="text/javascript" src="<%=contextPath%>/xava-ex/libs/a/xava-ex.js"></script>
 	
 	<%=style.getMetaTags()%>
 	
@@ -165,7 +171,8 @@
 		for (int i = 0; i < jsEditors.length; i++) {
 			if (jsEditors[i].endsWith(".js")) {
 	%>
-	<script type="text/javascript" src="<%=contextPath%>/xava/editors/js/<%=jsEditors[i]%>?ox=<%=version%>"></script>
+	<!-- <script type="text/javascript" src="<%=contextPath%>/xava/editors/js/<%=jsEditors[i]%>?ox=<%=version%>"></script> -->
+	<script type="text/javascript" src="<%=contextPath%><%=jsEditors[i]%>?ox=<%=version%>"></script>
 	<%
 			}
 		}

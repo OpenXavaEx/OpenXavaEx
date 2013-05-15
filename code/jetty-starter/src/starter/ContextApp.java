@@ -92,10 +92,10 @@ public class ContextApp {
         //Allow find resource in multi-folder
         Resource res = new ResourceCollection(
         		buildFolderResource("jetty-starter/war-patch"),
-        		buildFolderResource(es.ctxPath + "/web"),
         		//buildFolderResource("jetty-starter/war-base"),
         		buildFolderResource("OpenXavaEx/web"),
         		buildFolderResource("OpenXava/web"),
+        		buildFolderResource(es.ctxPath + "/web"),
         		null
         );
         ctx.setBaseResource(res);
@@ -125,7 +125,10 @@ public class ContextApp {
         fh.setInitParameter(DynamicLoaderFilter.INIT_PARAM_NAME_CLASSPATH,
         		getAppClassPathList(es.ctxPath)
         );
-        ctx.addFilter(fh, "*", FilterMapping.REQUEST);
+        ctx.addFilter(fh, "*.jsp", FilterMapping.REQUEST);
+        ctx.addFilter(fh, "/modules/*", FilterMapping.REQUEST);
+        ctx.addFilter(fh, "/dwr/*", FilterMapping.REQUEST);
+        ctx.addFilter(fh, "/schema-update/*", FilterMapping.REQUEST);
 
         server.start();
         //System.out.println(server.dump());

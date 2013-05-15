@@ -90,7 +90,7 @@ public class ClassModifyChecker {
     private long getModificationMask(File dir){
     	long result = 0L;
     	@SuppressWarnings("unchecked")
-		Iterator<File> files = FileUtils.iterateFiles(dir, null, true);
+		Iterator<File> files = FileUtils.iterateFiles(dir, new String[]{"class", "properties"}, true);
     	while (files.hasNext()){
     		File f = files.next();
     		result += f.lastModified();

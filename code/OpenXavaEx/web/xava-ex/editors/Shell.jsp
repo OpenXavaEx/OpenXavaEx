@@ -27,7 +27,7 @@ String script = request.getParameter("script");
 boolean readOnlyAsLabel = org.openxava.util.XavaPreferences.getInstance().isReadOnlyAsLabel();
 
 //Get the editor class and render it
-ShellEditorContext ctx = new ShellEditorContext(context, view, p, fvalue, errors, request);
+ShellEditorContext ctx = new ShellEditorContext(propertyKey, context, view, p, fvalue, errors, request);
 if (editable || !readOnlyAsLabel) { 
 %>
 <div><%=ShellEditorContext.render(ctx)%></div>
@@ -39,4 +39,4 @@ if (editable || !readOnlyAsLabel) {
 <%
 }
 %>
-<input type="hidden" name="<%=propertyKey%>" value="<%=fvalue%>">
+<input type="hidden" id="<%=propertyKey%>" name="<%=propertyKey%>" value="<%=fvalue%>">
