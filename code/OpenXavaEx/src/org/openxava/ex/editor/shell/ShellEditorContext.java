@@ -1,6 +1,5 @@
 package org.openxava.ex.editor.shell;
 
-import java.util.Collection;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,9 +9,7 @@ import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.ex.utils.FreeMarkerEngine;
 import org.openxava.formatters.IFormatter;
 import org.openxava.model.meta.MetaProperty;
-import org.openxava.util.Is;
 import org.openxava.util.Messages;
-import org.openxava.util.XavaResources;
 import org.openxava.view.View;
 import org.openxava.web.WebEditors;
 import org.openxava.web.meta.MetaEditor;
@@ -123,7 +120,7 @@ public class ShellEditorContext {
 			engine.setModel("values", this.getView().getValues());
 			engine.setModels(moreDatas);
 			String result;
-			result = engine.parseResource(loaderClass, resource);
+			result = engine.parseResource(loaderClass, resource, "UTF-8");
 			return result;
 		} catch (TemplateException e) {
 			throw new RuntimeException(e);
