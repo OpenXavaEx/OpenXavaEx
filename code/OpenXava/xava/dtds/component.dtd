@@ -35,10 +35,13 @@
   label CDATA #IMPLIED
   model CDATA #IMPLIED
   members CDATA "*"  
-  extends CDATA #IMPLIED
+  extends CDATA #IMPLIED  
 >
 
 <!ELEMENT members (#PCDATA|group|section|action)*>
+<!ATTLIST members
+	aligned-by-columns (true|false) "false"
+>
 
 <!ELEMENT section (#PCDATA|section|group|action)*>
 <!ATTLIST section

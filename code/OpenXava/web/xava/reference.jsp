@@ -1,3 +1,4 @@
+<%@page import="org.openxava.web.layout.LayoutFactory"%>
 <%@ include file="imports.jsp"%>
 
 <%@ page import="java.util.Collection" %>
@@ -208,9 +209,11 @@ if (!frame) while (itActions.hasNext()) {
 %>
 <% if (!composite) { %>
 </span>
-<% } %>
+<% }
+if (!LayoutFactory.rendererDefined()) {%>
 <%=postEditor%>
-<% if (!onlyEditor && labelFormat == MetaPropertyView.SMALL_LABEL) { %>
+<%}
+if (!onlyEditor && labelFormat == MetaPropertyView.SMALL_LABEL) { %>
 </td></tr>
 </table>
 <% } %>

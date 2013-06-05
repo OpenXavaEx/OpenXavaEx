@@ -193,6 +193,7 @@ public class GenerateReportServlet extends HttpServlet {
 					tab.setRequest(request);
 					parameters.put("Title", tab.getTitle());				
 					parameters.put("Organization", getOrganization());
+					parameters.put("Date", getCurrentDate());
 					for (String totalProperty: tab.getTotalPropertiesNames()) { 								
 						parameters.put(totalProperty + "__TOTAL__", getTotal(request, tab, totalProperty));
 					}
@@ -225,6 +226,10 @@ public class GenerateReportServlet extends HttpServlet {
 			log.error(ex.getMessage(), ex);
 			throw new ServletException(XavaResources.getString("report_error"));
 		}		
+	}
+
+	private String getCurrentDate() {
+		return java.text.DateFormat.getDateInstance(DateFormat.MEDIUM, Locales.getCurrent()).format(new java.util.Date());
 	}
 
 	private String getFileName(Tab tab) { 

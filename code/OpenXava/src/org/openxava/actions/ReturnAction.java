@@ -11,7 +11,7 @@ package org.openxava.actions;
 public class ReturnAction extends ViewBaseAction implements INavigationAction {
 
 	public void execute() throws Exception {
-		returnToPreviousView();
+		returnToPreviousView();		
 	}	
 	
 	public String [] getNextControllers() {

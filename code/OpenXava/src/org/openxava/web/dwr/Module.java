@@ -96,7 +96,7 @@ public class Module extends DWRBase {
 			}					
 			result.setViewMember(getView().getMemberName());
 			result.setStrokeActions(getStrokeActions());
-			result.setSelectedRows(getSelectedRows());
+			result.setSelectedRows(getSelectedRows());			
 			return result;
 		}
 		catch (SecurityException ex) {
@@ -197,7 +197,6 @@ public class Module extends DWRBase {
 		request(request, response, application, module, null, null, null, null, null, false);  		
 		memorizeLastMessages();
 		manager.setResetFormPostNeeded(true);
-		
 	}
 
 	private InputStream getURIAsStream(String jspFile, Map values, Map multipleValues, String[] selected, String[] deselected, String additionalParameters) throws Exception {
@@ -247,30 +246,39 @@ public class Module extends DWRBase {
 	}
 
 	private void setDialogLevel(Result result) {
-		result.setDialogLevel(manager.getDialogLevel());		
-		if (manager.isShowDialog() && manager.isHideDialog()) return;		
-		if (manager.isShowDialog()) {
+		result.setDialogLevel(manager.getDialogLevel());
+		if (manager.isShowDialog() && manager.isHideDialog()) return;
+		if (firstRequest && manager.getDialogLevel() > 0) {
+			result.setShowDialog(true);			
+			restoreDialogTitle(result); 
+		}		
+		else if (manager.isShowDialog()) {
 			result.setShowDialog(manager.isShowDialog());						
 			setDialogTitle(result);
 		}
-		if (manager.isHideDialog()) { 
+		else if (manager.isHideDialog()) { 
 			result.setHideDialog(true);
-		}
-		if (firstRequest && manager.getDialogLevel() > 0) { 
-			result.setShowDialog(true);
-		}
+			restoreDialogTitle(result); 						
+		}		
+		result.setResizeDialog(manager.getDialogLevel() > 0 && (getView().isReloadNeeded() || manager.isReloadViewNeeded()));		
+	}
+	
+	private void restoreDialogTitle(Result result) {
+		result.setDialogTitle((String) getView().getObject("xava.dialogTitle"));
 	}
 
-	private void setDialogTitle(Result result) { 		
+	private void setDialogTitle(Result result) {				
 		if (!Is.emptyString(getView().getTitle())) {
 			result.setDialogTitle(getView().getTitle());
 		}
-		else {
+		else {	
 			MetaAction lastAction = manager.getLastExecutedMetaAction();
 			String model = Labels.get(getView().getModelName());
 			if (lastAction == null) result.setDialogTitle(model);
+			else if (Is.emptyString(model)) result.setDialogTitle(lastAction.getDescription()); 
 			else result.setDialogTitle(lastAction.getDescription() + " - " + model);
 		}		
+		getView().putObject("xava.dialogTitle", result.getDialogTitle());
 	}
 
 	private Map getChangedParts(Map values) { 

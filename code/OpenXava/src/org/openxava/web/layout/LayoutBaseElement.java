@@ -51,4 +51,11 @@ public abstract class LayoutBaseElement implements ILayoutElement {
 		return groupLevel;
 	}
 
+	/**
+	 * @see org.openxava.web.layout.ILayoutElement#getGroupLevel(java.lang.int)
+	 */
+	public void setGroupLevel(int groupLevel) {
+		this.groupLevel = groupLevel;
+	}
+	
 }

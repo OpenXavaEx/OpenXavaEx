@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <%@ include file="imports.jsp"%>
 
 <%@page import="java.io.File"%>
@@ -16,11 +15,7 @@
 <%@page import="org.openxava.web.servlets.Servlets"%>
 <%@page import="org.apache.commons.logging.LogFactory" %>
 <%@page import="org.apache.commons.logging.Log" %>
-<%
-response.setHeader("Pragma","No-cache");
-response.setHeader("Cache-Control","no-cache");
-response.setDateHeader("Expires", -10);
-%>
+
 <%!private static Log log = LogFactory.getLog("module.jsp");
 
 	private String getAdditionalParameters(HttpServletRequest request) {
@@ -69,31 +64,32 @@ response.setDateHeader("Expires", -10);
 	manager.setApplicationName(request.getParameter("application"));
 
 	manager.setModuleName(module); // In order to show the correct description in head
-
+	
+	boolean restoreLastMessage = false;
 	if (manager.isFormUpload()) {
 		new Module().requestMultipart(request, response, app, module);
 	}
 	else {
-		Module.restoreLastMessages(request, app, module); 
+		restoreLastMessage = true;
 	}	
+
 	boolean isPortlet = (session.getAttribute(Ids.decorate(app, request
 			.getParameter("module"), "xava.portlet.uploadActionURL")) != null);
 
 	Module.setPortlet(isPortlet);
 	String version = org.openxava.controller.ModuleManager.getVersion();
-	//"getRealPath" can't support the multi-resource container setting
-	//String realPath = request.getSession().getServletContext().getRealPath("/");			
+	String realPath = request.getSession().getServletContext()
+			.getRealPath("/");			
 %>
 <jsp:include page="execute.jsp"/>
 <%
 	if (!isPortlet) {
 %>
  
+<!DOCTYPE html>
+
 <head>
 	<title><%=managerHome.getModuleDescription()%></title>
-	
-	<!-- The bootstarp javascript libs -->
-	<script type="text/javascript" src="<%=contextPath%>/xava-ex/libs/a/xava-ex.js"></script>
 	
 	<%=style.getMetaTags()%>
 	
@@ -147,8 +143,7 @@ response.setDateHeader("Expires", -10);
 		%>	
 	<script type='text/javascript' src='<%=contextPath%>/xava/js/calendar.js?ox=<%=version%>'></script>
 	<%
-		//if (new File(realPath + "/xava/js/custom-editors.js").exists()) {
-		if (application.getResource("/xava/js/custom-editors.js")!=null) {
+		if (new File(realPath + "/xava/js/custom-editors.js").exists()) {
 	%>
 	<script type='text/javascript' src='<%=contextPath%>/xava/js/custom-editors.js?ox=<%=version%>'></script>
 	<%
@@ -164,15 +159,13 @@ response.setDateHeader("Expires", -10);
 	<script type="text/javascript" src="<%=contextPath%>/xava/js/jquery-ui.js?ox=<%=version%>"></script>	
 	<script type="text/javascript" src="<%=contextPath%>/xava/js/jquery.bgiframe.js?ox=<%=version%>"></script>
 	<%
-		//File jsEditorsFolder = new File(realPath + "/xava/editors/js");		
-		//String[] jsEditors = jsEditorsFolder.list();
-		String[] jsEditors = (String[])application.getResourcePaths("/xava/editors/js").toArray(new String[0]);
+		File jsEditorsFolder = new File(realPath + "/xava/editors/js");		
+		String[] jsEditors = jsEditorsFolder.list();
 		Arrays.sort(jsEditors);
 		for (int i = 0; i < jsEditors.length; i++) {
 			if (jsEditors[i].endsWith(".js")) {
 	%>
-	<!-- <script type="text/javascript" src="<%=contextPath%>/xava/editors/js/<%=jsEditors[i]%>?ox=<%=version%>"></script> -->
-	<script type="text/javascript" src="<%=contextPath%><%=jsEditors[i]%>?ox=<%=version%>"></script>
+	<script type="text/javascript" src="<%=contextPath%>/xava/editors/js/<%=jsEditors[i]%>?ox=<%=version%>"></script>
 	<%
 			}
 		}
@@ -194,7 +187,10 @@ response.setDateHeader("Expires", -10);
 	}
 %> 
 <% 
-boolean coreViaAJAX = !manager.getPreviousModules().isEmpty() || manager.getDialogLevel() > 0 || manager.hasInitForwardActions(); 
+boolean coreViaAJAX = !manager.getPreviousModules().isEmpty() || manager.getDialogLevel() > 0 || manager.hasInitForwardActions();
+if (!coreViaAJAX && restoreLastMessage) {
+	Module.restoreLastMessages(request, app, module);
+}	
 
 if (manager.isResetFormPostNeeded()) {	
 %>		

@@ -10,6 +10,7 @@ import javax.rmi.*;
 import org.apache.commons.logging.*;
 import org.openxava.component.*;
 import org.openxava.ejbx.*;
+import org.openxava.jpa.*;
 import org.openxava.model.impl.*;
 import org.openxava.model.meta.*;
 import org.openxava.util.*;
@@ -146,7 +147,7 @@ public class MapFacade {
 		catch (RemoteException rex) {
 			throw new SystemException(rex);
 		}
-	}	
+	}
 	
 	/**
 	 * Creates a new aggregate from a map with its initial values. <p>	 

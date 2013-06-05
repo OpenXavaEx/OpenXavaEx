@@ -30,6 +30,7 @@ public class ViewParser extends XmlElementsNames {
 		else  {
 			v.setMembersNames(attributeMembers);
 		}
+		v.setAlignedByColumns(isAlignedByColumns(getMembersElement(el, lang), lang)); 
 		fillMediator(el, v, lang);
 		fillProperties(el, v, lang);
 		fillReferenceViews(el, v, lang);
@@ -40,14 +41,19 @@ public class ViewParser extends XmlElementsNames {
 		return v;
 	}
 	
-	private static String getMemberElementMembers(Element el, int lang) {
+	private static Element getMembersElement(Element el, int lang) { 
 		NodeList l = el.getElementsByTagName(xmembers[lang]);
 		if (l.getLength() < 1)
 			return null;
-		return getMembers(l.item(0), lang);
+		return (Element) l.item(0);
+	}
+
+	private static String getMemberElementMembers(Element el, int lang) {
+		return getMembers(getMembersElement(el, lang), lang);		
 	}
 	
-	private static String getMembers(Node n, int lang) {		
+	private static String getMembers(Node n, int lang) {
+		if (n == null) return null; 
 		NodeList list = n.getChildNodes();
 		StringBuffer r = new StringBuffer();
 		for (int i = 0; i < list.getLength(); i++) {
@@ -96,10 +102,16 @@ public class ViewParser extends XmlElementsNames {
 				throw new XavaException("section_name_or_label_required");			
 			}						
 			String members = getMembers(s, lang);
-			boolean alignedByColumns = ParserUtil.getAttributeBoolean(s, xaligned_by_columns[lang]);
+			boolean alignedByColumns = isAlignedByColumns(s, lang);
 			MetaView newSection = v.addSection(name, label, members, alignedByColumns);
 			fillSectionsImpl(s, newSection, lang);
 		}
+	}
+	
+	private static boolean isAlignedByColumns(Element el, int lang) {
+		if (el == null) return false;
+		if (ParserUtil.getAttributeBoolean(el, xaligned_by_columns[lang])) return true;
+		return XavaPreferences.getInstance().isAlignedByColumns();
 	}
 	
 	private static void fillGroups(Element el, MetaView v, int lang) throws XavaException {
@@ -110,7 +122,7 @@ public class ViewParser extends XmlElementsNames {
 			String name = n.getAttribute(xname[lang]);
 			String label = n.getAttribute(xlabel[lang]);
 			String members = getMembers(n, lang);
-			boolean alignedByColumns = ParserUtil.getAttributeBoolean(n, xaligned_by_columns[lang]);  
+			boolean alignedByColumns = isAlignedByColumns(n, lang);  
 			v.addMetaGroup(name, label, members, alignedByColumns);
 		}
 	}

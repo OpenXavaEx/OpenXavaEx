@@ -4,7 +4,6 @@ import java.util.*;
 
 
 
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.formatters.UpperCaseFormatter;
 import org.openxava.generators.xmlparse.*;
 import org.openxava.model.meta.*;
@@ -56,8 +55,7 @@ public class GeneratorFactory {
 	}
 	
 	private static Object instantiate(String className) throws Exception {
-		//return Class.forName(className).newInstance();		
-		return ClassLoaderUtil.forName(GeneratorFactory.class, className).newInstance();		
+		return Class.forName(className).newInstance();		
 	}
 	
 	private static void configure() throws XavaException {

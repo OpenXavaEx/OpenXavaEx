@@ -16,13 +16,11 @@ public class AggregateMapping extends ModelMapping {
 		
 	public void addReferenceMapping(ReferenceMapping referenceMapping) throws XavaException { 		
 		super.addReferenceMapping(referenceMapping);
-
 		if (!getMetaModel().containsMetaReference(referenceMapping.getReference())) {
 			MetaReference r = new MetaReference();
 			r.setReferencedModelName(Strings.firstUpper(referenceMapping.getReference()));
 			r.setAggregate(false); 
 			getMetaModel().addMetaReference(r);
-			getMetaModel().setContainerModelName(r.getReferencedModelName()); 
 		}
 
 	}

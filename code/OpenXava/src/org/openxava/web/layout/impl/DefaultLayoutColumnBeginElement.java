@@ -15,6 +15,8 @@ import org.openxava.web.layout.LayoutBaseElement;
 public class DefaultLayoutColumnBeginElement extends LayoutBaseElement
 		implements ILayoutColumnBeginElement {
 
+	private int columnIndex;
+	
 	public DefaultLayoutColumnBeginElement(View view, int groupLevel) {
 		super(view, groupLevel);
 	}
@@ -27,11 +29,27 @@ public class DefaultLayoutColumnBeginElement extends LayoutBaseElement
 	}
 	
 	/**
+	 * @return the columnIndex
+	 */
+	public int getColumnIndex() {
+		return columnIndex;
+	}
+
+	/**
+	 * @param columnIndex the columnIndex to set
+	 */
+	public void setColumnIndex(int columnIndex) {
+		this.columnIndex = columnIndex;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "ColumnBegin [groupLevel=" + getGroupLevel() + "]";
+		return "ColumnBegin [groupLevel=" + getGroupLevel()
+				+ ", columnIndex=" + getColumnIndex()
+				+ "]";
 	}
 
 }

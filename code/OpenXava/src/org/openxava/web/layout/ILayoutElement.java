@@ -23,4 +23,6 @@ public interface ILayoutElement {
 	void render(ILayoutPainter layoutPainter);
 	
 	int getGroupLevel();
+	
+	void setGroupLevel(int groupLevel);
 }

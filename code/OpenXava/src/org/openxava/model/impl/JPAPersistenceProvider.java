@@ -7,6 +7,7 @@ import javax.ejb.*;
 import javax.persistence.*;
 
 import org.apache.commons.logging.*;
+import org.hibernate.validator.*;
 import org.openxava.jpa.*;
 import org.openxava.model.meta.*;
 import org.openxava.tab.impl.*;
@@ -30,20 +31,50 @@ public class JPAPersistenceProvider extends POJOPersistenceProviderBase {
 		}
 		catch (EntityNotFoundException ex) {
 			// As in JPA specification find does not throw EntityNotFoundException
-			// but Hibernate (at least 3.2RC2) throw it (maybe an bug?)
+			// but Hibernate (at least 3.2RC2) throw it (maybe a bug?)
 			return null;
 		}
 	}
 	
 	protected void persist(Object object) {
-		XPersistence.getManager().persist(object);		
+		try { 
+			XPersistence.getManager().persist(object);
+		}
+		catch (org.openxava.validators.ValidationException ex) {
+			rollback(); 
+			throw ex;
+		}
+		catch (javax.validation.ValidationException ex) { 
+			rollback();
+			throw new org.openxava.validators.ValidationException(ex.getMessage());
+		}		
 	}
 	 
 	public void remove(MetaModel metaModel, Map keyValues)
-			throws RemoveException, XavaException {
+			throws RemoveException, XavaException {  
 		try {
 			Object model = find(metaModel, keyValues, false);  
 			XPersistence.getManager().remove(model);
+		}
+		catch (org.openxava.validators.ValidationException ex) {
+			rollback();
+			throw new org.openxava.validators.ValidationException(XavaResources.getString("remove_error",
+					metaModel.getName(), XavaResources.getString(ex.getMessage())));
+		}
+		catch (javax.validation.ValidationException ex) {
+			rollback();
+			throw new org.openxava.validators.ValidationException(XavaResources.getString("remove_error",
+					metaModel.getName(), XavaResources.getString(ex.getMessage())));
+		}		
+		catch (org.hibernate.validator.InvalidStateException ex) {
+			rollback();
+			InvalidValue [] invalidValues = ex.getInvalidValues();
+			StringBuffer message = new StringBuffer();
+			for (int i=0; i<invalidValues.length; i++) {
+				message.append(XavaResources.getString(Locales.getCurrent(), invalidValues[i].getMessage()));			
+			}
+			throw new org.openxava.validators.ValidationException(XavaResources.getString("remove_error",
+					metaModel.getName(), message));			
 		}
 		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);

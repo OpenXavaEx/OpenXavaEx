@@ -18,6 +18,8 @@ public class MetaApplications {
 
 	private static Map metaAplicacions;
 	
+	
+	
 	/**
 	 * Only call this from parser.
 	 */

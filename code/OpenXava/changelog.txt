@@ -1,6 +1,36 @@
 Change Log for OpenXava project
 ===============================
 
+OpenXava 4.7.1 (2013-5-28)
+--------------------------
+- New alignedByColumns property in xava.properties to aligned all the members by columns in the user interface. 
+- Support of # for root view, also available as aligned-by-columns for classic XML components.
+- Images gallery editor uses a dialog.
+- Russian documentation improved.
+- New layout engine improved again, though it is still in BETA it is perfectly usable.
+- New generic controller Close useful for dialogs with just a close button.
+- On closing a dialog if it has an action named return, volver, close or cerrar, the action is called automatically.
+- Counter injected in IAggregateOidCalculator now is a random number. It only applies to XML classic components.
+- Gallery.removeImage action asks for user confirmation.
+- New clearCondition() method in Tab, to clear the condition values and comparators.
+- Some new common use labels to be used in applications.
+- Fix: Adding images to a gallery from a dialog produces a JavaScript error.
+- Fix: Methods assertDialog(), assertNoDialog(), assertDialogTitle(), closeDialog() of ModuleTestBase fail after upload a file.
+- Fix: Title for dialogs with no associated model has an unneeded hyphen.
+- Fix: Dialog titles are lost when closing dialogs after upload a file from a dialog.    
+- Fix: When elements are hidden or shown inside a dialog the dialog width is not adjusted. 
+- Fix: With two embedded collections of the same type adding to the second collection adds the element to the first one.  
+- Fix: View.getValues() returns only a copy of the first tree level, so it produces some lateral effects sometimes.
+- Fix: If updating an entity fails referenced objects can be left created.
+- Fix: Filters in collections are stored between elements.
+- Fix: A ValidationException (both org.openxava and javax.validation) from a callback method shows an ugly message to the user.
+- Fix: It loses the added or removed actions in the list when you change to the detail mode.
+- Fix: Grammatical errors in English messages. 
+- Fix: Date in footer of PDF reports is formatted using server locale instead of client locale.
+- Fix: Composite structure fails when the parent reference is not named as the entity.
+- Fix: Checkbox editors for non-boolean values does not work. 
+- Fix: Polymorphic reference from a base class fails.
+
 OpenXava 4.7 (2013-4-2)
 -----------------------
 - ExtendedPrint.myReports stores all the generated reports, so the user can get them by name later. 

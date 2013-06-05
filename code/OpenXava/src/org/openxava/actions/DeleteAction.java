@@ -24,14 +24,8 @@ public class DeleteAction extends ViewDetailAction {
 			return;
 		}
 		Map keyValues = getView().getKeyValues();
-		try {
-			MapFacade.remove(getModelName(), keyValues);
-			resetDescriptionsCache();
-		}
-		catch (ValidationException ex) {
-			addErrors(ex.getErrors());	
-			return;
-		}		
+		MapFacade.remove(getModelName(), keyValues);
+		resetDescriptionsCache();
 		addMessage("object_deleted", getModelName());
 		getView().clear();
 		boolean selected = false;

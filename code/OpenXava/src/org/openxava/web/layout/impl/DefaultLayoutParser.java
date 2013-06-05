@@ -17,6 +17,7 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openxava.annotations.LabelFormatType;
 import org.openxava.controller.ModuleContext;
 import org.openxava.model.meta.MetaCollection;
 import org.openxava.model.meta.MetaMember;
@@ -25,6 +26,7 @@ import org.openxava.model.meta.MetaReference;
 import org.openxava.util.Is;
 import org.openxava.view.View;
 import org.openxava.view.meta.MetaGroup;
+import org.openxava.view.meta.MetaView;
 import org.openxava.view.meta.MetaViewAction;
 import org.openxava.view.meta.PropertiesSeparator;
 import org.openxava.web.Ids;
@@ -74,6 +76,7 @@ public class DefaultLayoutParser implements ILayoutParser {
 	private ILayoutViewBeginElement currentView;
 	private Stack<ILayoutContainerElement> containersStack;
 	private Stack<ILayoutRowBeginElement> rowsStack;
+	private Stack<Integer> containersColumnCountStack;
 	private int rowIndex;
 	private List<Integer> columnsPerRow;
 	private Map<Integer, Boolean> levelRowStarted;
@@ -131,6 +134,7 @@ public class DefaultLayoutParser implements ILayoutParser {
 		groupLevel = 0;
 		elements = new ArrayList<ILayoutElement>();
 		containersStack = new Stack<ILayoutContainerElement>();
+		containersColumnCountStack = new Stack<Integer>();
 		rowsStack = new Stack<ILayoutRowBeginElement>();
 		columnsPerRow = new ArrayList<Integer>();
 		levelRowStarted = new HashMap<Integer, Boolean>();
@@ -140,8 +144,48 @@ public class DefaultLayoutParser implements ILayoutParser {
 		currentView = createBeginViewMarker(view);
 		currentView.setRepresentsSection(representsSection);
 		addLayoutElement(currentView);
-		parseMetamembers(view.getMetaMembers(), view, false, true, inputPropertyPrefix);
+		MetaView metaView = view.getMetaModel().getMetaView(view.getViewName());
+		boolean alignedByColumn = (metaView == null ? false : metaView.isAlignedByColumns());
+
+		parseMetamembers(view.getMetaMembers(), view, false, true, inputPropertyPrefix, alignedByColumn);
 		addLayoutElement(createEndViewMarker(view));
+		if (currentView.isRepresentsSection() && 
+				currentView.getMaxFramesCount() == 1 &&
+				elements.size() > 4) {
+			ILayoutElement frameBeginElement = elements.get(3);
+			ILayoutElement frameEndElement = elements.get(elements.size() - 4);
+			
+			if (frameBeginElement instanceof ILayoutFrameBeginElement
+					&& frameEndElement instanceof ILayoutFrameEndElement
+					&& !(frameBeginElement instanceof ILayoutGroupBeginElement)
+					&& !(frameEndElement instanceof ILayoutGroupEndElement)) {
+				// We must remove the first row, first column and first (and only) frame
+				currentView.setMaxFramesCount(0);
+				currentView.setMaxContainerColumnsCount(((ILayoutFrameBeginElement)frameBeginElement).getMaxContainerColumnsCount());
+				for (int columnIndex = 0; columnIndex < currentView.getMaxContainerColumnsCount(); columnIndex++) {
+					currentView.setShowColumnLabel(columnIndex, ((ILayoutFrameBeginElement)frameBeginElement).getShowColumnLabel(columnIndex));
+				}
+				
+				currentView.getRows().clear();
+				for (ILayoutRowBeginElement rowBegin : ((ILayoutFrameBeginElement)frameBeginElement).getRows()) {
+					currentView.getRows().add(rowBegin);
+				}
+				
+				elements.remove(elements.size() - 4);
+				elements.remove(elements.size() - 3);
+				elements.remove(elements.size() - 2);
+				
+				elements.remove(3);
+				elements.remove(2);
+				elements.remove(1);
+				
+				for (int elementIndex = 1; elementIndex < elements.size() - 1; elementIndex++) {
+					ILayoutElement element = elements.get(elementIndex);
+					element.setGroupLevel(element.getGroupLevel() - 3);
+				}
+				
+			}
+		}
 	}
 
 
@@ -156,13 +200,13 @@ public class DefaultLayoutParser implements ILayoutParser {
 	 */
 	@SuppressWarnings("rawtypes")
 	protected void parseMetamembers(Collection metaMembers, View view, boolean isDescriptionsList, boolean isGrouped,
-			String inputPropertyPrefix) {
+			String inputPropertyPrefix, boolean alignedByColumn) {
 		boolean displayAsDescriptionsList = isDescriptionsList;
 		boolean frameOnSameColumn = false;
 		int frameStartingRowIndex = -1;
 		int frameMaxEndingRowIndex = -1;
 		setCurrentMustStartRow(isGrouped || rowsStack.isEmpty());
-		
+
 		Iterator it = metaMembers.iterator();
 		while (it.hasNext()) {
 			MetaMember m = (MetaMember) it.next();
@@ -178,29 +222,37 @@ public class DefaultLayoutParser implements ILayoutParser {
 					if (view.isHidden(p.getName())) {
 						continue;
 					}
+					ILayoutElement beforeLast = elements.size() > 1 ? elements.get(elements.size() - 2) : null;
 					ILayoutElement last = elements.size() > 0 ? elements.get(elements.size() - 1) : null;
 					MetaViewAction action = (p instanceof MetaViewAction) ? (MetaViewAction) p : null;
-					boolean createPropertyOnSameColumn = action != null && !currentMustStartRow() && currentRowStarted()
-							&& (last instanceof ILayoutColumnEndElement);
+
+					boolean hasFrame = WebEditors.hasFrame(p, view.getViewName());
+					
+					boolean createPropertyOnSameColumn = (action != null || !alignedByColumn) && !currentMustStartRow() && currentRowStarted()
+							&& (last instanceof ILayoutColumnEndElement) && (beforeLast instanceof ILayoutPropertyEndElement);
 
 					setEditable(view.isEditable(p));
 					if (createPropertyOnSameColumn) {
+						Integer currentColumn = containersColumnCountStack.pop() + 1;
+						containersColumnCountStack.push(currentColumn);
 						elements.remove(elements.size() - 1);
 						groupLevel++;
 					} else {
 						addLayoutElement(createBeginColumnMarker(view));
 					}
 					int rowIndexBeforeFrame = rowIndex;
-					boolean hasFrame = WebEditors.hasFrame(p, view.getViewName());
 					if (hasFrame) {
 				  		addLayoutElement(createBeginFrameMarker(p, view, ""));
 				  		addLayoutElement(createBeginRowMarker(view));
+						addLayoutElement(createBeginColumnMarker(view));
 					}
 					element = createBeginPropertyMarker(p, displayAsDescriptionsList, hasFrame, view,
 							inputPropertyPrefix); // hasFrame:true = suppress label
 					addLayoutElement(element);
 					addLayoutElement(createEndPropertyMarker(view));
 					if (hasFrame) {
+						addLayoutElement(createEndColumnMarker(view));
+						addLayoutElement(createEndRowMarker(view));
 				  		addLayoutElement(createEndFrameMarker(p, view));
 				  		rowIndex = rowIndexBeforeFrame;
 					}
@@ -243,10 +295,14 @@ public class DefaultLayoutParser implements ILayoutParser {
 								addLayoutElement(createEndColumnMarker(view));
 							} else {
 								if ("referenceEditor.jsp".equalsIgnoreCase(metaEditor.getUrl())) {
+									boolean referenceAlignedByColumns = alignedByColumn;
+									if (isFramed) {
+										referenceAlignedByColumns = subView.isAlignedByColumns();
+									}
 									parseMetamembers(subView.getMetaMembers(), subView, isReferenceAsDescriptionsList, isFramed 
 											|| (currentRowStarted() && !isReferenceAsDescriptionsList) 
 											|| (!currentRowStarted() && currentMustStartRow()),
-											subView.getPropertyPrefix());
+											subView.getPropertyPrefix(), referenceAlignedByColumns);
 								} else { // uses it owns reference editor
 									addLayoutElement(createBeginColumnMarker(view));
 									addLayoutElement(createBeginReferenceMarker(ref, isReferenceAsDescriptionsList, false, view,
@@ -281,7 +337,7 @@ public class DefaultLayoutParser implements ILayoutParser {
 					addLayoutElement(createBeginColumnMarker(view));
 			  		addLayoutElement(createBeginGroupMarker(group, subView, groupLabel));
 					parseMetamembers(group.getMetaView().getMetaMembers(), subView, false, true,
-							subView.getPropertyPrefix());
+							subView.getPropertyPrefix(), group.getMetaView().isAlignedByColumns());
 					if (rowIndex > frameMaxEndingRowIndex) {
 						frameMaxEndingRowIndex = rowIndex;
 					}
@@ -524,6 +580,7 @@ public class DefaultLayoutParser implements ILayoutParser {
 			currentRow.setMaxFramesCount(framesCount);
 		}
 		containersStack.push(frameElement);
+		containersColumnCountStack.push(-1);
 	}
 	
 	/**
@@ -567,6 +624,7 @@ public class DefaultLayoutParser implements ILayoutParser {
 			}
 		}
 		containersStack.pop();
+		containersColumnCountStack.pop();
 		groupLevel--;
 	}
 	
@@ -604,7 +662,9 @@ public class DefaultLayoutParser implements ILayoutParser {
 		if (columnsPerIndexedRow > maxViewColumnsCount) {
 			currentView.setMaxContainerColumnsCount(columnsPerIndexedRow);
 		}
-		
+		Integer columnIndex = containersColumnCountStack.pop() + 1;
+		returnValue.setColumnIndex(columnIndex);
+		containersColumnCountStack.push(columnIndex);
 		groupLevel++;
 		return returnValue;
 	}
@@ -616,6 +676,8 @@ public class DefaultLayoutParser implements ILayoutParser {
 	 */
 	protected ILayoutColumnEndElement createEndColumnMarker(View view) {
 		groupLevel--;
+		Integer currentColumn = containersColumnCountStack.pop() - 1;
+		containersColumnCountStack.push(currentColumn);
 		return new DefaultLayoutColumnEndElement(view, groupLevel);
 	}
 
@@ -738,6 +800,12 @@ public class DefaultLayoutParser implements ILayoutParser {
 					!returnValue.getActionsNameForReference().isEmpty()) ||
 					(returnValue.getActionsNameForProperty() != null &&
 					!returnValue.getActionsNameForProperty().isEmpty()));
+			
+			if (!Is.emptyString(propertyLabel) &&
+					labelFormat != LabelFormatType.NO_LABEL.ordinal()) {
+				int columnIndex = containersColumnCountStack.peek();
+				containersStack.peek().setShowColumnLabel(columnIndex, true);
+			}
 		} catch (Exception ex) {
 			LOG.warn("Maybe this is a separator:" + p.getName());
 		}

@@ -63,33 +63,35 @@ public class SaveElementInCollectionAction extends CollectionElementViewBaseActi
 	 * @since 4.7 
 	 */
 	protected void saveCollectionElement(Map containerKey) throws Exception {
-		if (isEntityReferencesCollection()) saveEntity(containerKey);
-		else saveAggregate(containerKey);		
-	}
-
-	private void saveEntity(Map containerKey) throws Exception {
 		if (getCollectionElementView().isEditable()) {
-			// Entity reference used as aggregate
+			// Aggregate or entity reference used as aggregate 
+			boolean isEntity = isEntityReferencesCollection(); 			
 			Map parentKey = new HashMap();
 			MetaCollection metaCollection = getMetaCollection();
 			parentKey.put(metaCollection.getMetaReference().getRole(), containerKey);
 			Map values = getValuesToSave();			
-			values.putAll(parentKey);
+			values.putAll(parentKey);			
 			try {
-				validateMaximum();
-				MapFacade.create(getCollectionElementView().getModelName(), values);
-				addMessage("entity_created_and_associated", getCollectionElementView().getModelName(), getCollectionElementView().getParent().getModelName()); 				
-			}
-			catch (DuplicateKeyException ex) {
 				MapFacade.setValues(getCollectionElementView().getModelName(), getCollectionElementView().getKeyValues(), values);
-				addMessage("entity_modified", getCollectionElementView().getModelName());				
-			}	
+				addMessage(isEntity?"entity_modified":"aggregate_modified", getCollectionElementView().getModelName());
+			}
+			catch (ObjectNotFoundException ex) {
+				create(values, isEntity);				
+			}		
 		}
 		else {
 			// Entity reference used in the standard way
 			associateEntity(getCollectionElementView().getKeyValues());
 			addMessage("entity_associated" , getCollectionElementView().getModelName(), getCollectionElementView().getParent().getModelName());
 		}
+	}
+
+	private void create(Map values, boolean isEntity) throws CreateException { 
+		validateMaximum();
+		MapFacade.create(getCollectionElementView().getModelName(), values);
+		addMessage(isEntity?"entity_created_and_associated":"aggregate_created", 
+			getCollectionElementView().getModelName(), 
+			getCollectionElementView().getParent().getModelName());
 	}
 
 	protected void associateEntity(Map keyValues) throws ValidationException, XavaException, ObjectNotFoundException, FinderException, RemoteException {		
@@ -103,42 +105,6 @@ public class SaveElementInCollectionAction extends CollectionElementViewBaseActi
 
 	private MetaCollection getMetaCollection() throws ElementNotFoundException, XavaException {
 		return getCollectionElementView().getParent().getMetaModel().getMetaCollection(getCollectionElementView().getMemberName());
-	}
-
-	private void saveAggregate(Map containerKey) throws Exception{
-		if (getCollectionElementView().getKeyValuesWithValue().isEmpty()) {
-			createAggregate(containerKey);			
-		}
-		else {
-			try {				
-				MapFacade.setValues(getCollectionElementView().getModelName(), getCollectionElementView().getKeyValues(), getValuesToSave());
-				addMessage("aggregate_modified", getCollectionElementView().getModelName());
-			}
-			catch (ObjectNotFoundException ex) {
-				// In case not hidden primary key in aggregate
-				createAggregate(containerKey);								
-			}
-		}								
-	}
-	
-	private void createAggregate(Map containerKey) throws Exception {
-		validateMaximum();
-		int row = 0;
-		if (!getMetaCollection().getMetaModel().isAnnotatedEJB3()) {
-			if (!getCollectionElementView().isCollectionCalculated()) {
-				getCollectionElementView().getCollectionTab().reset();
-			}
-			row = getCollectionElementView().getCollectionSize();
-		}
-		MapFacade.createAggregate(
-			getCollectionElementView().getModelName(),						
-			containerKey, row+1, // +1 for start in 1, because 0 is equals to no value					
-			getValuesToSave() ); 
-		addMessage("aggregate_created", getCollectionElementView().getModelName());
-	}
-	
-	private boolean isAutoCommit() {
-		return XavaPreferences.getInstance().isMapFacadeAutoCommit() || XavaPreferences.getInstance().isMapFacadeAsEJB();
 	}
 
 	/**

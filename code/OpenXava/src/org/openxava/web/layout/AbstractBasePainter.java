@@ -24,6 +24,8 @@ public abstract class AbstractBasePainter implements ILayoutPainter, Serializabl
 
 	private Stack<ILayoutContainerElement> containersStack;
 	private Stack<ILayoutRowBeginElement> rowsStack;
+	private Stack<ILayoutColumnBeginElement> columnsStack;
+	
 	private View view;
 	private ILayoutViewBeginElement viewElement;
 	private PageContext pageContext;
@@ -82,6 +84,19 @@ public abstract class AbstractBasePainter implements ILayoutPainter, Serializabl
 	}
 	
 	/**
+	 * @return Current column.
+	 */
+	protected ILayoutColumnBeginElement getColumn() {
+		ILayoutColumnBeginElement returnValue = null;
+		try {
+			returnValue = getColumnsStack().peek();
+		} catch (EmptyStackException e) {
+			LOG.error(e.getMessage(), e);
+		}
+		return returnValue;
+	}
+	
+	/**
 	 * Sets element as the current container.
 	 * @param layoutContainer.
 	 */
@@ -102,6 +117,23 @@ public abstract class AbstractBasePainter implements ILayoutPainter, Serializabl
 			LOG.error(e.getMessage(), e);
 		}
 	}
+	
+	/**
+	 * Sets the elemen as the current column.
+	 * @param layoutElement Element representing the current column.
+	 */
+	protected void setColumn(ILayoutColumnBeginElement layoutElement) {
+		getColumnsStack().push(layoutElement);
+	}
+	
+	protected void unsetColumn() {
+		try {
+			getColumnsStack().pop();
+		} catch (EmptyStackException e) {
+			LOG.error(e.getMessage(), e);
+		}
+	}
+	
 	/**
 	 * Sets the element as the current row and resets its column count to 0.
 	 * @param layoutElement
@@ -163,6 +195,23 @@ public abstract class AbstractBasePainter implements ILayoutPainter, Serializabl
 	}
 	
 	/**
+	 * @return the columnsStack
+	 */
+	protected Stack<ILayoutColumnBeginElement> getColumnsStack() {
+		if (columnsStack == null) {
+			columnsStack = new Stack<ILayoutColumnBeginElement>();
+		}
+		return columnsStack;
+	}
+
+	/**
+	 * @param columnsStack the columnsStack to set
+	 */
+	protected void setColumnsStack(Stack<ILayoutColumnBeginElement> columnsStack) {
+		this.columnsStack = columnsStack;
+	}
+
+	/**
 	 * 
 	 * @return The maximun number of columns in the view.
 	 */
@@ -177,6 +226,7 @@ public abstract class AbstractBasePainter implements ILayoutPainter, Serializabl
 	protected View getView(){
 		return view;
 	}
+	
 	/**
 	 * @return The current page context.
 	 */

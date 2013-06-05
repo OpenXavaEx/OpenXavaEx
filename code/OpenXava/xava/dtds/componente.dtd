@@ -35,7 +35,7 @@
   etiqueta CDATA #IMPLIED
   modelo CDATA #IMPLIED
   miembros CDATA "*"
-  hereda-de CDATA #IMPLIED
+  hereda-de CDATA #IMPLIED  
 >
 
 <!ELEMENT mediador EMPTY>
@@ -44,6 +44,9 @@
 >
 
 <!ELEMENT miembros (#PCDATA|grupo|seccion|accion)*>
+<!ATTLIST miembros 
+	alineado-por-columnas (true|false) "false"
+>	
 
 <!ELEMENT seccion (#PCDATA|seccion|grupo|accion)*>
 <!ATTLIST seccion

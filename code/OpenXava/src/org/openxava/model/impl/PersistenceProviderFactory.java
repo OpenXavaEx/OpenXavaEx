@@ -1,7 +1,6 @@
 package org.openxava.model.impl;
 
 import org.apache.commons.logging.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 
 /**
@@ -18,10 +17,7 @@ public class PersistenceProviderFactory {
 	public static IPersistenceProvider getInstance() {
 		if (instance == null) {
 			try {
-				//instance = (IPersistenceProvider) Class.forName(XavaPreferences.getInstance().getPersistenceProviderClass()).newInstance();
-				instance = (IPersistenceProvider)
-						ClassLoaderUtil.forName(PersistenceProviderFactory.class,
-								XavaPreferences.getInstance().getPersistenceProviderClass()).newInstance();
+				instance = (IPersistenceProvider) Class.forName(XavaPreferences.getInstance().getPersistenceProviderClass()).newInstance();
 			}
 			catch (Exception ex) {
 				log.error(ex.getMessage(), ex);

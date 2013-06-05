@@ -1,11 +1,12 @@
 package org.openxava.util;
 
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Level;
 
-import org.apache.commons.logging.*;
-import org.openxava.view.meta.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openxava.view.meta.MetaPropertyView;
 
 /**
  * @author Javier Paniza
@@ -491,27 +492,13 @@ public class XavaPreferences {
 	}
 
 	/** @since 4.6 */
-	public boolean isShowIconForViewReadOnly(){
+	public boolean isShowIconForViewReadOnly() {
 		return "true".equalsIgnoreCase(getProperties().getProperty("showIconForViewReadOnly", "true").trim());
 	}
 	
-	/**
-	 * @since 4.7
-	 * If false, topmost frames in views are not maximized.
-	 * @return True or false. Default value is true.
-	 */
-	public boolean isViewFramesMaximized() {
-		return "true".equalsIgnoreCase(getProperties().getProperty("viewFramesMaximized", "true"));
+	/** @since 4.7.1 */
+	public boolean isAlignedByColumns() { 
+		return "true".equalsIgnoreCase(getProperties().getProperty("alignedByColumns", "false").trim());
 	}
-
-	/**
-	 * @since 4.7
-	 * If false, topmost in sections are not maximized.
-	 * @return True or false. Default value is true.
-	 */
-	public boolean isSectionFramesMaximized() {
-		return "true".equalsIgnoreCase(getProperties().getProperty("sectionFramesMaximized", "true"));
-	}
-	
 	
 }

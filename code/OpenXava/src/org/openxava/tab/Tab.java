@@ -4,10 +4,12 @@ import java.math.*;
 import java.sql.*;
 import java.text.*;
 import java.util.*;
+import java.util.Collections;
 import java.util.prefs.*;
 
 import javax.servlet.http.*;
 
+import org.apache.commons.lang.*;
 import org.apache.commons.logging.*;
 import org.openxava.component.*;
 import org.openxava.converters.*;
@@ -18,8 +20,7 @@ import org.openxava.tab.impl.*;
 import org.openxava.tab.meta.*;
 import org.openxava.util.*;
 import org.openxava.view.*;
-import org.openxava.web.WebEditors;
-import org.openxava.web.Ids;
+import org.openxava.web.*;
 
 /**
  * Session object to work with tabular data. <p> 
@@ -116,7 +117,8 @@ public class Tab implements java.io.Serializable {
 	private String tabObject;
 	private boolean usesConverters;
 	private String title;  
-	private List<Map> selectedKeys; 
+	private List<Map> selectedKeys;
+	private boolean conditionJustCleared; 
 	
 	public List<MetaProperty> getMetaProperties() {
 		if (metaProperties == null) {
@@ -766,13 +768,7 @@ public class Tab implements java.io.Serializable {
 			}
 			if (selected.isEmpty()) return new int[0];
 			else{
-				int[] s = new int[selected.size()];
-				int index = 0;
-				for(Integer i : selected){
-					s[index] = i.intValue();
-					index++;
-				}
-				return s;
+				return ArrayUtils.toPrimitive(selected.toArray(new Integer[selected.size()]));
 			}
 		}
 		catch(Exception ex){
@@ -1004,6 +1000,17 @@ public class Tab implements java.io.Serializable {
 	}
 	
 	/**
+	 * @since 4.7.1
+	 */
+	public void clearCondition() { 
+		conditionValues= null;
+		conditionValuesTo = null;
+		conditionComparators = null;
+		condition = null;
+		conditionJustCleared=true;
+	}
+	
+	/**
 	 * 
 	 * @since 4.6
 	 */
@@ -1129,10 +1136,13 @@ public class Tab implements java.io.Serializable {
 
 	public synchronized void setRequest(HttpServletRequest request) {		
 		this.request = request;
-		String collectionPrefix = getCollectionPrefix();		
-		setConditionComparators(collectionPrefix);
-		setConditionValues(collectionPrefix);
-		setConditionValuesTo(collectionPrefix);		
+		if (!conditionJustCleared) { 
+			String collectionPrefix = getCollectionPrefix();		
+			setConditionComparators(collectionPrefix);
+			setConditionValues(collectionPrefix);
+			setConditionValuesTo(collectionPrefix);
+		}
+		conditionJustCleared = false;
 	}
 
 	private String getCollectionPrefix() {

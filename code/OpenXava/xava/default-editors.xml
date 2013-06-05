@@ -41,15 +41,16 @@
 	</editor>
  
 	<editor name="BooleanCheckBox" url="booleanEditor.jsp">
-		<formatter class="org.openxava.formatters.BooleanFormatter" />		<for-type type="boolean" />		<for-type type="java.lang.Boolean" />	</editor>
+		<formatter class="org.openxava.formatters.BooleanFormatter" >
+			<set property="nullAsFalse" value="true"/>
+		</formatter>		<for-type type="boolean" />		<for-type type="java.lang.Boolean" />	</editor>
 	
 	<editor name="BooleanYesNoCombo" url="booleanYesNoEditor.jsp">
 		<formatter class="org.openxava.formatters.BooleanFormatter" />
 		<for-model-property model="CustomReportColumn" property="booleanValue" />	
 	</editor>	
 	<editor name="DateCalendar" url="dateCalendarEditor.jsp">
-		<formatter class="org.openxava.formatters.DateFormatter" />		<for-type type="java.util.Date" />
-	</editor>
+		<formatter class="org.openxava.formatters.DateFormatter" />		<for-type type="java.util.Date" />	</editor>
 
 	<editor name="ValidValuesCombo" url="validValuesEditor.jsp">
 		<for-valid-values />

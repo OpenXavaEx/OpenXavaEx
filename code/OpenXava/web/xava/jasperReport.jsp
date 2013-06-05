@@ -165,6 +165,7 @@ else {
 
 	<parameter name="Title" class="java.lang.String"/>	
 	<parameter name="Organization" class="java.lang.String"/>
+	<parameter name="Date" class="java.lang.String"/>
 	<%
 	it = tab.getMetaProperties().iterator();
 	while (it.hasNext()) {
@@ -485,7 +486,7 @@ while (it.hasNext()) {
 						<font reportFont="Arial_Normal" size="10"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String">
-					<![CDATA[java.text.DateFormat.getDateInstance().format(new java.util.Date())]]>
+					<![CDATA[$P{Date}]]>
 				</textFieldExpression>
 				</textField>
 			</band>

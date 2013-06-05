@@ -3,7 +3,7 @@
  */
 package org.openxava.web.layout;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -18,7 +18,9 @@ import org.openxava.view.View;
  * @author Federico Alcantara
  *
  */
-public class LayoutPainterManager {
+public class LayoutPainterManager implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	/** 
 	 * Render the view.
 	 * @param view Originating view.
@@ -33,7 +35,7 @@ public class LayoutPainterManager {
 			ILayoutPainter painter = LayoutFactory.getLayoutPainterInstance(
 					(HttpServletRequest) pageContext.getRequest());
 			if (painter != null) {
-				returnValue = true;
+				returnValue = true;				
 				Collection<ILayoutElement> elements = parser.parseView(view, pageContext);
 				painter.initialize(view, pageContext);
 				renderElements(painter, elements, view, pageContext);
@@ -49,29 +51,20 @@ public class LayoutPainterManager {
 	 * @param pageContext page context.
 	 * @return True if a suitable parser / painter combination is found and used.
 	 */
-	public boolean renderSection(View parentView, PageContext pageContext) {
+	public boolean renderSection(View view, PageContext pageContext) {
 		boolean returnValue = false;
-		ILayoutPainter painter = LayoutFactory.getLayoutPainterInstance(
-				(HttpServletRequest) pageContext.getRequest());
-		if (painter != null) {
-			returnValue = true;
-			View view = parentView.getSectionView(parentView.getActiveSection());
-			String propertyPrefix = view.getPropertyPrefix();
-			view.setPropertyPrefix("");
-			painter.initialize(view, pageContext);
-			ILayoutSectionsRenderBeginElement beginElement = painter.defaultBeginSectionsRenderElement(view);
-			ILayoutSectionsRenderEndElement endElement = painter.defaultEndSectionsRenderElement(view);
-			beginElement.setView(parentView);
-			endElement.setView(parentView);
-			Collection<ILayoutElement> elements = new ArrayList<ILayoutElement>();
-			elements.add(beginElement);
-			elements.addAll(
-					LayoutFactory.getLayoutParserInstance((HttpServletRequest) pageContext.getRequest())
-						.parseView(view, pageContext, true));
-			elements.add(endElement);
-			view.setPropertyPrefix(propertyPrefix);
-			renderElements(painter, elements, view, pageContext);
-			painter.finalize(view, pageContext);
+		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		ILayoutParser parser = 	LayoutFactory.getLayoutParserInstance(request);
+		if (parser != null) {
+			ILayoutPainter painter = LayoutFactory.getLayoutPainterInstance(
+					(HttpServletRequest) pageContext.getRequest());
+			if (painter != null) {				
+				returnValue = true;
+				Collection<ILayoutElement> elements = parser.parseView(view, pageContext, true);
+				painter.initialize(view, pageContext);
+				renderElements(painter, elements, view, pageContext);
+				painter.finalize(view, pageContext);
+			}
 		}
 		return returnValue;
 	}

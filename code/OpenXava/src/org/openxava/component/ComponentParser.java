@@ -186,7 +186,7 @@ class ComponentParser extends ParserBase {
 		return getRoot().getElementsByTagName(xtransient[lang]).getLength() == 0;
 	}
 
-	private void setContainerModelToAggregateReference() throws XavaException { 
+	private void setContainerModelToAggregateReference() throws XavaException {
 		setContainerModelToAggregateReference(component.getMetaEntity());		
 		for (Iterator it = component.getMetaAggregates().iterator(); it.hasNext(); ) {
 			setContainerModelToAggregateReference((MetaModel) it.next());
@@ -195,7 +195,6 @@ class ComponentParser extends ParserBase {
 
 	private void setContainerModelToAggregateReference(MetaModel metaModel) throws XavaException { 
 		Collection references = metaModel.getMetaReferences();
-		if (references.isEmpty()) return;		
 		for (Iterator it = references.iterator(); it.hasNext();) {
 			MetaReference ref = (MetaReference) it.next();
 			if (component.hasMetaAggregate(ref.getReferencedModelName())) {
@@ -205,6 +204,16 @@ class ComponentParser extends ParserBase {
 				}
 			}
 		}
+		Collection collections = metaModel.getMetaCollectionsAgregate();
+		for (Iterator it = collections.iterator(); it.hasNext();) {
+			MetaCollection collection = (MetaCollection) it.next();
+			if (component.hasMetaAggregate(collection.getMetaReference().getReferencedModelName())) {
+				MetaModel referencedModel = collection.getMetaReference().getMetaModelReferenced();
+				if (referencedModel instanceof MetaAggregateForCollection) {
+					referencedModel.setContainerModelName(metaModel.getName());					
+				}
+			}
+		}		
 	}
 
 	/**

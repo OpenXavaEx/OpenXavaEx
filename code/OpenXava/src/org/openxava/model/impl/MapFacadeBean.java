@@ -10,8 +10,6 @@ import org.apache.commons.logging.*;
 import org.hibernate.Hibernate;
 import org.openxava.calculators.*;
 import org.openxava.component.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
-import org.openxava.jpa.*;
 import org.openxava.model.*;
 import org.openxava.model.meta.*;
 import org.openxava.util.*;
@@ -187,7 +185,7 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 	
 	public void setValues(UserInfo userInfo, String modelName, Map keyValues, Map values)
 		throws FinderException, ValidationException, XavaException, RemoteException  
-	{					
+	{							
 		Users.setCurrentUserInfo(userInfo);
 		keyValues = Maps.recursiveClone(keyValues); 
 		values = Maps.recursiveClone(values); 		
@@ -720,18 +718,23 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 				throw new ValidationException(validationErrors);			
 			}		
 			updateReferencedEntities(metaModel, values);			
-			Map convertedValues = convertSubmapsInObject(metaModel, values, XavaPreferences.getInstance().isEJB2Persistence());			
-			Object newObject = null;
-			if (metaModelContainer == null) {				
+			Map convertedValues = convertSubmapsInObject(metaModel, values, false); 
+			Object newObject = null;			
+			if (metaModel.getContainerReference() == null) {
 				newObject = getPersistenceProvider().create(metaModel, convertedValues);
 			} else {								
+				if (metaModelContainer == null) {
+					metaModelContainer = metaModel.getMetaModelContainer();
+					container = convertedValues.get(metaModel.getContainerReference());
+				}
 				newObject = getPersistenceProvider().createAggregate(					
 						metaModel,
 						convertedValues,
 						metaModelContainer,
 						container,
 						number);
-			}						
+			}					
+			
 			// Collections are not managed			
 			return newObject;
 		} catch (ValidationException ex) {
@@ -840,7 +843,7 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 		}
 	}
 	
-	private MetaModel getMetaModel(String modelName) throws XavaException { 
+	private MetaModel getMetaModel(String modelName) throws XavaException {
 		int idx = modelName.indexOf('.');			
 		if (idx < 0) {
 			return MetaComponent.get(modelName).getMetaEntity();
@@ -1012,8 +1015,9 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 			if (r.isAggregate()) {
 				return getAggregateValues((MetaAggregate) r.getMetaModelReferenced(), object, submembersNames);
 			} 
-			else {				
-				return getAssociatedEntityValues((MetaEntity) r.getMetaModelReferenced(), object, submembersNames);
+			else {		
+				MetaEntity metaEntityReferenced = (MetaEntity) (object==null?r.getMetaModelReferenced():MetaModel.get(Hibernate.getClass(object).getSimpleName()));
+				return getAssociatedEntityValues(metaEntityReferenced, object, submembersNames);
 			}
 		} catch (XavaException ex) {
 			log.error(ex.getMessage(), ex);
@@ -1068,12 +1072,11 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 	private Object instanceAggregate(MetaAggregateForReference metaAggregate, Map values)
 		throws ValidationException, XavaException, RemoteException {
 		try {
-			//Object object = Class.forName(metaAggregate.getBeanClass()).newInstance();
-			Object object = ClassLoaderUtil.forName(getClass(), metaAggregate.getBeanClass()).newInstance();
+			Object object = Class.forName(metaAggregate.getBeanClass()).newInstance();
 			PropertiesManager man = new PropertiesManager(object);			
 			removeViewProperties(metaAggregate, values);
 			removeCalculatedFields(metaAggregate, values); 
-			values = convertSubmapsInObject(metaAggregate, values, false);
+			values = convertSubmapsInObject(metaAggregate, values, false); 
 			man.executeSets(values);
 			return object;
 		} catch (ClassNotFoundException ex) {
@@ -1124,7 +1127,7 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 				return instanceAggregate((MetaAggregateForReference) r.getMetaModelReferenced(), values);
 			} else {
 				if (Maps.isEmpty(values)) return null;
-				return findAssociatedEntity((MetaEntity) r.getMetaModelReferenced(), values);
+				return findAssociatedEntity(r.getMetaModelReferenced(), values); 
 			}
 		}
 		catch (ObjectNotFoundException ex) {
@@ -1142,10 +1145,10 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 		}
 	}
 
-	private Object findAssociatedEntity(MetaEntity metaEntity, Map values)
+	private Object findAssociatedEntity(MetaModel metaEntity, Map values) 
 		throws FinderException, XavaException, RemoteException {
 		Map keyValues = extractKeyValues(metaEntity, values);		
-		return findEntity(metaEntity.getName(), keyValues);
+		return findEntity(metaEntity.getQualifiedName(), keyValues); 
 	}
 
 	private Map extractKeyValues(MetaModel metaModel, Map values)
@@ -1208,14 +1211,13 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 			}			
 			// removing collections are resposibility of persistence provider						
 			getPersistenceProvider().remove(metaModel, keyValues); 
-		} catch (ValidationException ex) {
+		} catch (ValidationException ex) {			
 			throw ex; 					
 		} catch (XavaException ex) {
 			log.error(ex.getMessage(), ex);
 			throw new XavaException("remove_error", metaModel.getName(), ex.getLocalizedMessage());				
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
-			rollback();
 			throw new RemoteException(XavaResources.getString("remove_error",
 				metaModel.getName(), ex.getLocalizedMessage()));
 		}
@@ -1261,16 +1263,18 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 		
 	private void setValues(MetaModel metaModel, Map keyValues, Map values)
 		throws FinderException, ValidationException, XavaException { 		
-		try {			
+		try {						
+			Object entity = findEntity(metaModel, keyValues); 
 			updateReferencedEntities(metaModel, values);			
 			removeKeyFields(metaModel, values);			
 			removeReadOnlyFields(metaModel, values);						
 			validate(metaModel, values, keyValues, null, false);
-			removeViewProperties(metaModel, values);												
-			Object entity = findEntity(metaModel, keyValues);			
+			removeViewProperties(metaModel, values);
 			verifyVersion(metaModel, entity, values);			 			
 			IPropertiesContainer r = getPersistenceProvider().toPropertiesContainer(metaModel, entity);			
-			r.executeSets(convertSubmapsInObject(metaModel, values, XavaPreferences.getInstance().isEJB2Persistence()));						
+			Map objects = convertSubmapsInObject(metaModel, values, true); 
+			r.executeSets(objects);
+
 			// Collections are not managed			
 		} 
 		catch (FinderException ex) { 
@@ -1396,39 +1400,27 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 						}
 					}						
 					if (metaModel.containsMetaReference(set.getPropertyNameFrom())) {
-						if (set.getPropertyNameFrom().equals(metaModel.getContainerReference())) {
-							if (container == null) {							
-								Object object = findEntity(metaModel, keyValues);
-								value = XObjects.execute(object, "get" + Strings.firstUpper(metaModel.getContainerReference()));
-							}
-							else {							
-								MetaModel containerReference = metaModel.getMetaModelContainer();
-								try {
-									Map containerKeyMap = getPersistenceProvider().keyToMap(containerReference, container);
-									value = getPersistenceProvider().find(containerReference, containerKeyMap);
-								}
-								catch (ObjectNotFoundException ex) {								
-									value = null;
-								}			
-							}
+						MetaReference ref = metaModel.getMetaReference(set.getPropertyNameFrom());
+						if (ref.isAggregate()) {							
+							value = mapToReferencedObject(metaModel, set.getPropertyNameFrom(), (Map) value);
 						}
-						else {					
-							MetaReference ref = metaModel.getMetaReference(set.getPropertyNameFrom());
-							if (ref.isAggregate()) {							
-								value = mapToReferencedObject(metaModel, set.getPropertyNameFrom(), (Map) value);
+						else {							
+							MetaModel referencedEntity = ref.getMetaModelReferenced();								
+							try {
+								if (value != null) {
+									value = findEntity(referencedEntity, (Map) value);										
+								}
 							}
-							else {							
-								MetaModel referencedEntity = ref.getMetaModelReferenced();
-								try {
-									if (value != null) {
-										value = findEntity(referencedEntity, (Map) value);
+							catch (ObjectNotFoundException ex) {			
+								value = null;
+								if (set.getPropertyNameFrom().equals(metaModel.getContainerReference())) {
+									if (container == null) {							
+										Object object = findEntity(metaModel, keyValues);
+										value = XObjects.execute(object, "get" + Strings.firstUpper(metaModel.getContainerReference()));
 									}
-								}
-								catch (ObjectNotFoundException ex) {								
-									value = null;
-								}																															
-							}		
-						}
+								}									
+							}																															
+						}		
 					}
 					mp.executeSet(set.getPropertyName(), value);									
 				}							
@@ -1576,8 +1568,7 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 		}				
 	}
 	
-	private Map convertSubmapsInObject(MetaModel metaModel, Map values,
-			boolean referencesAsKey) throws ValidationException, XavaException, RemoteException {		
+	private Map convertSubmapsInObject(MetaModel metaModel, Map values, boolean excludeContainerReference) throws ValidationException, XavaException, RemoteException { 
 		Map result = new HashMap();
 		Iterator it = values.entrySet().iterator();
 		while (it.hasNext()) {
@@ -1589,8 +1580,9 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 					value = en.getValue();
 				}
 				else if (metaModel.containsMetaReference(memberName)) {
-					MetaReference ref = metaModel.getMetaReference(memberName);
-					value = mapToReferencedObject(metaModel, memberName, (Map) en.getValue());				
+					if (excludeContainerReference && memberName.equals(metaModel.getContainerReference())) continue; 
+					MetaReference ref = metaModel.getMetaReference(memberName);					
+					value = mapToReferencedObject(metaModel, memberName, (Map) en.getValue());
 				}
 				else if (metaModel.getMapping().hasPropertyMapping(memberName)) {
 					value = en.getValue();

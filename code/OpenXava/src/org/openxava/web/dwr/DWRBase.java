@@ -21,7 +21,6 @@ class DWRBase {
 			throw new SecurityException("6859"); 
 		}
 		if (!context.exists(application, module, "manager")) { // This user has not execute this module yet 
-			//FIXME: DynamicClassLoader can't pass this check ...
 			throw new SecurityException("9876");  
 		}
 	}	

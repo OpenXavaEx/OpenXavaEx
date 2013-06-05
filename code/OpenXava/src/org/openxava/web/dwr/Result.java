@@ -23,7 +23,8 @@ public class Result {
 	private String error;
 	private boolean reload; 
 	private boolean showDialog; 	
-	private boolean hideDialog; 
+	private boolean hideDialog;
+	private boolean resizeDialog; 
 	private String dialogTitle; 
 	private int dialogLevel; 
 	private String viewMember;
@@ -179,5 +180,14 @@ public class Result {
 	public void setSelectedRows(Map selectedRows) {
 		this.selectedRows = selectedRows;
 	}
+
+	public boolean isResizeDialog() {
+		return resizeDialog;
+	}
+
+	public void setResizeDialog(boolean resizeDialog) {
+		this.resizeDialog = resizeDialog;
+	}
+
 	
 }

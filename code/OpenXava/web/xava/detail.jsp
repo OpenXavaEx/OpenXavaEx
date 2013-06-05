@@ -36,13 +36,17 @@ viewObject = (viewObject == null || viewObject.equals(""))?"xava_view":viewObjec
 org.openxava.view.View view = (org.openxava.view.View) context.get(request, viewObject);
 view.setViewObject(viewObject); 
 String propertyPrefix = request.getParameter("propertyPrefix");
+String representsSection = request.getParameter("representsSection");
+boolean isSection = "true".equalsIgnoreCase(representsSection);
 propertyPrefix = (propertyPrefix == null)?"":propertyPrefix; 
 view.setPropertyPrefix(propertyPrefix);
 boolean onlySections = view.hasSections() && view.getMetaMembers().isEmpty(); 
 %>
 
 <%
-if (!layoutPainterManager.renderView(view, pageContext)) {
+boolean renderedView = isSection ? layoutPainterManager.renderSection(view, pageContext)
+	: layoutPainterManager.renderView(view, pageContext);	
+if (!renderedView) {
 	// Only performed if no layout painter is in effect.
 	if (!onlySections) {	// IF Not Only Sections
 		if (view.isFrame()) {	// IF Is Frame 

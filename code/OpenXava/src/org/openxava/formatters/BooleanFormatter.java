@@ -13,7 +13,7 @@ import org.openxava.util.*;
 
 public class BooleanFormatter implements IFormatter {
 	
-	
+	private boolean nullAsFalse = false; 
 	
 	public String format(HttpServletRequest request, Object booleanValue) {
 		if (booleanValue == null) {
@@ -34,7 +34,7 @@ public class BooleanFormatter implements IFormatter {
 	}
 	
 	public Object parse(HttpServletRequest request, String string) {
-		if (Is.emptyString(string)) return null; 
+		if (Is.emptyString(string)) return nullAsFalse?Boolean.FALSE:null;		
 		if (
 			"yes".equalsIgnoreCase(string) ||
 			"SÍ".equalsIgnoreCase(string) ||
@@ -43,6 +43,14 @@ public class BooleanFormatter implements IFormatter {
 			"true".equalsIgnoreCase(string) ||
 			"verdadero".equalsIgnoreCase(string)) return Boolean.TRUE;
 		return Boolean.FALSE;
+	}
+
+	public boolean isNullAsFalse() {
+		return nullAsFalse;
+	}
+
+	public void setNullAsFalse(boolean nullAsFalse) {
+		this.nullAsFalse = nullAsFalse;
 	}
 	
 }

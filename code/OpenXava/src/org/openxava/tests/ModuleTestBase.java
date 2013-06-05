@@ -11,7 +11,6 @@ import org.apache.pdfbox.util.*;
 import org.openxava.application.meta.*;
 import org.openxava.component.*;
 import org.openxava.controller.meta.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.hibernate.XHibernate;
 import org.openxava.jpa.*;
 import org.openxava.model.meta.*;
@@ -2121,8 +2120,7 @@ public class ModuleTestBase extends TestCase {
 		if (xavaJunitProperties == null) {
 			try {
 				xavaJunitProperties = new Properties();
-				//URL resource = ModuleTestBase.class.getClassLoader().getResource("xava-junit.properties");
-				URL resource = ClassLoaderUtil.getClassLoader(ModuleTestBase.class).getResource("xava-junit.properties");
+				URL resource = ModuleTestBase.class.getClassLoader().getResource("xava-junit.properties");
 				if (resource != null) {
 					xavaJunitProperties.load(resource.openStream());
 				}
@@ -2300,17 +2298,16 @@ public class ModuleTestBase extends TestCase {
 	
 	private String getTopDialog(String module) throws Exception { 
 		int level = 0;
-		for (level = 1; ; level++) {
+		for (level = 10; level > 0; level--) {
 			try {
 				HtmlElement el = page.getElementById(Ids.decorate(application, module, "dialog" + level));
-				if (el == null || !el.hasChildNodes()) break;
+				if (el != null && el.hasChildNodes()) break;
 			}
 			catch (ElementNotFoundException ex) {
-				break;
-			}
+			}			
 		}
-		if (level == 1) return null;
-		return "dialog" + (level - 1);
+		if (level == 0) return null;		
+		return "dialog" + level;		
 	}
 
 	

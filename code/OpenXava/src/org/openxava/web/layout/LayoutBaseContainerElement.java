@@ -19,6 +19,7 @@ public abstract class LayoutBaseContainerElement extends LayoutBaseElement
 	private Integer maxFramesCount;
 	private Integer maxContainerColumnsCount;
 	private List<ILayoutRowBeginElement> rows;
+	private List<Boolean> showColumnLabelStates;
 
 	public LayoutBaseContainerElement(View view, int groupLevel) {
 		super(view, groupLevel);
@@ -69,6 +70,32 @@ public abstract class LayoutBaseContainerElement extends LayoutBaseElement
 	 */
 	public void setRows(List<ILayoutRowBeginElement> rows) {
 		this.rows = rows;
+	}
+
+
+	public void setShowColumnLabel(int columnIndex, boolean state) {
+		if (columnIndex >= 0) {
+			for (int index = 0; index <= columnIndex; index++) {
+				getShowColumnLabelStates().add(false);
+			}
+			getShowColumnLabelStates().set(columnIndex, state);
+		}
+	}
+
+	public boolean getShowColumnLabel(int columnIndex) {
+		boolean returnValue = false;
+		if (columnIndex >= 0 && 
+				columnIndex < getShowColumnLabelStates().size()) {
+			returnValue = getShowColumnLabelStates().get(columnIndex);
+		}
+		return returnValue;
+	}
+	
+	private List<Boolean> getShowColumnLabelStates() {
+		if (showColumnLabelStates == null) {
+			showColumnLabelStates = new ArrayList<Boolean>();
+		}
+		return showColumnLabelStates;
 	}
 
 }

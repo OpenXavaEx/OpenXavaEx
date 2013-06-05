@@ -1,7 +1,6 @@
 package org.openxava.calculators;
 
 import org.apache.commons.logging.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 
 /**
@@ -22,8 +21,7 @@ public class EnumCalculator implements ICalculator {
 		}
 		if (Is.emptyString(value)) return null;		
 		try {
-			//return Enum.valueOf((Class<Enum>) Class.forName(enumType), value);
-			return Enum.valueOf((Class<Enum>) ClassLoaderUtil.forName(getClass(), enumType), value);
+			return Enum.valueOf((Class<Enum>) Class.forName(enumType), value);
 		} 
 		catch (Exception ex) {
 			String message = XavaResources.getString("value_of_enum_error", enumType, value); 

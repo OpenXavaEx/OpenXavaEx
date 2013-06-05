@@ -1,8 +1,19 @@
 package org.openxava.view;
 
 import java.rmi.RemoteException;
-import java.util.*;
-import java.util.prefs.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import javax.ejb.FinderException;
 import javax.ejb.ObjectNotFoundException;
@@ -11,14 +22,19 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openxava.actions.IOnChangePropertyAction;
-import org.openxava.calculators.*;
+import org.openxava.calculators.ICalculator;
+import org.openxava.calculators.IEntityCalculator;
+import org.openxava.calculators.IJDBCCalculator;
+import org.openxava.calculators.IModelCalculator;
+import org.openxava.calculators.IOptionalCalculator;
 import org.openxava.component.MetaComponent;
 import org.openxava.controller.ModuleContext;
 import org.openxava.controller.ModuleManager;
 import org.openxava.controller.meta.MetaAction;
 import org.openxava.controller.meta.MetaController;
 import org.openxava.controller.meta.MetaControllers;
-import org.openxava.filters.*;
+import org.openxava.filters.CollectionInViewFilter;
+import org.openxava.filters.CollectionWithConditionInViewFilter;
 import org.openxava.mapping.ModelMapping;
 import org.openxava.model.MapFacade;
 import org.openxava.model.PersistenceFacade;
@@ -31,7 +47,19 @@ import org.openxava.model.meta.MetaModel;
 import org.openxava.model.meta.MetaProperty;
 import org.openxava.model.meta.MetaReference;
 import org.openxava.tab.Tab;
-import org.openxava.util.*;
+import org.openxava.util.DataSourceConnectionProvider;
+import org.openxava.util.ElementNotFoundException;
+import org.openxava.util.Is;
+import org.openxava.util.Labels;
+import org.openxava.util.Locales;
+import org.openxava.util.Maps;
+import org.openxava.util.Messages;
+import org.openxava.util.PropertiesManager;
+import org.openxava.util.Strings;
+import org.openxava.util.Users;
+import org.openxava.util.XArrays;
+import org.openxava.util.XavaException;
+import org.openxava.util.XavaResources;
 import org.openxava.util.meta.MetaSet;
 import org.openxava.view.meta.MetaCollectionView;
 import org.openxava.view.meta.MetaDescriptionsList;
@@ -170,7 +198,6 @@ public class View implements java.io.Serializable {
 	private Map<String, Collection<String>> changedActionsByProperty = null; 
 	private Collection propertiesWithChangedActions;
 	private Object model;
-	private boolean framesMaximized;
 	
 	// firstLevel is the root view that receives the request 
 	// usually match with getRoot(), but not always. For example,
@@ -342,11 +369,6 @@ public class View implements java.io.Serializable {
 		resetMembers();
 		this.metaView = metaView;
 		this.viewName = metaView.getName();
-		if (this.isSection()) {
-			this.setFramesMaximized(XavaPreferences.getInstance().isSectionFramesMaximized());
-		} else {
-			this.setFramesMaximized(XavaPreferences.getInstance().isViewFramesMaximized());
-		}
 	}
 	
 	public MetaModel getMetaModel() throws XavaException {		
@@ -374,7 +396,7 @@ public class View implements java.io.Serializable {
 	 * you have to use <code>setValues</code> or <code>setValue</code>.<br>
 	 */
 	public Map getValues() throws XavaException {			
-		return new HashMap(getValues(false));
+		return Maps.recursiveClone(getValues(false)); 
 	}
 
 	/**
@@ -481,22 +503,22 @@ public class View implements java.io.Serializable {
 				String viewName = getViewName(); 
 				setModelName(modelName);
 				setViewName(viewName); 
-				modelChanged = true;
+				modelChanged = true;				
 			}
 		}	
 		setValues(values, true);
-		if (modelChanged) refresh(); 
+		if (modelChanged) refresh(); 		
 	}
 	
 	private void setValues(Map map, boolean closeCollections) throws XavaException { 
 		if (values == null) values = new HashMap();
 		else values.clear();
-		if (closeCollections) closeChildCollectionDetailsAndClearSelected();
+		if (closeCollections) resetCollections();
 		resetCollectionTotals();
 		addValues(map);		
 	}
 
-	private void closeChildCollectionDetailsAndClearSelected() throws XavaException {
+	private void resetCollections() throws XavaException {
 		if (hasSubviews()) { 
 			Iterator it = getSubviews().values().iterator();
 
@@ -504,7 +526,7 @@ public class View implements java.io.Serializable {
 				View subview = (View) it.next();
 				subview.setCollectionDetailVisible(false);
 				subview.setCollectionEditingRow(-1);
-				subview.closeChildCollectionDetailsAndClearSelected();										
+				subview.resetCollections();										
 			}
 		}
 				
@@ -514,7 +536,7 @@ public class View implements java.io.Serializable {
 				View subview = (View) it.next();
 				subview.setCollectionDetailVisible(false);
 				subview.setCollectionEditingRow(-1);				
-				subview.closeChildCollectionDetailsAndClearSelected();
+				subview.resetCollections();
 			}
 		}
 				
@@ -524,11 +546,14 @@ public class View implements java.io.Serializable {
 				View subview = getSectionView(i); 
 				subview.setCollectionDetailVisible(false);
 				subview.setCollectionEditingRow(-1);
-				subview.closeChildCollectionDetailsAndClearSelected();
+				subview.resetCollections();
 			}	
 		}	
 		listSelected = null;
-		if (collectionTab != null) collectionTab.deselectAll(); 		
+		if (collectionTab != null) {
+			collectionTab.deselectAll();
+			collectionTab.clearCondition(); 
+		}
 	}
 	
 	private void resetCollectionTotals() throws XavaException {
@@ -2206,11 +2231,6 @@ public class View implements java.io.Serializable {
 		subviews = null;
 		sectionsViews = null;
 		groupsViews = null;
-		if (section) {
-			framesMaximized = XavaPreferences.getInstance().isSectionFramesMaximized();
-		} else {
-			framesMaximized = XavaPreferences.getInstance().isViewFramesMaximized();
-		}
 	}
 	
 	public void assignValuesToWebView() {		
@@ -4960,20 +4980,6 @@ public class View implements java.io.Serializable {
 			return false;
 		}
 	}		
-	
-	/**
-	 * @return the framesMaximized
-	 */
-	public boolean isFramesMaximized() { 
-		return framesMaximized;
-	}
-
-	/**
-	 * @param framesMaximized the framesMaximized to set
-	 */
-	public void setFramesMaximized(boolean framesMaximized) { 
-		this.framesMaximized = framesMaximized;
-	}
 
 	/**
 	 * Add an action to the property. <p>

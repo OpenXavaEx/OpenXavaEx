@@ -64,6 +64,7 @@ int activeSection = view.getActiveSection();
 		<table width='100%' cellspacing="0" border="0" cellpadding="2"><tr><td>
 		<jsp:include page="detail.jsp"> 
 			<jsp:param name="viewObject" value="<%=viewName%>" />
+			<jsp:param name="representsSection" value="true" />
 		</jsp:include>				
 		</td></tr></table>
 	</td></tr>	

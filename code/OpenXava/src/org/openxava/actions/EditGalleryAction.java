@@ -19,13 +19,14 @@ import org.openxava.view.*;
  * @author Javier Paniza
  */
 
-public class EditGalleryAction extends /*View*/BaseAction implements INavigationAction {
+public class EditGalleryAction extends ViewBaseAction implements INavigationAction { 
 		
 	private static Log log = LogFactory.getLog(EditGalleryAction.class);
 	
 	private String galleryProperty;
 	private String viewObject; 
-	private View view; 
+	private View containerView; 
+	private boolean editable; 
 
 	@Inject
 	private Gallery gallery;	
@@ -33,12 +34,13 @@ public class EditGalleryAction extends /*View*/BaseAction implements INavigation
 	
 	
 	public void execute() throws Exception {
-		String oid = getView().getValueString(galleryProperty);
+		editable = getContainerView().isEditable(galleryProperty); 
+		String oid = getContainerView().getValueString(galleryProperty);
 		if (Is.emptyString(oid)) {
 			UUIDCalculator cal = new UUIDCalculator();  
 			oid = (String) cal.calculate();
-			getView().setValue(galleryProperty, oid);
-			if (!getView().isKeyEditable()) { // Modifying
+			getContainerView().setValue(galleryProperty, oid);
+			if (!getContainerView().isKeyEditable()) { // Modifying
 				updateOidInObject(oid);
 			}
 		}
@@ -46,27 +48,28 @@ public class EditGalleryAction extends /*View*/BaseAction implements INavigation
 		gallery.loadAllImages();		
 		gallery.setTitle(XavaResources.getString("gallery_title", 
 				Labels.get(galleryProperty, Locales.getCurrent()), 
-				Labels.get(getView().getModelName(), Locales.getCurrent()), 
+				Labels.get(getContainerView().getModelName(), Locales.getCurrent()), 
 				getObjectDescription()));				
 		if (gallery.isEmpty()) {
 			addMessage("no_images");
 		}
 		gallery.setReadOnly(!isEditable());
+		showDialog(); 
 	}
 
 	private void updateOidInObject(String oid) throws Exception {
 		Map values = new HashMap();
 		values.put(galleryProperty, oid);
-		MapFacade.setValues(getView().getModelName(), getView().getKeyValues(), values);		
+		MapFacade.setValues(getContainerView().getModelName(), getContainerView().getKeyValues(), values);		
 	}
 
 	private String getObjectDescription() {
 		try {
 			StringBuffer result = new StringBuffer();
-			for (Iterator it=getView().getMetaModel().getMetaPropertiesKey().iterator(); it.hasNext();) {
+			for (Iterator it=getContainerView().getMetaModel().getMetaPropertiesKey().iterator(); it.hasNext();) {
 				MetaProperty p = (MetaProperty) it.next();
 				if (!p.isHidden()) {
-					Object value = getView().getValue(p.getName());
+					Object value = getContainerView().getValue(p.getName());
 					if (value != null) {
 						if (result.length() > 0) result.append('/');
 						result.append(value);
@@ -76,7 +79,7 @@ public class EditGalleryAction extends /*View*/BaseAction implements INavigation
 
 			String [] descriptionProperties = { "name", "nombre", "description", "descripcion" };
 			for (int i = 0; i < descriptionProperties.length; i++) {
-				String des = (String) getView().getValue(descriptionProperties[i]);
+				String des = (String) getContainerView().getValue(descriptionProperties[i]);
 				if (!Is.emptyString(des)) {
 					if (result.length() > 0) result.append(" - ");
 					result.append(des);
@@ -92,15 +95,15 @@ public class EditGalleryAction extends /*View*/BaseAction implements INavigation
 		}		
 	}
 	
-	private View getView() { 
-		if (view == null) {
-			view = (View) getContext().get(getRequest(), viewObject==null?"xava_view":viewObject);
+	private View getContainerView() { 
+		if (containerView == null) {
+			containerView = (View) getContext().get(getRequest(), viewObject==null?"xava_view":viewObject);
 		}
-		return view;
+		return containerView;		
 	}
 
 	private boolean isEditable() throws XavaException {
-		return getView().isEditable(galleryProperty);		
+		return editable; 
 	}
 
 	public String getGalleryProperty() {
@@ -112,7 +115,7 @@ public class EditGalleryAction extends /*View*/BaseAction implements INavigation
 	}
 
 	public String[] getNextControllers() throws Exception {
-		return isEditable()?new String [] { "Gallery" }:new String [] { "Return" };
+		return isEditable()?new String [] { "Gallery" }:new String [] { "Close" };
 	}
 
 	public String getCustomView() throws Exception {

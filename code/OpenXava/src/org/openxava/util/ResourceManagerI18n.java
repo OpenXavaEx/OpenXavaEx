@@ -5,7 +5,6 @@ import java.util.*;
 
 import org.apache.commons.logging.*;
 import org.openxava.application.meta.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 
 /**
  * @author Javier Paniza
@@ -70,7 +69,7 @@ public class ResourceManagerI18n {
 				String name = (String) it.next();
 				if (englishPrefix != null) {
 					try {
-						ResourceBundle rb = ResourceBundle.getBundle(name + englishPrefix, locale, ClassLoaderUtil.getClassLoader(getClass()));
+						ResourceBundle rb = ResourceBundle.getBundle(name + englishPrefix, locale);
 						return rb.getString(key);
 					}
 					catch (MissingResourceException ex) {
@@ -78,7 +77,7 @@ public class ResourceManagerI18n {
 				}
 				if (spanishPrefix != null) {
 					try {
-						ResourceBundle rb = ResourceBundle.getBundle(spanishPrefix + name, locale, ClassLoaderUtil.getClassLoader(getClass()));
+						ResourceBundle rb = ResourceBundle.getBundle(spanishPrefix + name, locale);
 						return rb.getString(key);
 					}
 					catch (MissingResourceException ex) {
@@ -90,7 +89,7 @@ public class ResourceManagerI18n {
 			log.error("Resource " + key + " cannot be translated using application specific resources. We use only " + resourcesFile,ex);
 		}
 		try {
-			ResourceBundle rb = ResourceBundle.getBundle(resourcesFile, locale, ClassLoaderUtil.getClassLoader(getClass()));
+			ResourceBundle rb = ResourceBundle.getBundle(resourcesFile, locale);
 			return rb.getString(key);
 		}
 		catch (MissingResourceException ex) {
@@ -111,7 +110,7 @@ public class ResourceManagerI18n {
 
 	public String getString(Locale locale, String key, Object argv0, Object argv1, Object argv2) {		
 		return getString(locale, key, new Object [] { argv0, argv1, argv2 });
-	}	
+	}
 	
 	public String getString(Locale locale, String key, Object [] argv) {		
 		MessageFormat formateador = new MessageFormat("");

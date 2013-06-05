@@ -22,6 +22,9 @@ abstract public class POJOPersistenceProviderBase implements IPersistenceProvide
 	
 	private static Log log = LogFactory.getLog(POJOPersistenceProviderBase.class);
 	
+	private static Random aggregateNumberGenerator = new Random(); 	
+	
+	
 	/**
 	 * Return the object associated to the sent key.
 	 */
@@ -66,7 +69,7 @@ abstract public class POJOPersistenceProviderBase implements IPersistenceProvide
 			// The second question (metaModel.getMetaPropertiesKey().isEmpty())  
 			// is for the case of one key reference with only one column in it, 
 			// this case must be treated as multiple key
-			boolean multipleKey = metaModel.getAllKeyPropertiesNames().size() > 1 || metaModel.getMetaPropertiesKey().isEmpty(); 
+			boolean multipleKey = metaModel.getAllKeyPropertiesNames().size() > 1 || metaModel.getMetaPropertiesKey().isEmpty();
 			if (!multipleKey) {
 				String keyPropertyName = (String) metaModel.getKeyPropertiesNames().iterator().next();
 				key = keyValues.get(keyPropertyName);
@@ -216,31 +219,16 @@ abstract public class POJOPersistenceProviderBase implements IPersistenceProvide
 	}
 
 	public Object createAggregate(MetaModel metaModel, Map values, MetaModel metaModelContainer, Object containerModel, int number) throws CreateException, ValidationException, RemoteException, XavaException {
-		String container = getContainerReference(metaModel, metaModelContainer); 
+		String container = metaModel.getContainerReference(); 
 		values.put(container, containerModel);
 		// The next two lines use Hibernate. At the momment for Hibernate and EJB3 
 		// In order to support a EJB3 no hibernate implementations we will need to change them
 		org.openxava.hibernate.impl.DefaultValueIdentifierGenerator.setCurrentContainerKey(containerModel);
+		if (number == 0) number = aggregateNumberGenerator.nextInt();
 		org.openxava.hibernate.impl.DefaultValueIdentifierGenerator.setCurrentCounter(number);
 		return create(metaModel, values);
 	}
 	
-	private String getContainerReference(MetaModel metaModel, MetaModel metaModelContainer) {
-		if (!Is.empty(metaModel.getContainerReference())) {
-			return metaModel.getContainerReference();
-		}
-		Class containerClass = metaModelContainer.getPOJOClass();
-		String containerName = "";
-		while (!java.lang.Object.class.equals(containerClass)) {
-			containerName = containerClass.getSimpleName();
-			if (Classes.hasMethod(metaModel.getPOJOClass(), "get" + containerName)) {
-				return Strings.firstLower(containerName);
-			}			
-			containerClass = containerClass.getSuperclass(); 
-		}
-		throw new XavaException("property_not_found", Strings.firstLower(containerName), metaModel.getPOJOClassName()); 
-	}		
-
 	public Object findByAnyProperty(MetaModel metaModel, Map keyValues) throws ObjectNotFoundException, FinderException, XavaException {		
 		return findUsingQuery(metaModel, Maps.treeToPlain(keyValues), false);
 	}

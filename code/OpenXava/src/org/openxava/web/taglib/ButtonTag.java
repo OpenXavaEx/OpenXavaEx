@@ -48,7 +48,7 @@ public class ButtonTag extends TagSupport implements IActionTag{
 			pageContext.getOut().print(" class='");
 			Style style = (Style) request.getAttribute("style");
 			pageContext.getOut().print(style.getButton());
-			pageContext.getOut().print("'\tonclick='openxava.executeAction(");
+			pageContext.getOut().print("'\tonclick='openxava.executeAction(");			
 			pageContext.getOut().print('"');				
 			pageContext.getOut().print(application);
 			pageContext.getOut().print('"');

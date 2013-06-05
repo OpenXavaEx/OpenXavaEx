@@ -28,7 +28,8 @@ here that you want to override.
 	<object name="xava_treeViewParser" class="org.openxava.util.TreeViewParser" />
 	<object name="xava_treeViewNodeFullPath" class="java.lang.String" />
 	<object name="xava_liferayLibrary" class="org.openxava.session.LiferayLibrary"/>					
-		
+	<object name="xava_metaActionsInList" class="java.util.Collection"/>
+	
 	<controller name="Typical">
 		<extends controller="Navigation"/>
 		<extends controller="CRUD"/>
@@ -335,10 +336,10 @@ here that you want to override.
 		<action name="maximizeImage" hidden="true" image="maximize.gif"
 			class="org.openxava.actions.MaximizeImageAction"/>
 		<action name="minimizeImage" hidden="true" image="minimize.gif"
-			class="org.openxava.actions.MinimizeImageAction"/>
-		<action name="removeImage" hidden="true" image="remove.gif"
+			class="org.openxava.actions.MinimizeImageAction"/>		
+		<action name="removeImage" hidden="true" image="remove.gif" confirm="true"
 			class="org.openxava.actions.RemoveImageFromGalleryAction"/>
-		<action name="return" 
+		<action name="close" 
 			class="org.openxava.actions.CancelAction"/>						
 	</controller>
 	
@@ -360,6 +361,11 @@ here that you want to override.
 	<controller name="Return">
 		<action name="return" 
 			class="org.openxava.actions.ReturnAction"/>			
+	</controller>	
+	
+	<controller name="Close">
+		<action name="close" 
+			class="org.openxava.actions.CancelAction"/>			
 	</controller>	
 	
 	<controller name="Reference">		<action name="search"			class="org.openxava.actions.ReferenceSearchAction"			image="search.gif"/>				<action name="createNew" 

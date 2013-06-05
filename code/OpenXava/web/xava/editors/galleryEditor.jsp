@@ -9,12 +9,13 @@ MetaProperty p = (MetaProperty) request.getAttribute(propertyKey);
 String fvalue = (String) request.getAttribute(propertyKey + ".fvalue");
 String viewObject = request.getParameter("viewObject");
 String viewObjectArgv = Is.emptyString(viewObject) || "xava_view".equals(viewObject)?"":(",viewObject=" + viewObject);
+String editAction = request.getParameter("editAction");
+if (Is.emptyString(editAction)) editAction = "Gallery.edit"; 
 %>
-
 
 
 <%@page import="org.openxava.util.Is"%><input id="<%=propertyKey%>" type="hidden" name="<%=propertyKey%>" value="<%=fvalue%>">
 
-<xava:image action='Gallery.edit' argv='<%="galleryProperty=" + p.getName() + viewObjectArgv%>'/>
+<xava:image action='<%=editAction%>' argv='<%="galleryProperty=" + p.getName() + viewObjectArgv%>'/>
 
 
