@@ -15,6 +15,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openxava.annotations.Tree;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.Is;
 import org.openxava.util.Strings;
 import org.openxava.util.XavaException;
@@ -554,7 +555,8 @@ public class TreeView {
 	public ITreeViewReader getTreeViewReaderImpl() {
 		if (treeViewReader == null && !Is.emptyString(treeViewReaderName)) {
 			try {
-				Class clazz = Class.forName(treeViewReaderName);
+				//Class clazz = Class.forName(treeViewReaderName);
+				Class clazz = ClassLoaderUtil.forName(getClass(), treeViewReaderName);
 				if (ITreeViewReader.class.isAssignableFrom(clazz)) {
 					treeViewReader = (ITreeViewReader)clazz.newInstance();
 				}

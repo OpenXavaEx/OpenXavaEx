@@ -19,6 +19,7 @@ import org.openxava.actions.*;
 import org.openxava.application.meta.*;
 import org.openxava.component.*;
 import org.openxava.controller.meta.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.hibernate.*;
 import org.openxava.jpa.*;
 import org.openxava.util.*;
@@ -1210,7 +1211,9 @@ public class ModuleManager implements java.io.Serializable {
 		while (it.hasNext()) {
 			MetaAction action = (MetaAction) it.next();
 			try {
-				if (IForwardAction.class.isAssignableFrom(Class.forName(action.getClassName()))) {
+				//if (IForwardAction.class.isAssignableFrom(Class.forName(action.getClassName()))) {
+				Class<?> actionClass = ClassLoaderUtil.forName(getClass(), action.getClassName());
+				if (IForwardAction.class.isAssignableFrom(actionClass)) {
 					return true;
 				}
 			}

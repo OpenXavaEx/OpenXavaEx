@@ -5,6 +5,7 @@ import java.util.*;
 
 
 import org.apache.commons.logging.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 import org.openxava.validators.meta.xmlparse.*;
 
@@ -70,7 +71,8 @@ public class MetaValidators {
 			if (isPrimitiveType(forType))
 				return null;
 			while (!forType.equals("java.lang.Object")) {
-				Class superClass = Class.forName(forType).getSuperclass();
+				//Class superClass = Class.forName(forType).getSuperclass();
+				Class superClass = ClassLoaderUtil.forName(MetaValidators.class, forType).getSuperclass();
 				if (superClass == null) return null; // An interface without parent
 				forType = superClass.getName();
 				MetaValidatorFor v =

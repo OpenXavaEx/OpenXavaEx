@@ -47,6 +47,13 @@ public class MetaComponent implements Serializable {
 		
 	
 	/**
+	 * FIXME: Add the reset function for DynamicClassLoader
+	 */
+	public static final void reset4Reload(){
+		components.clear();
+	}
+
+	/**
 	 * 
 	 * @exception ElementNotFoundException  If component does not exist.
 	 * @exception XavaException  Any other problem. 

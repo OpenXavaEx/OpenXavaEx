@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import org.openxava.ex.cl.ClassLoaderUtil;
 
 
 
@@ -51,7 +52,8 @@ public class PropertiesReader {
    */
   public Properties get() throws IOException {
 	  if (properties == null) {		
-			Enumeration e = theClass.getClassLoader().getResources(propertiesFileURL);
+			//Enumeration e = theClass.getClassLoader().getResources(propertiesFileURL);
+			Enumeration e = ClassLoaderUtil.getClassLoader(theClass).getResources(propertiesFileURL);
 			properties = new Properties();
 			List urls = new ArrayList();
 			List priorityURLs = new ArrayList();

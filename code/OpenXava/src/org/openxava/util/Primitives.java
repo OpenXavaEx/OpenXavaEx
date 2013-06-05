@@ -1,5 +1,6 @@
 package org.openxava.util;
 
+import org.openxava.ex.cl.ClassLoaderUtil;
 
 
 
@@ -79,7 +80,8 @@ public class Primitives {
 			
 		if (result == null) {
 			try {
-				result = Class.forName(type);
+				//result = Class.forName(type);
+				result = ClassLoaderUtil.forName(Primitives.class, type);
 			}
 			catch (ClassNotFoundException ex) {
 				result = Class.forName("java.lang." + type);

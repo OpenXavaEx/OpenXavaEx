@@ -10,6 +10,7 @@ import java.util.*;
 
 import org.apache.commons.logging.*;
 import org.openxava.component.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.mapping.*;
 import org.openxava.model.*;
 import org.openxava.util.*;
@@ -280,7 +281,8 @@ abstract public class MetaModel extends MetaElement {
 	 */
 	public Class getPropertiesClass() throws XavaException {
 		try {
-			return Class.forName(getInterfaceName());
+			//return Class.forName(getInterfaceName());
+			return ClassLoaderUtil.forName(getClass(), getInterfaceName());
 		} 
 		catch (ClassNotFoundException ex) {
 			return getPOJOClass();
@@ -1716,7 +1718,8 @@ abstract public class MetaModel extends MetaElement {
 	public Class getPOJOClass() throws XavaException { 
 		if (pojoClass==null){
 			try {
-				pojoClass =  Class.forName(getPOJOClassName());
+				//pojoClass =  Class.forName(getPOJOClassName());
+				pojoClass =  ClassLoaderUtil.forName(getClass(), getPOJOClassName());
 			} 
 			catch (Exception ex) {
 				log.error(ex.getMessage(), ex);

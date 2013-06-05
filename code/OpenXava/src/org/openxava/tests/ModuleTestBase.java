@@ -11,6 +11,7 @@ import org.apache.pdfbox.util.*;
 import org.openxava.application.meta.*;
 import org.openxava.component.*;
 import org.openxava.controller.meta.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.hibernate.XHibernate;
 import org.openxava.jpa.*;
 import org.openxava.model.meta.*;
@@ -2120,7 +2121,8 @@ public class ModuleTestBase extends TestCase {
 		if (xavaJunitProperties == null) {
 			try {
 				xavaJunitProperties = new Properties();
-				URL resource = ModuleTestBase.class.getClassLoader().getResource("xava-junit.properties");
+				//URL resource = ModuleTestBase.class.getClassLoader().getResource("xava-junit.properties");
+				URL resource = ClassLoaderUtil.getClassLoader(ModuleTestBase.class).getResource("xava-junit.properties");
 				if (resource != null) {
 					xavaJunitProperties.load(resource.openStream());
 				}

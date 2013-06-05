@@ -7,6 +7,7 @@ import javax.servlet.*;
 
 import org.apache.commons.logging.*;
 import org.openxava.actions.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 import org.openxava.util.meta.*;
 
@@ -180,7 +181,8 @@ public class MetaAction extends MetaElement implements Cloneable {
 	
 	public IAction createAction() throws XavaException {
 		try {
-			Object o = Class.forName(getClassName()).newInstance();
+			//Object o = Class.forName(getClassName()).newInstance();
+			Object o = ClassLoaderUtil.forName(getClass(), getClassName()).newInstance();
 			if (!(o instanceof IAction)) {
 				throw new XavaException("implements_required", getClassName(), IAction.class.getName());
 			}

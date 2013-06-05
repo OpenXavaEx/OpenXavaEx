@@ -1,6 +1,7 @@
 package org.openxava.util;
 
 import org.apache.commons.logging.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 
 /**
  * For obtaining a instance of report parameters.
@@ -15,7 +16,10 @@ public class ReportParametersProviderFactory {
 	public static IReportParametersProvider getInstance() {
 		if (instance == null) {
 			try {
-				instance = (IReportParametersProvider) Class.forName(XavaPreferences.getInstance().getReportParametersProviderClass()).newInstance();
+				//instance = (IReportParametersProvider) Class.forName(XavaPreferences.getInstance().getReportParametersProviderClass()).newInstance();
+				instance = (IReportParametersProvider)
+						ClassLoaderUtil.forName(ReportParametersProviderFactory.class,
+								XavaPreferences.getInstance().getReportParametersProviderClass()).newInstance();
 			}
 			catch (Exception ex) {
 				log.error(ex.getMessage(), ex);
