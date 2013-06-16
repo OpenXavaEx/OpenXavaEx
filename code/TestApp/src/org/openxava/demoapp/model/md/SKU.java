@@ -15,8 +15,8 @@ import org.openxava.annotations.Required;
 import org.openxava.annotations.Stereotype;
 import org.openxava.annotations.Tab;
 import org.openxava.annotations.View;
-import org.openxava.demoapp.base.BaseMasterDataModel;
 import org.openxava.demoapp.model.purchase.RequirementFormDetail;
+import org.openxava.ex.model.base.BaseMasterDataModel;
 
 @Entity
 @Table(name="MD_SKU")

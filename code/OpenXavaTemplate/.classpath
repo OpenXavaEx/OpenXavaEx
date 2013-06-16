@@ -4,6 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="properties"/>
 	<classpathentry kind="src" path="/OpenXava"/>
+	<classpathentry kind="src" path="/OpenXavaEx"/>
 	<classpathentry kind="src" path="persistence"/>
 	<classpathentry kind="src" path="xava"/>
 	<classpathentry kind="src" path="i18n"/>	

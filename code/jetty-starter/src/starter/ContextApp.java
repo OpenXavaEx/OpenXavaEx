@@ -78,6 +78,11 @@ public class ContextApp {
         ServletContextHandler root = new ServletContextHandler(contexts, "/", ServletContextHandler.SESSIONS);
         root.setBaseResource(buildFolderResource("jetty-starter/war-root"));
         root.addServlet(DefaultServlet.class, "/");    //Default servlet
+        //FIXME: org.eclipse.jetty.servlet.ServletHolder.initJspServlet() need it - InitParameter "com.sun.appserv.jsp.classpath"
+        root.setClassLoader(ContextApp.class.getClassLoader());
+        //JSP Servlet
+        System.setProperty("org.apache.jasper.compiler.disablejsr199", "true");
+        root.addServlet(JspServlet.class, "*.jsp");
         root.addServlet(new ServletHolder(new HttpServlet() {    //The stop servlet
             @Override
             public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
@@ -129,6 +134,8 @@ public class ContextApp {
         ctx.addFilter(fh, "/modules/*", FilterMapping.REQUEST);
         ctx.addFilter(fh, "/dwr/*", FilterMapping.REQUEST);
         ctx.addFilter(fh, "/schema-update/*", FilterMapping.REQUEST);
+        
+        ctx.setWelcomeFiles(new String[]{"index.jsp"});
 
         server.start();
         //System.out.println(server.dump());
@@ -263,7 +270,7 @@ public class ContextApp {
 		}
 		
 		private String getJndiName(){
-			return "jdbc/"+this.ctxPath+"_DS";
+			return "jdbc/"+this.ctxPath+"DS";
 		}
 		private String getDefaultSchema(){
 			if (isHSQL()){

@@ -24,10 +24,10 @@ import org.openxava.annotations.NoFrame;
 import org.openxava.annotations.ReferenceView;
 import org.openxava.annotations.Required;
 import org.openxava.annotations.Stereotype;
-import org.openxava.demoapp.base.BaseBillDetailModel;
 import org.openxava.demoapp.model.md.SKU;
 import org.openxava.ex.editor.shell.IShellEditor;
 import org.openxava.ex.editor.shell.ShellEditorContext;
+import org.openxava.ex.model.base.BaseBillDetailModel;
 import org.openxava.formatters.IFormatter;
 import org.openxava.jpa.XPersistence;
 

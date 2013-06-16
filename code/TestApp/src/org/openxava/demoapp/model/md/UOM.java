@@ -11,9 +11,9 @@ import org.openxava.annotations.Hidden;
 import org.openxava.annotations.Required;
 import org.openxava.annotations.Tab;
 import org.openxava.annotations.View;
-import org.openxava.demoapp.base.BaseMasterDataModel;
 import org.openxava.demoapp.etc._Link;
 import org.openxava.demoapp.model.md.enums.MeasureCatogory;
+import org.openxava.ex.model.base.BaseMasterDataModel;
 
 /**
  * The unit of measure master data

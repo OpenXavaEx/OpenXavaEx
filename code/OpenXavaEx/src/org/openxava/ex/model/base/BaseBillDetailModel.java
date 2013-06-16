@@ -1,4 +1,4 @@
-package org.openxava.demoapp.base;
+package org.openxava.ex.model.base;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <head>
-	<title>OpenXavaEx Demo</title>
+	<title>OpenXavaEx App</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
 	<script type="text/javascript" src="xava-ex/libs/LABjs/LAB.js"></script>
@@ -24,44 +24,12 @@
 			};
 
 			var zNodes =[{
-				name:"Management", open:true,
+				name:"App default", open:true,
 				children: [{
 					name:"Master Data", open:true,
 					children: [{
-						name:"UOM", 	_url:"./modules/UOM"
-					},{
-						name:"Vendor", 	_url:"./modules/Vendor"
-					},{
-						name:"SKU", 	_url:"./modules/SKU"
+						name:"FirstSample", 	_url:"./modules/FirstSample"
 					}]
-				},{
-					name:"Purchase", open:true,
-					children: [{
-						name:"Request", _url:"./modules/RequirementForm"
-					},{
-						name:"Inquiry", _url:"./modules/SourceInquiry"
-					},{
-						name:"PO", 		_url:"./modules/PurchaseOrder"
-					},{
-						name:"Receive", _url:"./modules/ReceiveTicket"
-					}]
-				},{
-					name:"TTS", open:true,
-					children: [{
-						name:"Master Data", _url:"./modules/Customer"
-					},
-					{
-						name:"Tank Data", _url:"./modules/Tank"
-					},{
-						name:"RunTimeData", _url:"./modules/RunTimeData"
-					},{
-						name:"UserData", 		_url:"./modules/UserData"
-					},{
-						name:"HistoryChart", _url:"./modules/HistoryChart"
-					}]
-				},{
-					name:"Inventory", open:true,
-					isParent:true
 				}]
 			},{
 				name:"System", open:true,
@@ -109,7 +77,7 @@
 <body>
 	<table style="height:100%;width:100%" border="0">
 		<tr style="height:20px;background-color:LightSteelBlue">
-			<td colspan="2"><h2>OpenXavaEx Demo</h2></td>
+			<td colspan="2"><h2>OpenXavaEx App</h2></td>
 		</tr>
 		<tr valign="top">
 			<td style="width:160px;background-color:aliceblue"><div id="navTree" class="ztree"></div></td>

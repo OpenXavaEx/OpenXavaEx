@@ -6,7 +6,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.openxava.annotations.Required;
-import org.openxava.demoapp.base.BaseBillDetailModel;
+import org.openxava.ex.model.base.BaseBillDetailModel;
 
 @Entity
 @Table(name="PO_PRR")

@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.openxava.annotations.Tab;
-import org.openxava.demoapp.base.BaseMasterDataModel;
+import org.openxava.ex.model.base.BaseMasterDataModel;
 
 /**
  * The unit of measure master data

@@ -17,7 +17,7 @@ import org.openxava.annotations.ListProperties;
 import org.openxava.annotations.Required;
 import org.openxava.annotations.Stereotype;
 import org.openxava.annotations.Tab;
-import org.openxava.demoapp.base.BaseBillModel;
+import org.openxava.ex.model.base.BaseBillModel;
 
 @Entity
 @Table(name="PO_PRH")
