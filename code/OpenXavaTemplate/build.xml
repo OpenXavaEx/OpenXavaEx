@@ -17,7 +17,7 @@
 	<!-- Build and deploy the application in war format -->	
 	<target name="deployWar">
 		<!-- In a directory -->
-		<ant antfile="../OpenXava/build.xml" target="deploy"/>
+		<ant antfile="../OpenXava/build.xml" target="ex_deploy"/>
 		<!-- In a file (it does not work well on windows + tomcat)
 		<ant antfile="../OpenXava/build.xml" target="deployWar"/>
 		-->

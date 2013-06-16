@@ -1,4 +1,5 @@
-/TestAppHsqlDB
 /build
 /.svn
-/etc
+/app*
+/App*
+/APP*
