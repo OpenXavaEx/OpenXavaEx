@@ -1065,6 +1065,17 @@
 		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF" overwrite="true">
 			<fileset dir="../OpenXava/web/WEB-INF"/>
 		</copy>
+		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/lib" overwrite="true">
+			<fileset dir="../OpenXava/lib">
+				<exclude name="**/servlet-api.jar"/>
+				<exclude name="**jsp-api.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/lib" overwrite="true">
+			<fileset dir="../OpenXavaExBase/lib">
+				<exclude name="**/*-sources.jar"/>
+			</fileset>
+		</copy>
 		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}" overwrite="true">
 			<fileset dir="../OpenXavaEx/web"/>
 		</copy>
@@ -1142,6 +1153,8 @@
 		<javac destdir="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/classes" includeantruntime="false">
 			<src path="${compile.src.path}"/>
 			<classpath>
+				<pathelement path="../OpenXavaExBase/bin"/>
+				<pathelement path="../OpenXavaEx/bin"/>
 				<pathelement path="../OpenXava/bin"/>
 				<fileset dir="../OpenXava/web/WEB-INF/lib">
 					<include name="**/*.jar"/>
