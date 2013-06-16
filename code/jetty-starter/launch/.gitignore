@@ -1,0 +1,4 @@
+*.*
+!ContextApp(local hsql).launch
+!ContextApp(local oracle).launch
+!.gitignore
