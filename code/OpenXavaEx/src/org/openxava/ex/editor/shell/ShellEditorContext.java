@@ -9,6 +9,8 @@ import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.ex.utils.FreeMarkerEngine;
 import org.openxava.formatters.IFormatter;
 import org.openxava.model.meta.MetaProperty;
+import org.openxava.util.DataSourceConnectionProvider;
+import org.openxava.util.IConnectionProvider;
 import org.openxava.util.Messages;
 import org.openxava.view.View;
 import org.openxava.web.WebEditors;
@@ -126,6 +128,20 @@ public class ShellEditorContext {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	/**
+	 * Get connection provider of current component
+	 * @return
+	 */
+	public IConnectionProvider getConnectionProvider(){
+		String componentName = this.view.getMetaModel().getMetaComponent().getName();
+		return DataSourceConnectionProvider.getByComponent(componentName);
+	}
+	
+	/**
+	 * Get the context path of current WebApp
+	 * @return
+	 */
 	public String getContextPath() {
 		return contextPath;
 	}

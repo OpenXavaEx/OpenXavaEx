@@ -8,5 +8,10 @@
 	<editor name="DateCalendar" url="../../xava-ex/editors/dateCalendarEditor-yyyymmdd.jsp">
 		<formatter class="org.openxava.ex.formatter.DateFormatter" />		<for-type type="java.util.Date" />
 	</editor>
-									
+
+	<!-- Override the default /editors/listEditor.jsp
+	<editor name="xava-ex-list-editor" url="../../xava-ex/editors/ListEditor.jsp">
+	  <for-tabs/>
+	</editor>
+	 -->
 </editors>

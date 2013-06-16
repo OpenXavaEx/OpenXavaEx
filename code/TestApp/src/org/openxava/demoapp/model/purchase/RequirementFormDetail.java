@@ -130,6 +130,9 @@ public class RequirementFormDetail extends BaseBillDetailModel{
 			}
 			SKU sku = XPersistence.getManager().find(SKU.class, skuId);
 			int leadTime = sku.getVendor().getLeadTimeDays();
+			
+			//BP: Use jdbc connection to access data
+			
 
 			for(int i=0; i<30; i++){	//A month after leadTime
 				Calendar cal = Calendar.getInstance();
