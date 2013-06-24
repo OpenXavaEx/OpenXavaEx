@@ -31,6 +31,7 @@ import org.openxava.ex.dwr.ForceUtf8DwrServlet;
 import org.openxava.ex.json.JsonViewerServlet;
 import org.openxava.ex.tools.DynamicLoaderFilter;
 import org.openxava.ex.tools.SchemaUpdateServlet;
+import org.openxava.ex.tools.TokenCookieSSOFilter;
 import org.openxava.web.servlets.ImagesServlet;
 import org.openxava.web.servlets.ModuleServlet;
 
@@ -83,13 +84,25 @@ public class ContextApp {
         //JSP Servlet
         System.setProperty("org.apache.jasper.compiler.disablejsr199", "true");
         root.addServlet(JspServlet.class, "*.jsp");
-        root.addServlet(new ServletHolder(new HttpServlet() {    //The stop servlet
+        //The STOP Servlet
+        root.addServlet(new ServletHolder(new HttpServlet() {
             @Override
             public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
                 System.err.println(">>> Stop server request from /STOP ...");
                 System.exit(0);
             }
         }), "/STOP");
+        //The "main" web app - for SSO testing
+        ServletContextHandler main = new ServletContextHandler(contexts, "/main", ServletContextHandler.SESSIONS);
+        main.setBaseResource(buildFolderResource("jetty-starter/war-app-main"));
+        main.addServlet(DefaultServlet.class, "/");    //Default servlet
+        //FIXME: org.eclipse.jetty.servlet.ServletHolder.initJspServlet() need it - InitParameter "com.sun.appserv.jsp.classpath"
+        main.setClassLoader(ContextApp.class.getClassLoader());
+        //JSP Servlet
+        System.setProperty("org.apache.jasper.compiler.disablejsr199", "true");
+        main.addServlet(JspServlet.class, "*.jsp");
+        //Welcome files
+        main.setWelcomeFiles(new String[]{"shell_index.jsp"});
 
         ServletContextHandler ctx = new ServletContextHandler(contexts, "/" + es.ctxPath, ServletContextHandler.SESSIONS);
         //FIXME: org.eclipse.jetty.servlet.ServletHolder.initJspServlet() need it - InitParameter "com.sun.appserv.jsp.classpath"
@@ -124,16 +137,24 @@ public class ContextApp {
 		
 		//JsonViewer Servlet
 		ctx.addServlet(JsonViewerServlet.class, "/json");
+		
+		//SSO Integration Filter
+		FilterHolder ssoFh = new FilterHolder(TokenCookieSSOFilter.class);
+		ssoFh.setInitParameter(TokenCookieSSOFilter.TOKEN_CHECK_URL_INIT_PARAME,
+				"http://localhost:"+es.httpPort+"/main/bridge.jsp?token=");
+        ctx.addFilter(ssoFh, "/modules/*", FilterMapping.REQUEST);
+		FilterHolder ssoFh2 = new FilterHolder(TokenCookieSSOFilter.class);
+		ssoFh2.setInitParameter(TokenCookieSSOFilter.TOKEN_CHECK_URL_INIT_PARAME, null);
+        ctx.addFilter(ssoFh2, "*.jsp", FilterMapping.REQUEST);
+        ctx.addFilter(ssoFh2, "/dwr/*", FilterMapping.REQUEST);
         
         //Dynamic class load filter, only for development
-        FilterHolder fh = new FilterHolder(DynamicLoaderFilter.class);
-        fh.setInitParameter(DynamicLoaderFilter.INIT_PARAM_NAME_CLASSPATH,
-        		getAppClassPathList(es.ctxPath)
-        );
-        ctx.addFilter(fh, "*.jsp", FilterMapping.REQUEST);
-        ctx.addFilter(fh, "/modules/*", FilterMapping.REQUEST);
-        ctx.addFilter(fh, "/dwr/*", FilterMapping.REQUEST);
-        ctx.addFilter(fh, "/schema-update/*", FilterMapping.REQUEST);
+        FilterHolder clFh = new FilterHolder(DynamicLoaderFilter.class);
+        clFh.setInitParameter(DynamicLoaderFilter.INIT_PARAM_NAME_CLASSPATH, getAppClassPathList(es.ctxPath));
+        ctx.addFilter(clFh, "*.jsp", FilterMapping.REQUEST);
+        ctx.addFilter(clFh, "/modules/*", FilterMapping.REQUEST);
+        ctx.addFilter(clFh, "/dwr/*", FilterMapping.REQUEST);
+        ctx.addFilter(clFh, "/schema-update/*", FilterMapping.REQUEST);
         
         ctx.setWelcomeFiles(new String[]{"index.jsp"});
 
@@ -230,6 +251,9 @@ public class ContextApp {
 		String v = System.getenv(var);
 		if (null==v){
 			v=defVal;
+			if (null!=v){
+				System.setProperty(var, v);		//Remember the real variable value into System Properties
+			}
 		}
 		return v;
 	}
