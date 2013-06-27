@@ -11,10 +11,8 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 ::Run OpenXava ant command
-set PATH=%~dp0.\exe\apache-ant-1.9.1\bin;%PATH%
-pushd OpenXavaTemplate
-call ant -buildfile CreateNewProject.xml
-popd
+set PATH=%~dp0..\exe\apache-ant-1.9.1\bin;%PATH%
+call ant
 
 pause
 popd

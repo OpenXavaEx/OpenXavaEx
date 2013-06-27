@@ -9,7 +9,7 @@ if (null==userInfo || null==userInfo.get("id")){
 }else{
 	//Redirect to index page of App
 	appCtx = System.getProperty("CTX_PATH");
-	redirUrl = "/" + appCtx + "/index.jsp?mainApp=/main";
+	redirUrl = "/" + appCtx + "/"+appCtx+".jsp?mainApp=/main";
 }
 response.sendRedirect(redirUrl);
 %>

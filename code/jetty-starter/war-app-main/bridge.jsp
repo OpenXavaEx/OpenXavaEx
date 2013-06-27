@@ -68,7 +68,7 @@ if (null!=token){	//Required from server - SSO check
 	Object userInfoObject = _getUserInfoFromSession(session);
 	if (null==userInfoObject){
 		//NOTE: replace you own login page here
-		response.sendRedirect("login.jsp");
+		response.sendRedirect("your-login-page.jsp");
 	}else{
 		//Create token and save as cookie
 		String t = _createToken(application, userInfoObject);

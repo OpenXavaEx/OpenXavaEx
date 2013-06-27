@@ -37,16 +37,13 @@ public class TokenCookieSSOFilter implements Filter {
 	
 	private String checkUrl;
 	
-	@Override
 	public void init(FilterConfig cfg) throws ServletException {
 		checkUrl = cfg.getInitParameter(TOKEN_CHECK_URL_INIT_PARAME);
 	}
-	@Override
 	public void destroy() {
 		//Do nothing
 	}
 
-	@Override
 	public void doFilter(final ServletRequest request, final ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpServletResponse resp = (HttpServletResponse)response;

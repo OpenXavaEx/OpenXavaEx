@@ -29,7 +29,7 @@ public class DynamicLoaderFilter implements Filter {
 	
 	private List<File> classpath = new ArrayList<File>();
 	private ClassModifyChecker checker = new ClassModifyChecker();
-	@Override
+
 	public void init(FilterConfig cfg) throws ServletException {
 		String pathList = cfg.getInitParameter(INIT_PARAM_NAME_CLASSPATH);
 		String[] pathArray = pathList.split(";");
@@ -37,18 +37,16 @@ public class DynamicLoaderFilter implements Filter {
 			classpath.add(new File(pathArray[i]));
 		}
 	}
-	@Override
+
 	public void destroy() {
 		//Do nothing
 	}
 
-	@Override
 	public void doFilter(final ServletRequest request, final ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
 		try{
 			//Make class reloadable, and clean application context when class reloaded
 			ClassLoaderUtil.injectIntoContextClassLoader(classpath, checker, new WhenClassReload(){
-				@Override
 				public void doReload() {
 					XPersistence.reset4Reload();
 					MetaComponent.reset4Reload();

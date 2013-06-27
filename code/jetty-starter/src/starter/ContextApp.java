@@ -156,7 +156,7 @@ public class ContextApp {
         ctx.addFilter(clFh, "/dwr/*", FilterMapping.REQUEST);
         ctx.addFilter(clFh, "/schema-update/*", FilterMapping.REQUEST);
         
-        ctx.setWelcomeFiles(new String[]{"index.jsp"});
+        ctx.setWelcomeFiles(new String[]{"index.jsp", es.ctxPath+".jsp"});
 
         server.start();
         //System.out.println(server.dump());
@@ -251,9 +251,9 @@ public class ContextApp {
 		String v = System.getenv(var);
 		if (null==v){
 			v=defVal;
-			if (null!=v){
-				System.setProperty(var, v);		//Remember the real variable value into System Properties
-			}
+		}
+		if (null!=v){
+			System.setProperty(var, v);		//Remember the real variable value into System Properties
 		}
 		return v;
 	}
