@@ -299,6 +299,8 @@ public class ContextApp {
 		private String getDefaultSchema(){
 			if (isHSQL()){
 				return "PUBLIC";
+			}else if (isMySQL()){
+				return this.ctxPath;
 			}else{
 				return this.dbUser;
 			}
