@@ -1,0 +1,30 @@
+
+ #### Created By: The Uniform Server Development Team ####
+ =========================================================
+ mysqladmin.exe         For help type:  mysqladmin --help
+ ---------------------------------------------------------
+ Change password from root to mpg123:
+ (Substitute YOUR password for mpg123)
+ mysqladmin --user=root --password=root password mpg123
+ Quick test:
+  mysqladmin --user=root --password=root status
+   OR if you changed the password:
+  mysqladmin --user=root --password=mpg123 status
+
+ Note: After changing the password and before stopping the server 
+       edit mysql_stop.bat and change the password in this line to match.  
+ rem ## Kill server
+ udrive\bin\mysqladmin.exe --port=3311 --user=root --password=root shutdown
+ =========================================================
+ mysql.exe              For help type:  mysql --help
+ ---------------------------------------------------------
+ To start a mysql prompt type:
+  mysql --user=root --password=root
+   OR if you changed the password:
+  mysql --user=root --password=mpg123
+
+ Quick tests:
+  mysql> SELECT VERSION(), CURRENT_DATE;
+  mysql> SHOW DATABASES;
+  To end: quit or \q
+ .........................................................

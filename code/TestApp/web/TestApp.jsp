@@ -57,6 +57,11 @@ if (null!=mainApp){
 				},{
 					name:"Inventory", open:true,
 					isParent:true
+				},{
+					name:"Reports", open:true,
+					children:[{
+						name:"UOM Verdor LeadTime(Days)", _url:"<%=modulesUrl%>/UomVendorLeadTimeReport"
+					}]
 				}]
 			},{
 				name:"System", open:true,
