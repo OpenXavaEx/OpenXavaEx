@@ -21,7 +21,8 @@ import org.openxava.ex.model.base.BaseMasterDataModel;
 @Entity
 @Table(name="MD_SKU")
 //BP: Can use a non-persistence in @Tab and @View
-@Tab(baseCondition = "enabled=true", properties="code, name, vendor.name, uom.displayName, price, descr")
+//BP: "e" means the main data table
+@Tab(baseCondition = "e.enabled=true", properties="code, name, vendor.name, uom.displayName, price, descr")
 @View(name="V-SKU-code-name", members="code; nameWithUom")
 public class SKU extends BaseMasterDataModel{
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
