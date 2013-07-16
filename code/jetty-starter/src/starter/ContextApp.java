@@ -28,7 +28,6 @@ import org.eclipse.jetty.util.resource.FileResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.openxava.ex.dwr.ForceUtf8DwrServlet;
-import org.openxava.ex.json.JsonViewerServlet;
 import org.openxava.ex.tools.DynamicLoaderFilter;
 import org.openxava.ex.tools.SchemaUpdateServlet;
 import org.openxava.ex.tools.TokenCookieSSOFilter;
@@ -134,9 +133,6 @@ public class ContextApp {
         ServletHolder susSh = new ServletHolder(SchemaUpdateServlet.class);
         susSh.setInitParameter(SchemaUpdateServlet.PERSISTENCE_UNIT_LIST, "default");	//default;junit
 		ctx.addServlet(susSh, "/schema-update/*");
-		
-		//JsonViewer Servlet
-		ctx.addServlet(JsonViewerServlet.class, "/json");
 		
 		//SSO Integration Filter
 		FilterHolder ssoFh = new FilterHolder(TokenCookieSSOFilter.class);
