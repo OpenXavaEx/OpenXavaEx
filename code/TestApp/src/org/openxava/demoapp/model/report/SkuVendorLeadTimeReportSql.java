@@ -1,10 +1,5 @@
 package org.openxava.demoapp.model.report;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -19,7 +14,6 @@ import org.openxava.demoapp.model.md.Vendor;
 import org.openxava.ex.annotation.query.Condition;
 import org.openxava.ex.annotation.query.Sql;
 import org.openxava.ex.model.base.BaseReportSqlQuery;
-import org.openxava.ex.utils.Misc;
 
 @View(members="#maxLeadTimeDays; sku, vendor; queryResult")
 @Tab(properties="skuCode, skuName, venderCode,venderName, leadTimeDays, *")
@@ -62,26 +56,5 @@ public class SkuVendorLeadTimeReportSql extends BaseReportSqlQuery{
 	}
 	public void setMaxLeadTimeDays(int maxLeadTimeDays) {
 		this.maxLeadTimeDays = maxLeadTimeDays;
-	}
-	
-	@Override
-	protected QueryResult doQuery(_ReportQueryAction action) {
-		@SuppressWarnings("unchecked")
-		List<Map<String,Object>> data = Misc.$list(
-				Misc.$attrs("skuCode", "001", "skuName", "电脑", "venderCode", "HP", "venderName", "惠普", "leadTimeDays", 30,
-						"modifyTime", new Date(System.currentTimeMillis()-13*24*60*60*1000), "credit", 11231.53),
-				Misc.$attrs("skuCode", "002", "skuName", "打印机", "venderCode", "HP", "venderName", "惠普", "leadTimeDays", 30,
-						"modifyTime", new Date(System.currentTimeMillis()-7*24*60*60*1000), "credit", 12119.681),
-				Misc.$attrs("skuCode", "011", "skuName", "存储", "venderCode", "IBM", "venderName", "IBM", "leadTimeDays", 60,
-						"modifyTime", new Date(System.currentTimeMillis()-11*24*60*60*1000), "credit", 7434.3)
-		);
-		@SuppressWarnings("serial")
-		Map<String, Class<?>> fields = new LinkedHashMap<String, Class<?>>(){{{
-			this.put("skuCode", (Class<?>)String.class);
-			this.put("leadTimeDays", (Class<?>)Integer.class);
-			this.put("modifyTime", (Class<?>)Date.class);
-			this.put("credit", (Class<?>)Double.class);
-		}}};
-		return new QueryResult(SkuVendorLeadTimeReportSql.class, fields, data);
 	}
 }

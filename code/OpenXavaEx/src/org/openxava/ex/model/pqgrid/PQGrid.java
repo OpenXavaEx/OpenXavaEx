@@ -70,8 +70,8 @@ public class PQGrid {
 			String iframe = StringTemplate.parse(
 					"<iframe id='${propertyKey}-ifmWorkspace' frameborder='0' src='${src}' style='width:100%' scrolling='no'></iframe>",
 					Misc.$props(
-							"propertyKey", ctx.getPropertyKey(), "src",
-							ctx.getContextPath() + "/xava-ex/editors/iframe/PQGrid.jsp?edit=true&id="+ctx.getRawValue()),
+							"propertyKey", ctx.getPropertyKey(),
+							"src", ctx.getContextPath() + "/xava-ex/editors/iframe/PQGrid.jsp?edit=true&id="+ctx.getRawValue()),
 					StringTemplate.REGEX_PATTERN_JAVA_STYLE);
 			return iframe;
 		}
@@ -79,8 +79,8 @@ public class PQGrid {
 			String iframe = StringTemplate.parse(
 					"<iframe id='${propertyKey}-ifmWorkspace' frameborder='0' src='${src}' style='width:100%' scrolling='no'></iframe>",
 					Misc.$props(
-							"propertyKey", ctx.getPropertyKey(), "src",
-							ctx.getContextPath() + "/xava-ex/editors/iframe/PQGrid.jsp?edit=false&id="+ctx.getRawValue()),
+							"propertyKey", ctx.getPropertyKey(),
+							"src", ctx.getContextPath() + "/xava-ex/editors/iframe/PQGrid.jsp?edit=false&id="+ctx.getRawValue()),
 					StringTemplate.REGEX_PATTERN_JAVA_STYLE);
 			return iframe;
 		}

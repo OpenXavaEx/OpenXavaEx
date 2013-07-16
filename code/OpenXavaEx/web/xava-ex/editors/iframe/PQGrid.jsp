@@ -1,3 +1,4 @@
+<%@page import="org.openxava.ex.utils.VersionInfo"%>
 <%@page import="org.openxava.ex.model.pqgrid.PQGrid"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -39,11 +40,22 @@
         $(function () {
             //Patch: make grid area all page width, and hide some useless element
             var iframe = window.frameElement;
-            $(parent.$(iframe).parents("table")[0]).css("width", "100%");
-            $(parent.$(iframe).parents("table")[1]).css("width", "100%");
-            $(parent.$(iframe).parents("tr")[0]).prev().hide();
-            $($(parent.$(iframe).parents("tr")[1]).children("td")[0]).hide();
-            $($(parent.$(iframe).parents("tr")[1]).children("td")[1]).hide();
+            <%if ("4.7.1".equals(VersionInfo.getOpenXavaVersion())){%>
+                $(parent.$(iframe).parents("table")[0]).css("width", "100%");
+                $(parent.$(iframe).parents("table")[1]).css("width", "100%");
+                $(parent.$(iframe).parents("tr")[0]).prev().hide();
+                $($(parent.$(iframe).parents("tr")[1]).children("td")[0]).hide();
+                $($(parent.$(iframe).parents("tr")[1]).children("td")[1]).hide();
+            <%}%>
+            <%if ("4.7".equals(VersionInfo.getOpenXavaVersion())){%>
+                $($($(parent.$(iframe).parents("table")[0]).children("tbody")).children()[0]).hide();
+                $(parent.$(iframe).parents("table")[0]).css("width", "100%");
+                $(parent.$(iframe).parents("table")[1]).css("width", "100%");
+                $(parent.$(iframe).parents("table")[2]).css("width", "100%");
+                $($($($(parent.$(iframe).parents("table")[2]).children("tbody")).children()[0]).children()[0]).hide();
+                $($($($(parent.$(iframe).parents("table")[2]).children("tbody")).children()[0]).children()[1]).hide();
+            <%}%>
+
             var perfectWidth = "99.7%"; //The width to display all table content
         	
         	//Build PQGrid
