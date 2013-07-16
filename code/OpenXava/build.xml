@@ -644,7 +644,7 @@
 		<echo file="../${project}/web/WEB-INF/classes/editors-js.properties">${editorsjs.files}</echo>
 	</target>
 
-	<target name="prepareWar" depends="updateDataSourceInfo, configureJNDI">
+	<target name="prepareWar" depends="createDist, updateDataSourceInfo, configureJNDI">
 		<delete dir="../${project}/web/xava"/>
         <delete includeemptydirs="true">
 		    <fileset dir="../${project}/web/WEB-INF" excludes="classes/**"/>
@@ -956,6 +956,7 @@
 	-->
 	<target name="updateOX">
 		<antcall target="copyDTDs"/>
+        <!--
 		<copy todir="../${project}/web/xava" overwrite="true" >
 			<fileset dir="../OpenXava/web/xava" excludes="WEB-INF/**,style/custom.css"/>
 		</copy>
@@ -965,8 +966,11 @@
 		<copy todir="../${project}/web/WEB-INF" overwrite="true">
 			<fileset dir="../OpenXava/web/WEB-INF"/>
 		</copy>
+        -->
 		<antcall target="createWebXml"/>
+        <!--
 		<jar jarfile="../${project}/web/WEB-INF/lib/openxava.jar" basedir="../OpenXava/bin"/>
+        -->
 		<!-- Delete the old Hibernate jars (used until v4m5) -->
 		<delete file="../${project}/web/WEB-INF/lib/ejb3-persistence.jar"/>
 		<delete file="../${project}/web/WEB-INF/lib/hibernate-annotations.jar"/>
@@ -1050,5 +1054,130 @@
 
 	</target>
 
+
+	<target name="ex_deploy" depends="ex_reset, updateDataSourceInfo, configureJNDI, ex_compileJava">
+		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}" overwrite="true">
+			<fileset dir="../OpenXava/web" excludes="WEB-INF/**,style/custom.css"/>
+		</copy>
+		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}/xava/style" overwrite="false">
+			<fileset file="../OpenXava/web/xava/style/custom.css"/>
+		</copy>
+		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF" overwrite="true">
+			<fileset dir="../OpenXava/web/WEB-INF"/>
+		</copy>
+		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/lib" overwrite="true">
+			<fileset dir="../OpenXava/lib">
+				<exclude name="**/servlet-api.jar"/>
+				<exclude name="**jsp-api.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/lib" overwrite="true">
+			<fileset dir="../OpenXavaExBase/lib">
+				<exclude name="**/*-sources.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}" overwrite="true">
+			<fileset dir="../OpenXavaEx/web"/>
+		</copy>
+		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}" overwrite="true">
+			<fileset dir="../${project}/web"/>
+		</copy>
+		<jar jarfile="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/lib/openxava.jar" basedir="../OpenXava/bin"/>
+		<jar jarfile="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/lib/openxava-ex.jar" basedir="../OpenXavaEx/bin"/>
+		<jar jarfile="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/lib/openxava-exbase.jar" basedir="../OpenXavaExBase/bin"/>
+
+        <touch file="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/web.xml"/>
+    </target>
+    <target name="ex_reset" depends="">
+		<delete dir="${deploy.dir}/${name.war}${war.dir.suffix}" failonerror="false"/>
+		<mkdir dir="${deploy.dir}/${name.war}${war.dir.suffix}"/>
+    </target>
+	<target name="ex_compileJava" depends="">
+        <!-- OpenXava and Ex -->
+        <mkdir dir="../OpenXavaExBase/bin"/>
+		<javac destdir="../OpenXavaExBase/bin" includeantruntime="false"
+			   source="1.5" target="1.5" debug="on" fork="no" encoding="UTF-8">
+			<src path="../OpenXavaExBase/src"/>
+			<classpath>
+				<fileset dir="../OpenXavaExBase/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<pathelement path="${j2ee.lib};${xava.compiler.path}"/>
+			</classpath>
+		</javac>
+        <mkdir dir="../OpenXava/bin"/>
+		<javac destdir="../OpenXava/bin" includeantruntime="false"
+			   source="1.5" target="1.5" debug="on" fork="no" encoding="UTF-8">
+			<src path="../OpenXava/src"/>
+			<classpath>
+                <pathelement path="../OpenXavaExBase/bin"/>
+				<fileset dir="../OpenXava/web/WEB-INF/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="../OpenXava/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="../OpenXavaExBase/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<pathelement path="${j2ee.lib};${xava.compiler.path}"/>
+			</classpath>
+		</javac>
+		<copy todir="../OpenXava/bin">
+			<fileset dir="../OpenXava/xava"/>
+			<fileset dir="../OpenXava/i18n"/>
+			<fileset dir="../OpenXava/properties"/>
+		</copy>
+        <mkdir dir="../OpenXavaEx/bin"/>
+		<javac destdir="../OpenXavaEx/bin" includeantruntime="false"
+		       source="1.5" target="1.5" debug="on" fork="no" encoding="UTF-8">
+			<src path="../OpenXavaEx/src"/>
+			<classpath>
+                <pathelement path="../OpenXavaExBase/bin"/>
+                <pathelement path="../OpenXava/bin"/>
+				<fileset dir="../OpenXava/web/WEB-INF/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="../OpenXava/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="../OpenXavaExBase/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<pathelement path="${j2ee.lib};${xava.compiler.path}"/>
+			</classpath>
+		</javac>
+		<copy todir="../OpenXavaEx/bin">
+			<fileset dir="../OpenXavaEx/xava"/>
+		</copy>
+        
+        <!-- Current project -->
+		<mkdir dir="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/classes"/>
+		<javac destdir="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/classes" includeantruntime="false"
+			   source="1.5" target="1.5" debug="on" fork="no" encoding="UTF-8">
+			<src path="${compile.src.path}"/>
+			<classpath>
+				<pathelement path="../OpenXavaExBase/bin"/>
+				<pathelement path="../OpenXavaEx/bin"/>
+				<pathelement path="../OpenXava/bin"/>
+				<fileset dir="../OpenXavaExBase/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="../OpenXava/web/WEB-INF/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="../OpenXava/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<pathelement path="${j2ee.lib};${xava.compiler.path}"/>
+			</classpath>
+		</javac>
+		<copy todir="${deploy.dir}/${name.war}${war.dir.suffix}/WEB-INF/classes">
+			<fileset dir="../${project}/xava"/>
+			<fileset dir="../${project}/persistence"/>
+			<fileset dir="../${project}/i18n"/>
+			<fileset dir="../${project}/properties"/>
+		</copy>
+	</target>
 
 </project>
