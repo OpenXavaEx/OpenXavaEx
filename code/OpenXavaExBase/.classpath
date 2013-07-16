@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/OpenXava/web/WEB-INF/lib/slf4j-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="/OpenXava/web/WEB-INF/lib/slf4j-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/fastjson-1.1.30.jar" sourcepath="lib/fastjson-1.1.30-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-lang3-3.1.jar" sourcepath="lib/commons-lang3-3.1-sources.jar"/>
-	<classpathentry kind="lib" path="/OpenXava/web/WEB-INF/lib/commons-io.jar"/>
+	<classpathentry exported="true" kind="lib" path="/OpenXava/web/WEB-INF/lib/commons-io.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/freemarker-2.3.19.jar" sourcepath="lib/freemarker-2.3.19-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-jxpath-1.3.jar" sourcepath="lib/commons-jxpath-1.3-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
