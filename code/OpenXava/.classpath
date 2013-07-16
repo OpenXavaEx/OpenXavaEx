@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="xava"/>
+	<classpathentry kind="src" path="properties"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="i18n"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-fileupload.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/itext.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/portlet-api-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/dom4j.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-collections.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/ehcache.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/cglib.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/asm.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/jasperreports.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/antlr.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate3.jar" sourcepath="lib-src/hibernate-3.6.10.Final-core_envers_entitymanager-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate-validator.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/javassist.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-validator.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/mailapi.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/htmlunit.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/commons-io.jar"/>
+	<classpathentry kind="lib" path="lib/sac.jar"/>
+	<classpathentry kind="lib" path="lib/cssparser.jar"/>
+	<classpathentry kind="lib" path="lib/nekohtml.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/ox-jdbc-adapters.jar"/>
+	<classpathentry kind="lib" path="lib/htmlunit-core-js.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-logging.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ejb.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jsp-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/servlet-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/dwr.jar" sourcepath="lib-src/dwr-2.0.5-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/slf4j-jdk14.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/javax.inject.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="lib/portal-kernel.jar"/>
+	<classpathentry kind="lib" path="lib/portal-service.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/groovy-all.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/jpa2.jar"/>
+	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="lib/xalan.jar"/>
+	<classpathentry kind="lib" path="lib/serializer.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate-classic-validator.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/validation-api.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/jaxb-api.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/commons-codec.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-lang.jar"/>
+	<classpathentry kind="lib" path="lib/httpclient.jar"/>
+	<classpathentry kind="lib" path="lib/httpcore.jar"/>
+	<classpathentry kind="lib" path="lib/httpmime.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/autobizlogic.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox.jar"/>
+	<classpathentry kind="lib" path="lib/fontbox.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/OpenXavaExBase"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

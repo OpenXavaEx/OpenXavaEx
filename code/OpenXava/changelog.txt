@@ -1,0 +1,1408 @@
+Change Log for OpenXava project
+===============================
+
+OpenXava 4.7 (2013-4-2)
+-----------------------
+- ExtendedPrint.myReports stores all the generated reports, so the user can get them by name later. 
+- WebSphere Portal 8 support including visual style integration.
+- WebSphere 8 support.
+- Liferay 6.1 support.
+- 30% performance improvement in automated module tests.
+- Action ExtendedPrint.customReport renamed to ExtendedPrint.myReports.
+- New smtpHostTrusted property in xava.properties to use email servers with expired certificates. 
+- If a session object has a request property, the current request is injected before injecting the object into the action. 
+- Date formatting optimized for French.
+- New protected method saveCollectionElement() in SaveElementInCollectionAction to refine behavior.
+- Shell scripts to start HSQLDB manager from command line.
+- Data in automatic PDF reports is formatted in the same way as in list. 
+- New layout engine improved again, though it is still in BETA and deactivated by default.
+- User preferences support creating and removing subnodes (from Preferences Java API).
+- Fix: web.xml is not Servlet 2.4 compatible, though OpenXava uses Servlet 2.4 since v3.1.
+- Fix: Sometimes columns customization for collections is not stored.
+- Fix: Report title is not shown for automatic PDF reports in some machines.
+- Fix: Many standard i18n messages do not show correctly apostrophes.
+- Fix: In custom reports filters gt_comparator is shown instead of > with Spanish.
+- Fix: @ManyToMany collections fail after removing one of the elements.
+- Fix: Selected rows are lost when you do a order by any property, a page change, etc.
+- Fix: When combining filter and order in custom report, filter is ignored. 
+- Fix: Confirm message for actions associated to properties incorrect. 
+- Fix: View.setModel() does not refresh collections.
+
+OpenXava 4.6.1 (2013-1-9)
+-------------------------
+- New IWithMessage to be implemented by validators to get the messages from @Required, @PropertyValidator and @EntityValidator.
+- New layout engine improved, though it is still in BETA and deactivated by default.
+- Fix: @Inject does not work in "on change" actions.
+- Fix: Impossible to store column width in collections inside @AsEmbedded references.
+- Fix: Default size not correct for TELEFONO stereotype.
+- Fix: Clicking in the current mode with IE8 goes to a nonexistent page.
+- Fix: Named reference view for reference with inheritance switches to DEFAULT.
+- Fix: HTML_TEXT fields don't preserve content after recalculation. 
+- Fix: Second level dialogs are shown very narrow with IE9.
+- Fix: Mouse over list rows in IE9 moves the bottom button bar.
+- Fix: Removing first column in custom reports fails.
+- Fix: Removing selected columns in custom reports fails.
+- Fix: Obtaining selected object from a calculated collection fails with transient elements.
+- Fix: Attribute message of @Required is ignored.
+- Fix: Incorrect validation message from PositiveValidator.
+- Fix: Messages in i18n files with no arguments are not formatted in the standard way.
+- Fix: Thai MS874 encoding fails with IE.
+- Fix: Custom reports fail with XML components if persistence.xml is not defined.
+- Fix: Valid values do not work in custom reports With XML components. 
+- Fix: Duplicate dialog title in custom report.
+- Fix: Incorrect title on reloading custom report dialog.
+- Fix: Valid-values values are not kept when a column is edited in custom report dialog.
+- Fix: Comparator values are not kept when a column is edited in custom report dialog.
+
+OpenXava 4.6 (2012-11-21)
+-------------------------
+- Custom reports in list mode that allow user define its own reports using a dialog.
+- New attribute editor in @Tab to define an editor for a tab. Also available for XML version with <tab editor=/>.
+- In editors.xml it's possible to associate an editor by default for all tabs or for tabs of certain models.
+- New @RowAction annotation for collections (also available as row-action in XML components).
+- Labels and messages available in Russian.
+- The report names include model name and time, for automatic and custom reports in PDF, CSV, RTF, ODT and Excel.   
+- New property model (setModel()/getModel() in View for populating a View directly from a model object (an entity or transient class). 
+- BooleanFormatter parses null as null and not as false, so Boolean values can be true, false or null.
+- It's possible to assert PDF content in jUnit tests with new 6 methods of ModuleTestBase, such as assertPopupPDFLine(). 
+- New setTitle(), setConditionValues() and setConditionComparators() methods in Tab.
+- New BooleanYesNoCombo editor to show booleans with a YES/NO combo.
+- In list mode focus is placed in the first filter text box.
+- Many new common use labels to be used in applications.
+- New property 'showIconForViewReadOnly' in xava.properties to view or not the key and required icons in read only views. 
+- New methods assertAction/assertNoAction(String action, String arguments) in ModuleTestBase. 
+- It's possible to add custom portlets by means of portlet-ext.xml and liferay-display-ext.xml.
+- Fields version and versionDate of ModuleManager now are private.
+- Fix: @Size(max=x) fails with Save and Stay
+- Fix: OpenXava 4.5.1 fails in WebSphere 6.1.
+
+OpenXava 4.5.1 (2012-9-11)
+--------------------------
+- Focus order only include editors. Actions, links, tabs, etc. are excluded.
+- SimpleHTMLReportAction extends SimpleTemplaterAction to be able to use SimpleTemplater in mails.
+- Documentation for @Tree improved.
+- Fix: Focus is not set in the first load of detail only modules.
+- Fix: Navigating among objects with references with inheritance produces system error.
+- Fix: New in a model with a reference with inheritance does not reset the reference view to the base model.
+- Fix: Searching from a reference with inheritance does not always show all the objects of the hierarchy.
+- Fix: resetAfter=false for saving fails when inheritance is used in references. 
+- Fix: Tree editor cannot add child node without @GeneratedValue.
+- Fix: SimplerTemplaterAction does not return booleans.
+- Fix: SimpleTemplater does not work for empty collections.
+- Fix: SimpleTemplater better detect in which cases not to insert <br/> instead of new lines.
+- Fix: Tree editor failed to look up properties in property-based entities.
+- Fix: Base Style generates a tr with no td in sections, so it fails with IE.
+- Fix: Bad layout for + and X icons in frame of images gallery.
+- Fix: Liferay column resize not stored permanently.
+- Fix: Fails on save the second object when id is inside a group.
+- Fix: Labels qualified with entity name (MyEntity.myProperty in i18n file) are not used in list mode.
+- Fix: Tooltip not recognized when defined qualified in i18n file, that is using: MyEntity.myProperty[description].
+- Fix: Searching a reference with several @SearchKey does not work if some key field has an event associated.
+- Fix: Removing a column from the list after filtering produces "Errors trying to obtain data list".
+- Fix: Adding an element in a collection in split mode changes the main module list by the collection list.
+- Fix: Changing list row count in a page other than the first one shows the incorrect page.
+- Fix: Image for showing/hiding filter in list in collection is broken with 2 collections in a dialog.
+- Fix: Popup calendar for dates fails in Chinese.
+- Fix: Fails on Tomcat with unpackWARs="false".
+- Fix: Duplicate div on load collections via AJAX.
+
+OpenXava 4.5 (2012-7-18)
+------------------------
+- Support for all strategies of JPA inheritance mapping.
+- Data for list and collections is obtained via JPA, before JDBC was used.
+- Automated Business Logic (ABL) library added.
+- All new layout architecture (the code that paints the UI). It still in BETA but can be activated with layout.painter in xava.properties.
+- New TypicalNotResetOnSave controller available.
+- AJAX performance improvement in collections: when selected elements change but data remains the same, only the selection is refreshed.
+- @OnSelectElementAction does not refresh its collection by default, it improves dramatically performance in some cases.
+- Improvements in Italian i18n files. 
+- New utility class XArrays.
+- It's possible to define more easily styles with the file custom.css.
+- Hibernate upgraded to 3.6.10.
+- New property messagesOnTop in xava.properties to show the messages in the top or in the bottom of the user interface.  
+- New methods add/removeActionForProperty() in View for adding actions to a property dynamically.
+- New calculators: CurrentUserJobTitleCalculator, CurrentUserMiddleNameCalculator, CurrentUserNickNameCalculator, CurrentUserBirthDateYearCalculator, CurrentUserBirthDateMonthCalculator and CurrentUserBirthDateDayCalculator.
+- New properties in UserInfo: jobTitle, middleName, nickName, birthDateYear, birthDateMonth and birthDateDay.
+- It's possible to define different parameters for each report in JasperMultipleReportBaseAction.
+- Fix: Link to CSS null when running inside portal.
+- Fix: Fails in WebSphere 6.1.
+- Fix: Message 'Delete record on row x...' shows the incorrect row number.
+- Fix: Navigation with key value 0.
+- Fix: Navigation with hidden key and view with nested sections.
+- Fix: Default pdf and excel when the filter list needs the user name.  
+- Fix: on-select-element-action missed in component.dtd.
+- Fix: Some methods of ModuleTestBase for checking, unchecking and asserting checked rows fail with calculated collections.
+- Fix: Adding the second detail in an embedded collection when creating the second main object fails.
+
+OpenXava 4.4.1 (2012-4-25)
+--------------------------
+- New method executeClicking() in ModuleTestBase. 
+- Fix: Locales for portlet resource files do not match those of portlet.xml (javax.portlet.title error in liferay).
+- Fix: Reports with format excel produce a file called report.pdf instead of report.xls. 
+- Fix: Tab default values are applied to collections.
+- Fix: If defined list formatter is used as formatter in detail mode too.
+- Fix: Tries to load .svn files as JS.
+- Fix: Calculated properties are not injected in the entity validators.
+- Fix: CSRF attack error in Liferay.
+- Fix: Keystrokes don't work until the first action is called.
+- Fix: Method setFocus() of View does not work for dialogs. 
+- Fix: Report titles too long are now shown completely.
+- Fix: Searching from detail does not execute XAVA_SEARCH_ACTION.
+- Fix: Reference property with a @Formula fails in the tabs.
+- Fix: collections with @Condition not work well in change schema.
+
+OpenXava 4.4 (2012-3-22)
+------------------------
+- Totals and row count are shown in collection frames when they are folded.
+- Comparator 'range' added to list and collections filter.
+- Java 7 support.
+- Slide effect for hiding and showing frames.
+- Frames fill all the width of the view.
+- HtmlUnit upgraded to 2.9.
+- jQuery UI upgraded to 1.8.12.
+- jQuery upgraded to 1.5.2.  
+- Liferay 4.1 is no longer supported.
+- New method setConditionValuesTo() in ModuleTestBase.
+- Fix: Reseting filter values does not work completely when an enum or descriptions list is present.  
+- Fix: Liferay51 style (the default one) pointed to a non-existent JavaScript file.
+- Fix: List column resizing does not work with IE9.
+- Fix: Moving and resizing dialogs do not work with IE9.
+- Fix: Loading... AJAX waiting message is not visible when a dialog is shown.
+- Fix: Moving and resizing a dialog affect the next open dialog size and position.
+- Fix: Combo with a simple key (a) overlapped with a combo with a composed key (a, b) and a simple property (b) fails: Field b is not saved.
+
+OpenXava 4.3.1 (2012-1-12)
+--------------------------
+- Fix: Reference with @AsEmbedded read the referenced object if the id has some event associated. 
+- Fix: Dialogs do not work on IE9.
+- Fix: Object not found when the id is inside a section.
+- Fix: Parent entity is not injected in EntityValidor if the reference name does not match with the model name.
+- Fix: Oracle 9 maximum open cursors exceeded.
+- Fix: Exception on commit from a dialog disables the dialog and shows the error message in a hidden layer.
+- Fix: After modifying a collection calculated values that depend on a not saved value are not correct.
+- Fix: Loading in the View an embeddable with all the values null fails. 
+- Fix: setHidden() of View does not work for elements of subviews.
+- Fix: Generating a PDF report from a collection inside a group fails.
+- Fix: Custom ITreeViewReader is never selected.
+- Fix: Redeploying in Liferay generates an ugly stacktrace about portlet title. 
+- Fix: i18n entry not recognized if it does not exist in the default language of the server machine.
+- Fix: Exception saving entity with embeddable with read only members.
+- Fix: Popup for dates is not shown from dialogs. 
+
+OpenXava 4.3 (2011-12-14)
+-------------------------
+- Total properties in collections.
+- HtmlText editor now uses an embedded rich text editor instead of using a popup windows.
+- New methods addWarning() and addInfo() in BaseAction to produce warning and info messages.
+- It's possible to generate several reports from the same action by means of JasperMultipleReportBaseAction.
+- New IMultipleForwardAction to do several forwards to several URIs from the same action.
+- New SimpleHTMLReportAction to create reports from simple HTML templates.
+- New SimpleTemplater class to process simple HTML templates.
+- New getEntity() method in View class that returns the entity associated to the view.
+- Groovy upgraded to 1.8.3.
+- FCKEditor upgraded to CKEditor 3.6.2.
+- When a constraint violation of JSR-303 has no property path its message is shown as is to the user. 
+- New property summationInList in xava.properties to enable or disable the custom user summation in list and collections.
+- OpenXava version info now is stored in a version.properties file.
+- New methods assertPopupCount(), assertInfo(), assertWarning(), assertNoInfo(), assertNoWarning(), assertInfosCount(), assertWarningsCount() in ModuleTestBase.
+- New method toList() in Strings.
+- Commons Lang jar added to WEB-INF/lib.
+- Fix: Links in HtmlEditors disappear using Firefox 3.6. 
+- Fix: In pages with several modules javascript code for editors is executed several times causing incorrect behavior.
+- Fix: Customizing a collection in a module affects collections of the same element in all modules.
+- Fix: PDF reports fail with summation of qualified properties.
+- Fix: Validators defined in validators.xml of a project does not overwrite the built in ones. 
+- Fix: Closing prepared statements twice produces errors in JBoss. 
+
+OpenXava 4.2.3 (2011-9-20)
+--------------------------
+- Properties with WebURL editor or WEBURL stereotype are shown in list as links.
+- Fix: Dialogs in Liferay 6 do not hide resizing gadgets of collections behind. 
+- Fix: Images gallery does not work from a reference.
+- Fix: Encoding of the content of the generated hbm files does not match with the declared encoding.
+- Fix: On change actions and calculated properties fail in Chrome with BigDecimal values.
+- Fix: Loading... AJAX message is not well displayed in IE6/IE7.
+- Fix: Uploading files fails when using old URL notation for module.
+- Fix: Reference members in @Tab does not show the correct value when referenced entity and main entity map to the same table. 
+- Fix: On IE6 and IE7 columns headers are fixed when the horizontal scroll is moved. The horizontal scroll for lists has been removed for IE6 and IE7. 
+- Fix: NullPointerException when a getter method is missing or bad written.
+- Fix: Modifying an empty reference from a dialog closes the dialog and freezes the module. 
+- Fix: Simple package name for entities (without dots) produces an exception. 
+- Fix: Liferay 6 navigation bar changes its font size when there is an OpenXava portlet in the page. 
+- Fix: @Editor with forViews is ignored when used inside a reference. 
+- Fix: PDF reports fail if hibernate.cfg.xml is not present. 
+- Fix: French i18n files contain single quote ', which prevent the {0} replacement to be done.  
+- Fix: Argument type mismatch on saving element in nested collection with root entity with composite key.
+ 
+OpenXava 4.2.2 (2011-8-16)
+--------------------------
+- JetSpeed 2.2.1 supported.
+- New PersistenceUnit controller and SetPersistenceUnitAction class to facilitate multi-database applications.
+- BaseAction no longer implements IChangeControllersAction, but still implements the change controllers related methods.
+- Date format improved for Catalan.
+- Fix: Inheritance for views does not work with transient classes.
+- Fix: Fixed URL for DTD of DWR files, it improves performance on Liferay deploying.
+- Fix: List fails when the user customize the list and afterwards the programmer removes properties from the entities. 
+- Fix: "en" language entries are not included in portlet.xml because they are redundant with default entries. 
+- Fix: In a cascade remove collection when trying to create an element with a embedded with a reference to an entity fails. 
+- Fix: Changing module from dialog does not close the dialog.
+- Fix: Multi persistence unit applications do not work.
+- Fix: regenerateGenerator ant task fails.
+- Fix: portletLocales of xava.propeties has no effect on portlet.xml generation.
+- Fix: Closing a two level dialog in a module with web-view shows the root view in the dialog.
+- Fix: After using setControllers(), removeActions() has no effect if executed in the same action.  
+- Fix: Creating a new collection element when all element components are inside groups fails.
+- Fix: @OnChange actions are executed twice inside collection elements with groups.
+- Fix: No focus placement inside collection elements in some cases.  
+- Fix: Using apostrophe in HtmlText editor cut the content from the apostrophe. 
+
+OpenXava 4.2.1 (2011-7-11)
+--------------------------
+- View.setLabelId() supports qualified member name as argument.
+- Commons FileUpload upgraded to 1.2.2.
+- Removed "images/" prefix of all action definitions in default-controllers.xml, it was optional since v4.2.
+- English and Spanish messages refined.
+- New csvEncoding property available in xava.property to define the encoding of the generated CSV.
+- Fix: ClassCastException using a collection with cascade remove and a reference to the same entity in the same entity.
+- Fix: @Tab doesn't work with @AttributeOverride.
+- Fix: More than two levels of nested entities as embedded fails.
+- Fix: Loss of the selected rows when enter on the list to choose a reference.
+- Fix: Performance problem on iPad using list with many columns, it was produced by Flip effect, so Flip effect has been removed. 
+- Fix: Buttons in dialogs does not respond on iPad.
+- Fix: Flip effect on close dialogs on iPad.
+- Fix: IForwardAction does not forward when used on module initialization (on-init, on-each-request or before-each-request).  
+- Fix: Impossible to add a child in Tree editor without treeOrder.
+- Fix: JDBC connection leaks in some circumstances.
+- Fix: References marked as @SearchKey are not modifiable when the keyEditable is false in main view.
+- Fix: Dialog disappears adding collection elements with no chosen rows.
+
+OpenXava 4.2 (2011-6-17)
+------------------------
+- iPad support: when an application is accessed from an iPad a style adapted to the iPad is used.
+- A new custom visual style can be defined writing only a CSS file.
+- Top right red 'Loading...' AJAX indicator replaced by a stylized centered 'Loading...' box.
+- The default mode controller is defined by the style, though defaultModeController of xava.properties still exists and has preference.
+- Slide effect on list pagination (only for iPad).
+- Flip effect on changing mode (only for iPad).
+- Styles allow define more details about the UI behavior: isRowLinkable(), isShowPageNumber(), isShowModuleDescription(), isChangingPageRowCountAllowed(), isShowRowCountOnTop(), etc.
+- Each style has its own imagesFolder, so each style can define its own icon for actions, even for custom actions.
+- A different style can be selected by each browser type. 
+- ValidationException now is a RuntimeException.
+- System encoding recognition improved.
+- Property labelAlign removed from xava.properties, now alignment is defined by CSS.
+- In action definition 'image' does not requires the folder name 'images/' as prefix.
+- Fix: NullPointerException validating BigDecimal null values.
+- Fix: Fails rendering list when the property (xava.properties) 'resizeColumns= false'. 
+- Fix: NullPointerException stacktrace (without failing) when starting portlets in Liferay.
+- Fix View.setLabelId() fails when used in subviews.
+- Fix: NullPointerException: charsetName with Jetty.
+- Fix: Fails displaying collection element when the collection has a group in its view.
+- Fix: Fails the tab preferences when you have same model name in several applications. Added application name as discriminator.
+
+OpenXava 4.1.2 (2011-4-11)
+--------------------------
+- Added comparator 'not contains' to list and collections filter.
+- New ManyToMany.edit action for updating elements from a many to many collection.
+- New method reload() in ModuleTestBase for simulating clicking in browser reload button.
+- New method createNotValidatingCollections() in MapFacade.
+- The user only can choose 20 rows per page at most for list and collections, in order to have a good performance.
+- New 'reportParametersProviderClass' property in xava.properties. It allows that you put your own code to generate the report parameters.  
+- Photos are shown in list and collections. 
+- jquery.qtip.js removed, this produces a 40% performance improvement in list reloading.
+- UrlParameters controller accepts language_COUNTRY as argument for locale. 
+- Clear message in log when incorrect migration to OX4 from old versions.
+- Fix: Downloading file fails after uploading file.
+- Fix: Reloading the page after navigating to a module locks the module.
+- Fix: Bad behavior when ESC is pressed from a dialog with Firefox (now ESC is not allowed in Firefox).
+- Fix: radioButtonEditor does not throw change event.
+- Fix: @Size(min=) in collections is not recognized.
+- Fix: showDialog() fails when used in a module with web-view.
+- Fix: Composite structure using collections with cascade remove does not work.
+- Fix: @Required in the reference to the container class prevents saving collection elements.
+- Fix: Since the user changes the size of a column in a list or collection, the changes in @Tab(properties=) are ignored. 
+- Fix: Processing box for takes-long actions is shown back when called from a dialog.
+- Fix: Removing a collection element from detail dialog does not ask for confirmation. 
+- Fix: Shorting columns if the value contains '-' produces two lines in calculated collections.
+
+OpenXava 4.1.1 (2011-2-28)
+--------------------------
+- CRITICAL FIX: List and collections are not shown inside dialogs.
+- Support for @PrimaryKeyJoinColumn and @PrimaryKeyJoinColumns JPA annotations in @OneToOne relationships.
+- Fix: Failed properties not marked in UI when using Bean Validation (JSR-303).
+- Fix: @Max from JSR-303 does not limit the characters that user can type in the editor.
+
+OpenXava 4.1 (2011-2-15)
+------------------------
+- Bean Validation JSR-303 support.
+- The user can add and remove summation for any numeric persistent property in list and collections.
+- The user can sort by several columns in list and collections.
+- Standard PDF reports show column summations.
+- Summation available for list and collections adding a + to property names.
+- Automatic horizontal scrollbar for list and collections for not enlarging the UI.
+- Hibernate upgraded to 3.6.1.
+- New stereotype PASSWORD/CONTRASENA.
+- When the model is transient the default controller-mode for the module is DetailOnly. 
+- New methods toSet() and toSetNullByPass() in Strings to convert string lists in sets.
+- Added assertTotalInList() and assertTotalInCollection() in ModuleTestBase.
+- Removed the unused library: jboss-archive-browsing.jar.
+- Fix: Export to EXCEl in list mode does not work fine with Russian data.
+  
+OpenXava 4.0.1 (2011-1-11)
+--------------------------
+- New callback methods that allow to use JPA inside them:  @PreCreate, @PostCreate and @PreDelete.
+- Groovy can be use for calculators and validators of XML components.
+- New getMethodsAnnotatedWith() method in Classes utility class.
+- Boolean and bool has no default converter.
+- In conditions if you put a model name inside ${ } it is changed by table name. 
+- Added setConditionValues(List ) and setConditionComparators(List ) in ModuleTestBase to be used with Groovy.
+- New after-each-request option for <action/> in controllers.xml. 
+- IForwardAction allows to forward to javascript code, using javascript: as prefix.
+- New listeners.xml in WEB-INF for defining listeners.
+- Fix: Tomcat start/stop script leaves directory in windows.
+- Fix: @AsEmbedded delete action only works when container reference name matches container model name.
+- Fix: @AsEmbedded does not hide reference to parent.
+- Fix: getView() from a CreateNewElementInCollectionAction does not return the main view.
+- Fix: Reference actions not shown with a @ReadOnly @SearchKey.
+- Fix: Entity validator fails when a property name of the entity matches container entity name.
+- Fix: Validators run more than once.
+- Fix: Descriptions list of a reference with multiple key with some values with blanks.
+- Fix: Filtering by boolean in list when column is boolean fails with some databases.
+- Fix: Fails on save list/collection preferences when the tab or collection name is too long.
+- Fix: Descriptions list of a reference with nested composite keys fails on save.
+- Fix: "List.filter" action present in bottom in detail only modules with before-each-request actions.
+- Fix: @DescriptionsList notForTabs, it does not work with 'DEFAULT'.
+- Fix: Character & not supported in condition of descriptions list.
+- Fix: <xava:editor> doesn't work in a custom view when it is not the main module view.
+- Fix: Converter was not applied to descriptions list parameters.
+- Fix: Depends condition for Enum from a descriptions list is not working. 
+- Fix: TreeView editor does not work in Liferay 6.
+
+OpenXava 4.0 (2010-11-22)
+-------------------------
+Main new features over 3.1.4 for developers:
+- Groovy support.
+- JPA 2.0 support.
+- Support for JSR-330, the Java standard for dependency injection.
+- Dropped support for EntityBeans CMP2.
+- Dropped support for Java 1.4. From now on OX requires Java 5 or better.
+Main new features over 3.1.4 for the users:
+- New mode 'split' (labeled as "Both") in addition to already existing 'detail' and 'List' modes.
+- The user can minimize and restore any frame, storing the frame status by user.
+- Delete action for collections and list is shown in each row.  
+- More intuitive 'search' action. Now it uses a dialog to ask for the search data.
+- The user can resize the column widths for list and collections using the mouse, and the values are persisted by user.
+- Tooltip for cells in list and collections.
+- References as combos to filter in list mode.
+- Clicking on any part of the row, for list or collection, goes to the detail.
+- Popup dialogs supported.
+- Collections use dialogs to edit, add and remove elements.
+- A dialog is used for searching, creating or modifying a reference.
+- New checkbox in list to select and deselect all rows at once.
+- The user can change the row count of list and collections, and the setting is stored by user.
+- Improved look & feel of page navigation for list and collections.
+- Visual style of button bar improved.
+For the full list of new features see below the notes for the versions from 4m1 to 4m6.  
+
+OpenXava 4m6 (2010-11-10)
+-------------------------
+- Groovy support.
+- Liferay 6 supported, including look & feel integration.
+- JPA 2.0 support: Hibernate upgraded to 3.6.0.
+- Friendly URL for modules, like this: /MyApplication/modules/MyModule.
+- Visual style of button bar improved, including showing the label for each action.
+- More intuitive icons for navigation.
+- Labels are aligned by default to right. For aligning to left use labelAlign=LEFT in xava.properties.
+- Default action is shown as first button in bottom button bar, even if it is already in top button bar.
+- New editor DocumentLibrary (and stereotype DOCUMENT_LIBRARY) to have a group of documents stored in Liferay Document Library.
+- New mapped superclass Identifiable with a UUID id, to use as base class for entities.
+- Default size for columns optimized in list and collections.
+- Russian documentation improved.
+- It's no longer required to put the entities in a package named 'model' or 'modelo'. Any package name is valid for entities.
+- Minor changes to TreeView to optimize performance.
+- @OneToMany(orphanRemoval=true) supported: if  an element is removed from a collection the element is deleted from database. 
+- New showLabelsForToolBarActions property in xava.properties.
+- New possible value "almost-never" for by-default attribute of <action/> inside controllers.xml.
+- New 'ignoreAccentsForStringArgumentsInConditions' in xava.properties. It finds records whether you're looking for 'camión' or 'camion',...
+- New setModuleDescription() method in ModuleManager that changes the portlet title.
+- Emails: Sending attachments added.
+- Help icon obtained from container portal.
+- New saveAndStayForCollections property in xava.properties to choose if the button for save & stay will be in collection element dialog.
+- New setConditionValue() method in Tab for setting the value for the list condition programmatically.
+- Removed the Hibernate dependent code from AnnotatedClassParser, so now it's possible to use other JPA providers.
+- Methods getProperty() of ModuleTestBase renamed to getXavaJUnitProperty().
+- Clear stacktrace when data source does not work. No more 'Module x is not defined'.
+- Fix: Tests fail to do login against Liferay 6.
+- Fix: Users.getCurrent() returns an incorrect user sometimes.
+- Fix: i18n files are not correctly copied when creating a portlet war.
+- Fix: Choosing reference fails when reference name matches id name of referenced entity.
+- Fix: @Tab fails with multi-level @Embedded.
+- Fix: Updating embedded collection element a 'Member not found' exception is thrown.
+- Fix: Bad layout for header fields when frames.
+- Fix: NullPointerException by EditorTag hides the real source of error in some cases. 
+- Fix: Incorrect default action (broken in 4m5). 
+- Fix: Help doesn't work for external URL.
+- Fix: Division by 0 generating PDF reports where all columns are little. 
+- Fix: 'Parse may not be called while parsing' error when several users start at once after deploying. 
+
+OpenXava 4m5 (2010-7-28)
+------------------------
+- New mode 'split' (labeled as "Both") in addition to already existing 'detail' and 'List' modes.
+- The user can change the row count of list and collections, and the setting is stored by user.
+- Improved look & feel of page navigation for list and collections.
+- New Collection.saveAndStay action that allows to save a collection element without closing the dialog.
+- Default module help text in English, Spanish and Russian.
+- New defaultModeController property in xava.property to define the default initial mode.
+- Russian translation of Reference Guide and other documentation improved.
+- Help module: new 'helpPrefix', 'helpSuffix' and 'helpInNewWindow' properties in xava.properties. By default it uses 'http://openxava.wikispaces.com/help_'.
+- New getParentView() method in CollectionElementViewBaseAction.
+- Column resizing and customizing list can be disabled.
+- New mode 'NONE' for actions in controllers.xml to be displayed only in each row.
+- The pageRowCount property of Tab is persistent, storing its value by user.
+- Row action is always shows in collections, even when the properties of collection list and detail view match.
+- Actions from mode-controller with on-init=true are executed on module initialization.
+- HibernatePersistence declared explicitly as provider for JPA.
+- Hidden properties are not available to add by the user in list and collections.
+- Upgrade Jasperreports to 3.5.3
+- New SetEditableAction action class.
+- New cssClass and cssStyle attributes available for <xava:image /> taglib.
+- The List and Navigation controllers are no longer added automatically.
+- Style for checked rows is also applied in the list for adding new columns.
+- ModuleManager, ModuleContext, IValidator and IPropertyValidator now are serializable.
+- View editable and keyEditable properties are false at module initialization.
+- Delete action in each row: it display message with the row number.
+- The setConditionValues and setConditionComparators methods of ModuleTestBase use varargs.
+- Fix: SaveElementInCollectionAction changes the view if not super.execute() is called.
+- Fix: Dependent properties in a collection element does not react to events when they are hidden and shown.
+- Fix: @NoCreate and @NoModify annotations doesn't work for collections.
+- Fix: When a view is not editable its collections have edit action for rows and save action in element view.  
+- Fix: Arrays are not displayed nicely in list and collections.
+- Fix: Row actions in several lines when the list shows many properties.
+- Fix: Detail collection actions (like @RemoveAction) with empty action name fails.
+- Fix: Bug on dialogs when opening another dialog such as reference search.
+- Fix: @Column scale attribute ignored.
+- Fix: Jasper report actions does not show correct data after changing schema.
+- Fix: Several nested tooltip for cells when executing several times actions over a collection/list.
+- Fix: JavaScript memory leak (so performance degradation) when working some time with a collection/list. 
+- Fix: Checkbox 'select/deselect all' not display in choose list (rows with radio button). 
+- Fix: When you shorten columns if the value contain '-' it produces two lines.
+
+OpenXava 4m4 (2010-5-25)
+------------------------
+- The user can minimize and restore any frame, storing the frame status by user.
+- Delete action for collections and list is shown in each row.
+- New in-each-row attribute in <action/> to show actions for list mode or collection in each row.  
+- @Tree annotation and TreeView editor for displaying collections using a tree.
+- More intuitive 'search' action. Now it uses a dialog to ask for the search data.
+- It is possible to define default values for tabs (tabular data) at global level with the new tabs-default-values.xml.
+- Frames are right and left justified.
+- New ManyToMany controller for creating new elements from a many to many collection.
+- New 'refresh' action in CRUD controller. Behaves as the old 'search'.
+- The default action for CRUD controller now is 'save'. Before it was 'search'.
+- New @SearchListCondition annotation to specify a condition for the search list used in a references or collections.
+- New defaultLabelFormat property in xava.properties to indicate the default when @LabelFormat would be omitted.
+- New styles in openxava.css to use in @LabelStyle: 'bold-label', 'italic-label' and 'reverse-label'.
+- New 'defaultLabelStyle' property in xava.properties to indicate the default when @LabelStyle would be omitted. 
+- New @LabelStyle annotation to specify a style for the label.
+- Add 'forTabs' and 'notForTabs' in @DescriptionsList.
+- The addListAction and removeListAction methods of View preserve the original order of the actions.
+- Little adjustment for space between columns in automatic PDF reports.
+- New SetSchemaAction, SetLocaleAction and SetUserAction action to modify session data from url parameters.  
+- Fix: Mode List: @DescriptionsList does not apply 'condition', and if it has 'depends' it shows plane property.
+- Fix: Adding and removing actions to a collection is not refreshed instantly. 
+- Fix: After customizing the list all the row are shown, even if they have been hidden using 'Hide them' link.
+- Fix: JavaScript calendar does not throw onchange event when clicking on 'Today'.
+- Fix: On change events are not thrown with numeric fields in IE.
+- Fix: Dialog does not hide combo boxes from back view in IE6. 
+- Fix: @Depends not working properly in Safari with numeric values.
+- Fix: Poor performance when editing a collection element in a large collection. 
+- Fix: @SearchKey in a not editable view does not hide their associate actions.
+- Fix: References as combos to filter in list mode: qualify the columns when it create the condition.  
+- Fix: References as combos to filter in list mode: using XML components.
+- Fix: Mode List: descriptionsList does not apply conditionBase with filter.
+- Fix: Filter in list mode with calculated property and descriptionsList; descriptionsList and enumLetterType property.
+- Fix: Filter by number zero in list mode.  
+
+OpenXava 4m3 (2010-3-25)
+------------------------
+- The user can resize the column widths for list and collections using the mouse, and the values are persisted by user.
+- Tooltip for cells in list and collections.
+- References as combos to filter in list mode.
+- Clicking on any part of the row, for list or collection, goes to the detail.
+- Polimorphic view resolution for collection elements.
+- Removed MemoFormatter for list mode. The new tooltip and resizing columns are better options.
+- Russian translation of documentation improved.
+- The dot key can be used as decimal separator in any locale. It is converted automatically to the local decimal separator.
+- ValidationException and RuntimeException in @Prepersist are propagated to the actions.
+- Original RuntimeExceptions from MapFacade.setValues() are propagated to the actions.
+- Any JavaScript file in xava/editors/js is loaded automatically. This folder is for JS of custom editors.
+- The JavaScript function openxava.addEditorInitFunction to add code to be executed for initialized JS of custom editors.
+- The creation of default modules is optional. Added property 'generateDefaultModules' in xava.properties.
+- Clear error message when module reentrance is produced.
+- Attribute id included in Html for all the built-in editors, to facilitate JavaScript manipulation.
+- custom-editors.js is only included if exists. Moreover the usage of this file has been deprecated.
+- Classes.getSimpleName() method dropped. Use getSimpleName() of Class instead.
+- Style 'highlight' from openxava.css renamed to 'row-highlight'.
+- MapFacade.getValues() adds a __MODEL_NAME__ entry with the model name of the found object.
+- Removed history.txt file.
+- commons-beanutils.jar (already included in OX) is exported from the Eclipse OpenXava project.
+- Fix: New JS files are not recognized after updating OX version because of browser cache.
+- Fix: Calendar popup is not shown from dialogs.
+- Fix: Fields annotated with @SearchKey are not editable when editing an existing entity.
+- Fix: Alphabetic characters can be entered in numeric fields.
+- Fix: Excel exporting does not work fine when semicolons in the text.
+- Fix: Chinese translation of popup calendar was not correctly encoded. 
+- Fix: Collection of generic (Collection<T>) fails.
+- Fix: MappedSuperClass in different package than child classes fails.
+- Fix: Filtering by year or month in list mode fails with Oracle and latest PostgreSQL versions.
+- Fix: Trying to modify an empty reference shows an error but must not show a dialog.
+- Fix: 'forwardUri' in a 'nextModule' fails inside a portal.
+
+OpenXava 4m2 (2010-1-26)
+------------------------
+- Collections use dialogs to edit, add and remove elements.
+- Support for JSR-330, the Java standard for dependency injection. Now it's possible to use @Inject and @Named in action fields instead of <use-object /> in <action/>.
+- Show messages/errors animated.
+- New methods in BaseAction to change dynamically actions: setControllers(), returnToPreviousControllers(), setDefaultControllers(),  addActions(), removeActions() and clearActions().
+- New methods in ViewBaseAction to manage dialogs: showDialog() and closeDialog().
+- Improved performance with large tables in list mode.
+- It's possible to specify the style to use inside portals by means of new properties in xava.properties. 
+- Edit action by default for collections other than @AsEmbeddable, CascadeType.REMOVE or CascadeType.ALL allows only viewing the element.
+- Now the action Return.return does not close the dialog.
+- TabBaseAction now extends ViewBaseAction so getView() and methods about dialogs and view navigation are available from it.
+- show-dialog and hide-dialog has been dropped from <action/>, this produces a BACKWARD INCOMPATIBILITY over 4m1.
+- DWR engine.js is cached to improve performance.
+- No error occurs, but only a warning, when <use-object /> (from controllers.xml) tries to inject in an non-existing property. This feature improves backward compatibility.
+- New getFieldsAnnotatedWith() method in Classes utility class.
+- Fix: Hibernate log is not shown when retrieving the entity metadata.
+- Fix: Degradation of performance when the user is working in the same page during some time.
+- Fix: Focus cannot be controlled when using OnChange actions. The next field is focused after the action.
+- Fix: JavaScript error (not noticeable by the user) ox_...__xava_focus_property is not defined.
+- Fix: Labels in collection with no 'cascade=CascadeType.REMOVE' 
+- Fix: Documentation portlets with no language specified cannot be installed in WebSphere Portal. Now a default value for languages (from portletLocales in xava.properties) is assumed.
+- Fix: Paging in collections forgets selected rows.
+- Fix: Problems with checkbox 'select/deselect all' with several collections and @OnSelectElementAction.
+- Fix: Timing problems in junit test combining on-change properties and actions.
+- Fix: In @OnChange for descriptions list references when the value is zero it's converted to null.
+- Fix: Automatic label generation (Strings.javaIdentifierToNaturalLabel() method) does not work fine with acronyms.
+- Fix: JavaScript calendar does not work when several portlets in the same page.
+- Fix: In some combination of nested sections the section is duplicated on changing section.
+- Fix: Problems with charset encoding on accepting data from browser.
+
+OpenXava 4m1 (2009-11-24)
+-------------------------
+- Popup dialogs supported by means of show-dialog and hide-dialog attribute for <action /> in controllers.xml.
+- A dialog is used for searching, creating or modifying a reference.
+- Image editor and Image gallery editor use a dialog to upload the files.
+- New checkbox in list to select and deselect all rows at once.
+- Reference guide in Russian improved.
+- Dropped support for EntityBeans CMP2.
+- Dropped support for Java 1.4. From now on OX requires Java 5 or better.
+- Dialog for uploading file in image editor has a cancel button.
+- When generating a PDF report or CSV export from list, if there are checked rows, only them are shown in the report.
+- WebURL editor, used by WEBURL steroetype, has a link to go to the URL.
+- New methods in BaseAction: getManager(), getRequest() and getContext().
+- New property 'title' for View class. This title will be shown in the frame when the view would be displayed in a dialog.
+- New getNewMode() and setNewMode() methods in BaseAction to change the module mode (detail/list).
+- Fordward to pages outside the application is possible by means of IForwardAction.
+- SaveElementInCollectionAction has a method getValuesToSave() to refine the data to save.
+- New methods in ViewBaseAction to work with view navigation: showNewView(), returnToPreviousView() and getPreviousView().
+- JasperReportBaseAction now extends from ViewBaseAction.
+- New assertDialog(), assertNoDialog(), assertDialogTitle() and closeDialog() methods in ModuleTestBase.
+- XSystem.isJava5OrBetter() method removed.
+- JavaScript code (openxava.js) now uses jQuery.
+- Added jQuery UI library.
+- EntityResolver for XML parser that allows you to remove the WEB-INF/classes/dtds in your application at deploying time.
+- Tomcat included in distribution upgrade to Tomcat 6.0.20.
+- Upgrade to HtmlUnit 2.5.
+- A trim is applied to all labels of OpenXava elements: This fix some ugly layout in IE7.
+- New EnumStringType hibernate type to convert from arbitrary strings in DB to enum values in JPA.
+- OpenXavaTest refactored: Source folders reorganized, XavaSuite class removed, ant task renamed, etc.
+- Fix: Generating PDF reports and exporting to CSV fail when multischema is used.
+- Fix: Generating PDF reports and exporting to CSV fail in collections inside nested sections.
+- Fix: View navigation malfunction after choosing a reference when searching with a list.
+- Fix: Calculated collections inside a transient (not entity) class does not work.
+- Fix: Character + in string fields was erased.
+- Fix: Ugly formatting of action error messages with additional information.
+- Fix: MetaElement.getDescription() and MetaElement.getLabel() used local machine locale. Now it uses client locale.
+- Fix: ModuleManager.reset does not work with descriptionsList at default schema components
+
+OpenXava 3.1.4 (2009-8-27)
+--------------------------
+- @Formula annotation from Hibernate supported for detail and list mode.
+- Labels and messages translated to Serbian.
+- Labels and messages translated to Swedish.
+- Added 'list-formatter' to <formatter /> in editors.xml. 
+- New servlets.xml and filters.xml can be used in web/WEB-INF to add custom servlets and filters.
+- Support for Liferay 5.2.3 with Tomcat 6.
+- When the user reset the filters in list, the comparators (the combos) are reset too. 
+- On adding first collection element the container entity is refreshed in UI after saved.
+- New attribute formula for property-mapping in XML components to specify a property calcuted by SQL.
+- DateFormatter and javascript calendar adapted to work in Swedish.
+- New MemoFormatter applied by default to MEMO stereotype.
+- Attribute column in property-mapping of XML components now is optional. Property name is assumed.
+- Added assertCollectionNotEmpty() method to ModuleTestBase.
+- Improved message when datasource is not defined in persistence.xml
+- Added reset() method in ModuleManager to reinitalize the running module. 
+- Added getAll() method in ModuleContext to obtain all objects with the same name. 
+- Upgrade to commons-logging 1.1.1.
+- Parameters in module URL can be obtained with request.getParameter() from any part of the application, even inside a portal.
+- If adding alements to a collection validation exceptions are produced , the validation messages are show to the user.
+- Property isI18nWarnings from xava.properties now is false by default, so i18n warnings are no shown by default.
+- Better management of exceptions from editors: The trace has the root cause and the module is not broken, only the failed editor is not shown.
+- Removed getChosenKeyMap() method from ChooseReferenceAction. This method was not used.
+- Fix: Messages objects are not serializable betweend different JVM. Added serialVersionUID.
+- Fix: IChangeModuleAction does not work when called from a IChainAction.
+- Fix: Error on delete entity with inheritance and composite key.
+- Fix: Projects with - in the name do not work.
+- Fix: Double click execute the action twice, adding duplicate records to database in some cases.
+- Fix: AccessTracking does not work in Sybase.
+- Fix: StackOverflowError with recursive referenced annotated with @OnChange.
+- Fix: Formatting boolean in list mode fails when boolean type column is used.
+- Fix: Calculated properties fails on adding first collection element in some circumstances.
+- Fix: View.refresh() method closed detail element view of collections.
+- Fix: Changing the name of a searching reference tab makes the main module tab fails.
+- Fix: After loading an image (LoadImageAction) subsequent calls to CancelAction do not return to previous view.
+- Fix: Nested collections with composite key with references fail.
+- Fix: Actions with confirm=true do not ask for confirmation when keystrokes is used.
+- Fix: Users.getCurrentUserInfo() returns null after using MapFacade.
+- Fix: The default action (when user press ENTER) does not work with AJAX.
+- Fix: ModuleTestBase.executeDefaultAction() does not refresh page after execution.
+- Fix: JavaScript error when using groups aligned by columns in Liferay with Firefox.
+- Fix: Date formatting fails with Chinese locale.
+- Fix: Adding only sections with extendsView of @View produces an ArrayIndexOutOfBoundsException
+- Fix: Using extendsView of @View without members adds all member of current entity to the extended view.
+- Fix: View.setHidden(group, true) doesn't work fired from OnChange in some cases.
+- Fix: When a row is selected by code, if the user unselected it the selected style persisted.
+- Fix: Switching subview dynamically (with setViewName) does not work.
+- Fix: Fails to compile on Eclipse Galileo (JUNIT_HOME is missing).
+- Fix: Adding elements to a ManyToMany collection when the parent object is new fails.
+- Fix: @DisplaySize does not work in custom view with <xava:editor> for reference members.
+- Fix: Row selection in collection are not cleared when main object changed.
+- Fix: Reference (@ManyToOne) to an element of a collection with cascade ALL or REMOVE fails when used in a list.
+- Fix: It's not possible to write in a full numeric field though the content is selected.
+- Fix: textAreaEditor (really any editor with frame=true) cannot be displayed side by side.
+- Fix: Uploading files fails with before-each-request and on-each-request actions.
+- Fix: @EmbeddedId with int/long and NUMERIC in DB fails.
+
+OpenXava 3.1.3 (2009-6-16)
+--------------------------
+- @Editor can be applied to collections. Also available for XML version with <collection-view editor=/>.
+- @Editor can be applied to references. Also available for XML version with <reference-view editor=/>.
+- In editors.xml it's possible to associate an editor by default for all collections or for collections to certain models.
+- In editors.xml it's possible to associate an editor by default for all references or for references to certain models.
+- The selected row in list and collection is highlight.
+- OnSelectElementAction uses takesLong and confirmMessage.
+- The default label is natural, e.g. the label for lastInvoiceNumber now is "Last invoice label".
+- The default parse for int, short and long (MetaProperty.parse) returns null for null or empty string (before it returned 0).
+- It's possible to layout several collections on the same line.
+- OnSelectElementAction added to calculated collection.
+- Removed unused TTFs (fonts for PDF generation).
+- Fix: Editors with alwaysEnabled=true do not refresh via AJAX in some cases.
+- Fix: Is.empty fails with a BigDecimal less than one and not zero.
+- Fix: XCollections.last fail when collection is empty or null.
+- Fix: viewObject property is missing for OnSelectElementBaseAction
+- Fix: highlight select element whit OnSelectElementAction 
+- Fix: Collections with cascade REMOVE whose getter returns null fails in some cases.
+- Fix: mappedBy in @ManyToOne only allowed a reference named equal as the container entity.
+- Fix: @GeneratedValue in a not @Hidden key throws a NullPointerException.
+- Fix: Editors with multiple html elements with the same name fail (broken in v3.1).
+- Fix: IForwardAction at the same time that IChainAction (not refreshed the screen).
+
+OpenXava 3.1.2 (2009-4-22)
+--------------------------
+- View inheritance: A view can extends from another. Available for JPA POJOs and XML components.
+- New @OnSelectElementAction annotation to define an action to be executed when an element of the collection is selected or unselected.
+- Russian translation of the reference guide and other documentation.
+- New format 'odt' (Open Document) available for JasperReportBaseAction.
+- The UI for adding columns to list or collections now uses paging.
+- Descriptive icons for properties are show next to the label when LabelFormat is SMALL.
+- New 'remove' link in Image editor, so also in PHOTO and IMAGE stereotypes.
+- New attribute always-reload for editor in editors.xml.
+- New method assertNoLabel() in ModuleTestBase.
+- ModuleTestBase.assertExists() works with collections too. 
+- New defaultPersistenceUnit property in xava.properties to choose the JPA persistence unit to use by default.
+- New properties pageRowCount and addColumnsPageRowCount to customize rows per page for list and "add columns".
+- Clear message if you have not the ejb.jar in lib or common/lib of Tomcat.
+- Clear warning message when using @ReferenceView erroneously.
+- openxava.tld moved to openxava.jar (as taglib.tld).
+- Added activation.jar in order to facilitate the use of JavaMail.
+- Upgrade to JasperReport 3.1.4.
+- Fix: Nested sections with only sections are duplicated on change section in some very rare cases.
+- Fix: When changing controllers from an @OnChange action the button bar is not refreshed.
+- Fix: fails to enter a second time for a change of third-level module
+- Fix: To generate portlets when 'configuration' property is not in build.xml fails with XML style applications.
+- Fix: PDF generation does not work with Russian language.
+- Fix: Some rare NullPointerException on generating PDF the first time with filters (@Tab(filter=)).
+- Fix: StackOverflowError on circular references.
+- Fix: Some gramatical corrections in error messages.
+- Fix: Messages are not showed after executing an IForwardAction.
+- Fix: Order columns fails in some databases when changing schema with XPersistence or XHibernate.
+
+OpenXava 3.1.1 (2009-2-23)
+--------------------------
+- Several modules in the same portal page are supported.
+- WebSphere Portal 6.1 style support.
+- Refine style for WebSphere Portal 6.0.
+- Full tested with WebSphere 6.1.
+- @PropertyValue in @PropertyValidator with not 'value' throws error (because it's not supported).
+- Default editors and default size for short, java.lang.Short, double, java.lang.Double, float and java.lang.Float.
+- Removed method ModuleManager.getForm().
+- Fix: Upload files in a module called from an IChangeModuleAction does not work.
+- Fix: Module navigation (IChangeModuleAction) with more than 2 deep levels does not returns well.
+- Fix: Warning NotSerializableException with Tab removed.
+- Fix: List for adding columns to list or collections did not use list look & feel.
+- Fix: Creating from a reference an entity with collection fails.
+- Fix: OneToMany Fails without AutoGenerated ID trying to insert a parent and child record at the same time with visible ID in the detail entity.
+- Fix: FinderException, CreateException, ValidationException and RemoveException did rollback transaction, and they ought not to rollback.
+- Fix: Modify a reference to an entity that uses UUID as hidden key fails when UpperCaseFormatter is used for strings.
+- Fix: Selfreference collection with CascadeType.ALL or REMOVE fails.
+
+OpenXava 3.1 (2008-12-16)
+-------------------------
+- Full AJAX support.
+- Style for standalone module (outside portal) is configurable: Liferay 5.1 (now the default), Liferay4.3 and the OX Classic are available (change it using styleClass and styleCSS in properties/xava.properties). 
+- Chinese documentation advanced.
+- Now template projects do not ask by datasource name on create a new project.
+- Upgrade to Hibernate 3.3.1, Hibernate Annotations 3.4.0, Hibernate EntityManager 3.4.0 and Hibernate Validator 3.1.0.
+- The xava.properties of template projects contains all available properties.
+- Property formLineSpacing removed from xava.properties. It's better to change CSS files for this.
+- The produced pages are XHTML 1.0 instead of HTML 4.0 (only outside portal).
+- Upgrade to Servlets 2.4 API; so now requires a Servlet 2.4 container for run (Tomcat 5.x, WebSphere 6.x, etc).
+- ModuleTestBase does not allow to modify a disabled or readonly html element.
+- Support for UTF-8 for web request and response. Now the encoding for request/response is gotten from file.encoding system property.
+- New file custom-editors.js can be used on web/xava/js for defining the javascript for custom editors.
+- New editor for Timestamp and DATETIME with only one field for date and time. The old one still is available using @Editor("DateTimeSeparatedCalendar") or changing editors.xml.
+- Removed old and unused stuff for language: xava_language session object, Languages controller, Language class and languages.jsp.
+- New methods for obtaing labels for MetaProperty and Labels that do not required request or locale object as argument.
+- Library aspectrt.jar removed from WEB-INF/lib.
+- Money editor shows the currency symbol depending on the server locale.
+- Button for popup calendar has a new image.
+- Is.equal admits to compare objects of not compatible types, just it returns false in this case.
+- Custom reports, those derived from JasperReportBaseAction, now are filled inside JPA/Hibernate transaction, for avoiding lazy initialization problems.
+- New method getChosenKeyMap() in ChooseReferenceAction.
+- New method getMembers() in Messages.
+- New methods refresh() and refreshCollections() in View.
+- New property 'portletLocales' in xava.properties that indicates the locales to use for generating i18n files for portlets.
+- Is.equal can compare integers with enums, using the enum ordinal; and Shorts, Integers and Long among themselves.
+- Added default sizes (in default-size.xml) for java.lang.Integer, java.lang.Long, float, java.lang.Float, double and java.lang.Double.
+- New format 'rtf' available for JasperReportBaseAction.
+- New method remove() in ModuleContext for removing a session object.
+- New property 'browser' for xava-junit.properties to indicate the browser type to be used for testing.
+- New InputStreams utility class.
+- HtmlUnit updated to 2.2.
+- Fix: Validation error in some build.xml because default attribute was missing.
+- Fix: Code generation with some version of Sun JDK fails with when Spanish language is used.
+- Fix: JavaScript calendar in catalan inside Liferay does not show special character. calendar-ca.js has been adapted to UTF-8.
+- Fix: fckEditor.jsp indide portal throws JSP file "/xava/editors/../imports.jsp" not found.
+- Fix over 3.0.3: @RowStyle does not work on Liferay 5.1.
+- Fix: In ModuleTestBase tests after a popup windows with a non-html page is shown (as a pdf) the test does not behaves well.
+- Fix: From time to time when reference objects are created or modified a NullPointerException is thrown returning to the main view.
+- Fix: JavaScript error in IE6 and IE7 trying to put the focus in a hidden input.
+- Fix: FCKEditor not modifying text for FF3.
+- Fix: Error image for properties is not only shown for the failing property, but for all with the same name in view.
+- Fix: Modifying the container object from a callback method of a collection element fails.
+- Fix: Searching in a reference uses 'like' as condition when id is hidden and another property is used for searching, so sometimes the search is not exact.
+- Fix: On generating reports (and other cases) the latest action is reexecuted.
+
+OpenXava 3.0.3 (2008-8-14)
+--------------------------
+- Full support for Liferay 5.0 and 5.1.
+- Visual style integration for Liferay 5.1.
+- Labels and messages translated to Chinese.
+- French translation of labels and messages by a native French speaker.
+- French translation of the reference guide and other documentation.
+- Chinese translation of the reference guide and other documentation.
+- HttpUnit replaced by HtmlUnit for implementing ModuleTestBase.
+- Qualified properties are allowed for 'condition' and 'orderBy' of @DescriptionsList even it they are not in 'descriptionProperties'.
+- New property 'format' for JasperReportBaseAction. It can be 'pdf' or 'excel'.
+- JSP link tag has a new attribute 'cssStyle'.
+- Date formatter for Spanish and Polish admit 2 or 4 digits for years, and it throws parse error on incorrect dates.
+- New methods assertRowCollectionChecked() and assertRowCollectionUnchecked() in ModuleTestBase.
+- New utility class Classes for helping in class introspection.
+- Label editors show the description instead of id when the type is enum or valid-values.
+- Some HTML cleanup: All scripts inside HTML, no duplicate ids, focus_property_id hidden input removed.
+- commons-logging.jar is included in WEB-INF/lib.
+- Fix: FCKEditor, used for htmlEditor, is always in Spanish.
+- Fix: MetaElement class does not compile in some charsets.
+- Fix: Portlets do not work on Liferay 5.0.x.
+- Fix: getJRXML() of JasperReportBase does not recognize windows style path as absolute paths.
+- Fix: IPropertyAction fails when applied to a not qualified property.
+- Fix: Checkboxes remain checked after deletion in collections.
+- Fix: StackOverflowError parsing entities with cyclic references.
+- Fix: Calling updateSchema just before create a new project fails.
+- Fix: A on-change action triggered from the execution of a normal action closes the transaction.
+- Fix: Added elements to an inherited collection fails.
+- Fix: updateSchema ant target of MiEscuela demo project fails.
+- Fix: Incorrect default size for editors when using @Column without length.
+- Fix: On module navigation with IChangeModuleAction on-each-request and before-each-request actions of initial module were executed in target module too.
+- Fix: Hiding a predefined collection action for detail (as DeleteAction) duplicate the previous action in UI.
+
+OpenXava 3.0.2 (2008-6-4)
+-------------------------
+- Labels and messages translated to Italian.
+- liferay-display.xml file is generated: OX applications inside Liferay is not on 'Undefined' category but on a category for each application.
+- To hide/show the filter for a list or collection is remember by each user.
+- Gallery images table can work on a database without schema.
+- Java Preferences used for storing user preferences. OpenXavaDS and openxava-db are no longer needed.
+- New method getCurrentPreferences() added to Users class.
+- Actions on-each-request and before-each-request are executed only in the specified mode of the action (list or detail).
+- DateUtilSQLConverter (the default converter used for dates) admits any object compatible with java.util.Date from DB.
+- Classic XML Components guide moved to wiki.
+- The message for "object not found" contains the used key values.
+- @SearhKey can be applied to references.
+- I18n entries for tab properties can be applied to all entities at once using wildcards.
+- New method toStringArray() added to XCollections utility class.
+- PropertyAspect removed from OpenXava.
+- Fix: Broken links in Reference Guide.
+- Fix: Projects generated by OpenXavaTemplate or OpenXavaPlantilla do not work in embedded tomcat of Eclipse WTP 1.5 at first attemp.
+- Fix: Ant target 'compile' of OpenXava/build.xml does not work with OX3 style projects.
+- Fix: Compilation errors with Java 6.
+- Fix: Groups in one row aren't displayed correctly everytime with Firefox.
+- Fix: Incorrect charset on PDF report generation with WebSphere Portal 6.0 inside AS/400.
+- Fix: When there are rows selected in list mode and the user choose directly a not selected row it fails.
+- It's possible to scape message for avoiding translation putting them between simple quotes.
+- Fix: Searching a reference typing the key does not throw on change actions if the key displayed is not the internal id of the object.
+- Fix: Hiding programmatically all the elements of a section fails.
+- Fix: When the user changes the key of a reference and then click the link for searching the reference using a list it does not go to the list.
+- Fix: Excessive log warning about editors.
+- Fix: Searching a reference with @SearchKey using the list fails.
+- Fix: Stereotype PHOTO/IMAGE fails in collections.
+- Fix: Incorrect focus position when two search references inside a reference.
+- Fix: updateOX ant task was not coping xml components dtds for classic projects.
+- Fix: Selected elements of a collection inside of a not showed section are not correctly cleared.
+
+OpenXava 3.0.1 (2008-4-16)
+--------------------------
+- Hibernate Validator full support. Messages thrown by Hibernate Validator are shown to the user as validation messages.
+- @Required, @PropertyValidator and @EntityValidator redefined as Hibernate Validator constraints.
+- Max size of textAreaEditor uses Javascript for control max size (even with Ctrl-V).
+- Action 'new' of CRUD put the view to the initial section.
+- Ant creation wizard on template projects asks for the project name. Now it's not needed edit the ant build files.
+- Fix: On Liferay 4.3 with Internet Explorer 7 frames and tabs are not shown when the user is
+ log on.
+- Fix: Getters of references or collections annotated with @Transient fail.
+- Fix: Calculated properties with @Depends fails on transient classes.
+- Fix: Formatter is not applied when an editor is assigned via @Editor annotation.
+- Fix: On edit detail of collections data of nested references is not loaded correctly.
+- Fix: Select for row count of list fails when last showed database column ends with 'FROM'.
+- Fix: JasperReport generation: Invalid encoding name on some windows with WebSphere 6.0.
+
+OpenXava 3.0 (2008-3-4)
+-----------------------
+- POJOs + Java 5 annotations for defining business components.
+- XavaException now is a RuntimeException.
+- MapFacade methods do not longer throws RemoteException, instead it now throws SystemException (runtime).
+- Fix: JasperReport generation: Invalid encoding name "Cp1252" on some windows, and malformed URL on WebSphere 6.0.
+- Fix: Fails on WebSphere 6.0 (at some level patch). Broken since 2.2.3.
+
+OpenXava 2.2.5 (2008-2-21)
+--------------------------
+- New <on-change-search /> element for <reference-view/> to overwrite the default action for searching when the user type the key.
+- New before-each-request attribute for <action/> in controllers.xml.
+- Text field editor for numeric data uses JavaScript to prevent the user from entering non-numeric characters.
+- Text field editor for numeric data take into decimal point, thousands separator and sign for calculate size.
+- New utility class Emails to facilitate the use of JavaMail.
+- The cmp-type attribute of property-mapping supports to use all Java wrappers of java.lang and java.math without package.
+- MapFacade is not autocommit by default from now on. It's needed to put mapFacadeAutoCommit=true in xava.properties for autocommit.
+- New method MapFacade.commit to force a commit when MapFacade is working without auto commit.
+- Dates.toString() methods uses the current locale from Locales.getCurrent.
+- Unused classes ChangeLenguageAction and GoFirstAction removed.
+- CRUD.new action now restore by default the model of the view to the current module model.
+- Hibernate updated to 3.2.5.
+- When an action throws an exception all messages (not errors) added by the action are not shown.
+- AccessTracking does not record duplicate continuous entries.
+- TabUserPreference uses "native" as key generation to allow to save tab preferences in Oracle.
+- Hide rows action is no longer shown on collections.
+- New StringTimeConverter.
+- AnnotatedClassParser shows source exception on obtaining class names from hibernate session.
+- Code tuning after FindBugs revision.
+- Fix: Layout problem in Liferay when a section with only a property with frame.
+- Fix: Layout problem when a reference with frame="false" which contains sections.
+- Fix: Navigation is broken sometimes on Jetspeed 2.0 with Internet Explorer.
+- Fix: Buttons too big in IE.
+- Fix: Focus is not set after a request with IE7 and Liferay 4.1.
+- Fix: Javascript warning, when the focus go to a not selectable control, removed.
+- Fix: Fails on create hibernate session on JDK1.4 of AS/400.
+- Fix: 'Create' and 'Modify' link for references which key is inside a group was not shown.
+- Fix: On Java 6 the on change event in keys with composite keys was not always the last one.
+- Fix: Save first detail in a collection saved the container entity although the detail was not saved because of a validation error 
+- Fix: Fails on search references typing its key when working with multischema.
+- Fix: Search reference does not work when key is multiple, visible and inside a group.
+- Fix: When a member in a section was hidden programmatically and the result was only one reference or collection the frame was not hidden.
+- Fix: Overlapped columns were not recognized when the letters case does not match.
+- Fix: ValidValuesVerticalRadioButton was horizontal.
+
+OpenXava 2.2.4 (2007-12-19)
+---------------------------
+- Full support for Liferay 4.3, including visual style integration.
+- New stereotypes IP, ISBN, CREDIT_CARD and EMAIL_LIST.
+- It's possible to mark a property as search key to be used for indicating which properties will be used for searching.
+- New class UserInfo and method Users.getCurrentUserInfo() for accessing to info the portal user.
+- New calculators CurrentUserGivenNameCalculator, CurrentUserFamilyNameCalculator and CurrentUserEmailCalculator.
+- XSS (Cross-site scripting) protection added.
+- XHibernate supports multischema and different configuration by thread.
+- Refined default size of text fields for filtering in list mode. Now is 80%, before it was 50%.
+- Portlets use action url as form action, and propagate parameters from processAction method. Needed for Jetspeed 2.1.2.
+- Fix: Search using list from an overlapped reference with string keys fails.
+- Fix: 'Remove selected' from a collection inside a reference displayed as-aggregate does not work.
+- Fix: Minor errors in component.dtd/componente.dtd.
+- Fix: Reference to entity used as key and displayed as-aggregate fails on delete.
+- Fix: JavaScript calendar in Liferay 4.3 did not work.
+- Fix: Ugly layout when one (or few) fields before a wide group.
+- Fix: Layout problem when multiple nested frames with references with no frame.
+- Fix: Removed warning 'Trying to load controller .. twice' on generating portlets.
+- Fix: Code generator works with Java 1.4 (broken in 2.2.3).
+- Fix: If key inside a group in a reference the first editor outside the group was editable.
+- Fix: java.io.NotSerializableException: org.openxava.tab.impl.EntityTab removed.
+
+OpenXava 2.2.3 (2007-10-29)
+---------------------------
+- New stereotypes TELEPHONE, EMAIL and WEBURL.
+- Optimistic concurrency support using version property.
+- The generic messager error "Impossible to execute x action" now has also the message from the original exception.
+- In the page for customizing columns of list (and collections) the label of each property to add is shown.
+- The user can hide/show the filter part in list and collections. Also showFilterByDefaultInList and 
+showFilterByDefaultInCollections are available in xava.properties.
+- Labels in list mode are qualified by default. That is customer.name is shown as "Name of Customer" (before it was only "Name").
+- Compilable with Java 6, and still with Java 5 and Java 1.4 (dropped EmptyResultSet class).
+- New methods Labels.getQualified() and MetaProperty.getQualifiedLabel().
+- New DaysDelayCalculator for calculating delays between dates.
+- New property toUpperForStringArgumentsInConditions for xava.properties. It allows to choose the use of upper for searching in list and collections.
+- XavaPreferences can be only instatiate using getInstance() method.
+- JavaScript calendar aligns to bottom on IE6 and to top in the other cases, for avoiding a problem of overlapping with Liferay top bar.
+- Buttons instead of links for no image actions is possible (using buttonsForNoImageActions=true in xava.properties).
+- New property nullToZero in IntegerNumberConverter and LongNumberConverter to choose if null have to be converted to 0.
+- AccessTracking table schema changed in order to support MySQL.
+- New calculator CurrentTimestampCalculator.
+- Labels class does not print any stack trace on fail, it only log warning messages.
+- Fix: Focus when a reference or group is on top of the view is not set inside that reference or group.
+- Fix: Nested key references do not set editable correctly.
+- Fix: References with no frames inside groups are not nicely shown in some cases. 
+- Fix: SQLException from Oracle on collections when key of main object is empty.
+- Fix: <xava:link /> with empty string fails. This breaks the ability to removing some action in collection-view.
+
+OpenXava 2.2.2 (2007-9-3)
+-------------------------
+- A default module is assumed for each component of the application without declaring it in application.xml. 
+- New element default-module in application.xml for defining the controllers for default modules.
+- A static final field for each property is generated for interfaces on code generation.
+- Support for qualified properties (properties of references) in order of collections.
+- row-style available for <collection-view/>.
+- Fix: Code generation Java 1.4 compatibilty restored (broken in v2.2.1).
+- Checkbox in collection row is always present, even in read only calculated collection with no  list actions.
+- New methods assertRowStyleInCollection and assertNoRowStyleInCollection in ModuleTestBase.
+- Method setJPAPersistence removed from XavaPreferences.
+- Fix: Ordering and filtering for nested collection or collection inside references did not work.
+- Fix: When <property-view /> is used the size of the property is ignored by editor.
+- Fix: Using a named view with sections for displaying a reference was failing.
+- Fix: order in <descriptions-list/> has no effect when condition is not specified.
+
+OpenXava 2.2.1 (2007-8-7)
+-------------------------
+- Method getSQLBaseCondition() removed from MetaTab.
+- Button bar is not shown if it is empty (no action nor mode actions).
+- More meaningful title for PDF reports in collections.
+- Icon for 'delete' changed.
+- New property emailAsUserNameInPortal for usin in xava.properties that allows Users.getCurrent() returns the user email instead of the user id inside a portal.
+- JavaScript calendar is aligned on top of editor, in order to work fine in IE6.
+- MoneyFormatter for MONEY and DINERO stereotypes. Now money is always displayed with two decimals.
+- New methods noLastTokenWithoutLastDelim() added to Strings utity class.
+- It's possible to put empty string for action in edit-action, view-action, new-action, save-action, hide-detail-action, remove-action, remove-selected-action of collection-view, and the action will not be shown in the User Interface.
+- The JSP tags: action, link, image and button support empty string as value for action.
+- Tab now is serializable.
+- Now actions in DefaultListActionsForCollections controller are not added automatically to calculated collections.
+- New method Messages.getIds() that returns a list with the ids of the messages.
+- New display-size attribute available in <property-view/>.
+- A validation of scale is done for MONEY/DINERO stereotype.
+- regenerateHibernate now delete filtered-file folder before regenerate. Now you can rename a component with no problems.
+- Mode.list link is not available when creating or modifing a reference. In general change mode actions are not available after view navigation.
+- Beta support for EJB3 Entities as component definition language. The code is in a ox3-src folder. This is for supporting the development of OX3.
+- All data access from JUnit tests in OpenXavaTest is done using JPA instead of Hibernate.
+- Added method toKeyString(Object pojo) to ModuleTestBase in order to obtain a string representation of the key of a POJO from the POJO itself.
+- Fix: Searching by a property of type String mapped to a numeric column fails on Informix (or other DBs that do not support like in numerica columns)
+- Fix: JavaScript calendar fails on choose dates in languages other than Spanish.
+- Fix: List actions fail in nested collection. As generating PDF or deleting selected rows.
+- Fix: Some unexpected exception in Labels produces that collections will not work.
+- Fix: editor attribute in <property-view/> does not work is the property is inside a group.
+- Fix: NullPointerException in DateTimeFormatter when it try to parse a null value.
+- Fix: Calculated properties in aggregate collections that use IModelCalculator fails.
+- Fix: Collections fails on creating new objects in UI working agains some databases (as Informix).
+- Fix: Charset of JasperReports for automatic reports depends on the JVM config (special characters was not well displayed in Liferay).
+- Fix: 'editor' attribute of <property-view/> did not work in default view (the view with no name).
+- Fix: Multischema applications (using XPersistence.setDefaultSchema()) fail in collections when changing from a schema to other in some databases without reinitatite the module.
+- Fix: StackOverflowError in ResourceManagerI18n generating code from a locale other than ca, de, en, es, fr, in, pl.
+- Fix: MetaModel.getMetaView() failed when a null or empty string was used as argument and no default view was explicitly defined in component.
+- Fix: getValueInCollection and assertValueInCollection does not calculated well the row number in the case of not calculated and read only collection without view link.
+
+
+
+
+OpenXava 2.2 (2007-6-28)
+------------------------
+MAIN FEATURES since 2.1
+- Collection behaviour greatly improved.
+- Look & Feel integration for Liferay and WebSphere Portal 6 improved.
+- Transient components and default mapping for persistent components.
+- Moreover, more than 80 features and fixes over 2.1.
+
+Features and fixes since 2.1.5:
+- Entity collection behaviour improved: You can add several elements at once, and with less clicks.
+- New type of action IChainActionWithArgv, that allows sent values for the properties to the chained action.
+- The detail view in collections now is shown on top by default, you can put it on bottom with detailOnBottomInCollections=true in xava.properties.
+- When save a collection element the detail view is not hidden, but it continue displayed.
+- When i18n for members of collections are not defined, the i18n for the default tab is assumed.
+- Bulgarian flag added to OpenXava Portal (Liferay).
+- Fix: When quotation marks in text field was used, the data inside quotation was not visible.
+- Fix: Intermittent bug on high load (NullPointer obtaining a parameter for request) on return from creating o modifiying a reference.
+- Fix: Tomcat log does not work in OpenXava Portal (Liferay) on Windows.
+- Fix: Fails in i18n of members of collections.
+
+OpenXava 2.1.5 (2007-6-18)
+--------------------------
+- Refined look and feel of lists and collections for WebSphere Portal and Liferay in order to see clearly the seperation within cells.
+- WebSphere Portal 6 style improved: Sections and frames have native aspect; and a little problem with resolutions higher than 1600x has been fixed.
+- Support for Bulgarian language in portlet generation.
+- Filtering by year and month in list mode works fine in all databases (including Postgres and Informix).
+- New editors ValidValuesVerticalRadioButton and ValidValuesHorizontalRadioButton.
+- New stereotype IMAGE_LABEL/ETIQUETA_IMAGEN.
+- Fix: MapFacade.createReturningValues did not return values calculated from default-value-calculators.
+- New property hibernateJavaLoggingLevel available in xava.properties to set the logging level for Hibernate.
+- Fix: Overlapping properties and references in mapping did not work if the case of the columns did not match.
+- Fix: ModuleTestBase.assertCollectionRowCount and assertCollectionRowCount fails on a calculated collection with only one row.
+- Fix: Calculated properties using IModelCalculator or IEntityCalculator fail in collection (bug introduced in v2.1.4)
+- Fix: Focus positioning fails when there is an event associated to the last field of a group.
+
+OpenXava 2.1.4 (2007-5-29)
+--------------------------
+- Controller DefaultListActionsForCollections that allows define default list actions for all collections.
+- Export to excel and print as PDF is available for collections.
+- Action for list mode (that work with Tab object) can be apply to collection too.
+- All features of list mode are available also for collections. This includes ordering, searching, pagination, etc.
+- New method Tab.setDefaultOrder() for setting the default order for the Tab in runtime.
+- New method Tab.setPropertiesNames() for setting the properties displayed by the Tab in runtime.
+- New method Tab.setFilter() for setting the filter of a Tab in runtime.
+- New methods in View: getCollectionSelectedValues(), getCollectionObjects() and getCollectionSelectedObjects()
+- PersistenceFacade added (in package org.openxava.model) for accessing some persistence services in an abstract way.
+- Hibernate update to 3.2.4.sp1 and Hibernate EntityManager updated to 3.3.1.GA.
+- Button for filtering in list mode is replaced by an icon.
+- Class ArrayOneRowResultSetAdapter (from util) removed (really moved to org.openxava.converters.typeadapters).
+- CSV Export (export to excel in list mode) change the 'new line' (\n or \r) by spaces in order to export nicely when multiline texts are present.
+- Property 'csvSeparator' can be used in xava.properties to indicate the column separator for CSV export.
+- New class SystemException for throwing from business method when a system level exception is produced.
+- Ant target 'generarPortlets' has been removed from OpenXava/build.xml, 'generatePortlets' can be used instead.
+- MapFacade.validate() can be used for validating aggregates (not only entities)
+- Fix: Fail in list mode: Calculated property of a reference that depends on a property of the same name of one of the main object.
+- Fix: User preferences for tab was not loaded when duplicate rows was found.
+- Fix: View.setValue() threw exception if the member is hidden.
+- Fix: 'Transaction not successfully' message showed on saving tab preferences.
+- Fix: When create a new object from a reference ant it has an  on-change action associated to the key some times a NullPointerException is thrown and the on-change action is not executed.
+- Fix: Required icon in editors with frame was not nicely displayed inside Liferay Portal.
+- Fix: In websphere 6.0 using WebSphereTransactionManagerLookup a lot of warning messages is shown on commit transaction.
+- Fix: Ant targets 'generatePorlets' and 'redeployPortlets' touched application.xml although it did not exists. This created an empty application.xml file in Spanish projects.
+- Fix: MapFacade.setValue and MapFacade.validate crash when a reference with null value used in a model validator is sent.
+
+OpenXava 2.1.3 (2007-5-2)
+-------------------------
+- New editor radionButton.jsp to display/edit valid-values in radio button format.
+- <property-view/> has the attribute editor to specify a editor to a property for use only in that view.
+- It's possible to give name to a editor in editors.xml
+- A key property marked as hidden="true" without required attribute assumes required="true".
+- Fix: NoClassDefFoundError on AS/400 + WebSphere 6 (bug introduced in OX2.1.2).
+- New static methods for MetaModel: getForPOJO(), getForPOJOClass() and existsForPOJOClass()
+- CSS modified in order to make more visible disable editors.
+- Fix: It did not release transaction nor hibernate session when fail on loading and saving tab preferences.
+- NotZeroValidator (used by default for required="true") now shown a message '{0} is required' is the value is null. Before the message was 'It's not possible assign null to a int'.
+- Value of type int, long and short used as key are parsed as null (before as 0) if they are used as key, this is for better support of referenced using 0 as valid key.
+- Default mapping: If mapping is not specified in a component definition a default one is assumed.
+- Support for Transient Components: Using the <transient/> instead of mappings on defining the component.
+- Fix: On modifying view properties was not validated.
+- Fix: When create a new object from a reference the on-change action associated to the key of the reference is not thrown.
+
+OpenXava 2.1.2 (2007-4-12)
+--------------------------
+- Fix: Cache in DataSourceConnectionProvider by component did not work
+- New controller 'DefaultSchema' that allows creating applications that change the default database schema in runtime for each user independently.
+- New methods setDefaultSchema and setPersistenceUnitProperties for XPersistence class. These methods allow change the JPA configuration in the current thread.
+- A little improvement in dateCalendar editor. It did fail when used without HTML tables, because a <br>
+- New attribute 'on-each-request' available for action element in controllers.xml. This allows that an action will be executed automatically in each user request.
+- The keystrokes for record navigation now are control alt RIGHT, control alt LEFT and control alt HOME, because the old ones (control RIGHT, control LEFT, control HOME) had conflicts with text editor normal keystrokes.
+- Fix: If in list mode a property from a reference is shown (a qualified property), and the property is calculated using a IModelCalculator then it fails.
+- Hibernate update to 3.2.2, and Hibernate Persistence Manager and Hibernate Annotations update to 3.3.0.
+- Support for database with schema support but that they not allow to use schema in data manipulation. This allows use schemas in Hypersonic.
+- Editor for valid-value and Java 5 Enum is defined in default-editor.xml and can be defined in editors.xml/editores.xml. Now it's possible to customize the valid-values/enum editor.
+- Fix: ClassCastException when searching with MapFacade using BigDecimal as values for integer properties.
+- Fix: Stereotype IMAGES_GALLERY/GALERIA_IMAGENES shows a gap between first and second image if you have more than seven.
+- New class ArrayOneRowResultSetAdapter for reading a object array as JDBC ResultSet.
+
+OpenXava 2.1.1 (2007-3-2)
+-------------------------
+- OpenXava number version is logged.
+- Fix: Composite key with an int or long and NUMERIC in database fails searching in detail mode.
+- New methods setYear, setMonth and setDay added to Dates class.
+- Stereotype IMAGES_GALLERY/GALERIA_IMAGENES is shown nicely in Liferay Portal.
+- New method getAllMetaActionsIterator() added to ModuleManager to avoid using org.apache.commons.collections.IteratorUtils inside JSP (Eclipse WTP does not like it).
+- Ant target 'compile' in OpenXava/build.xml is refined in order to work fine even if it is the first ant target to be executed when a project is recently created.
+- Fix: Focus is lost inside Liferay when a request is done.
+- Fix: Avoid browser cache of PDF OpenXava generated documents.
+- Using key properties of parent model in a 'from' attribute from an aggregate works. That is, to use from="invoice.year" from a InvoiceDetail aggregate is allowed.
+
+OpenXava 2.1 (2007-2-12)
+------------------------
+MAIN FEATURES
+- Full support for EJB3 JPA as persistence engine.
+- Full support for Liferay portal.
+
+XML SYNTAX
+- Session objects declared in controllers.xml now can have global scope. A new scope attribute is added to <object/> element.
+- Attribute remove-selected-action added to <collection-view/> in order to define a custom action for removing selected elements in a collection.
+
+JAVA API
+- View.getRemoveSelectedInCollectionAction() renamed to View.getRemoveSelectedCollectionElementsAction()
+- Protected method removeSelected added to RemoveSelectedInCollectionAction in order to facilitate the refiniment of the action.
+
+MISC
+- deployEJB (in OpenXava/build.xml) copy all hibernate jars to the ear in order to use Hibernate inside EJB2.
+- New ant target in OpenXava/build.xml 'generatePortlets' that generates a war file in portlet format but it does not copy it to deploy directory.
+- Logging of i18n problems is now low (only short warning messages). No exception is shown now.
+- Removed commit from list.jsp. Now in order to work with WebSphere you need to configure your hibernate.cfg.xml. Look at OpenXavaTest/hibernate.cfg.xml adn OpenXavaTest/websphere-as400.properties to see an example.
+- Hibernate Entity Manager and Hibernate Annotations updated to 3.2.1
+- DateTimeFormatter improved for Polish locale.
+- New property javaLoggingLevel available in xava.properties to specify the log level for the OX applications.
+- No cache is used for OX portlets. expiration-cache is 0 in portlet.xml generated by OpenXava.
+- Polish translation for labels and messages.
+- wtpBuild ant target is dropped from OX. You can use 'rebuild' ant target instead.
+- New demo project ProductSale added.
+- Style of frame for collection elements supports Liferay.
+- The OX jsp are always updated in OX applications, in this way when a new OX version is updated the OX code in applications is update without problems
+- Removed incorrect stack trace about JPA when a datasource cannot be obtained, even if the application does not use JPA the trace was shown.
+- The properties in the files inside WEB-INF/classes have always preference, independently of classloader configuration of application server.
+- Choosing the encoding for portlet.xml is posible using portlet.encoding property in build.xml.
+
+FIXES
+- Fix: Maps.treeToPlains did not work with more than 2 levels.
+- Fix: Action for references (search, create, modifying) did not support more than 2 nested level.
+- Fix: javaLoggingLevel property in xava.properties had no effect inside junit test. Also now trim() is done before parse its value.
+- Fix: Typing @ in a windows using a view with sections changes the current tab. This may affect to all AltGr characters.
+- Fix: In view: Layout a reference besides to the next reference does not work (the next one was placed below).
+- Fix: Java 5 was required for portlet generation. Now it works (again) with Java 1.4
+- Fix: Calendar for date editor does not work in a module called from another module.
+- Fix: Portlets does not work in WebSphere Portal 5.1
+- Fix: HtmlPortlet does not recognize the language correctly.
+- Fix: Searching on focus lost in references with hidden key fails in the second attempt.
+- Fix: Image for editing in HTML_TEXT stereotype was missing.
+- Fix: MetaValidators.findFromParent print a NullPointer stacktrace if the type is an interface.
+- Fix: ModuleTestBase.assertListNotEmpty() works well, before one line list was considered as empty.
+
+
+OpenXava 2.0.4 (2006-12-19)
+---------------------------
+UI BEHAVIOUR
+- More coherent behaviour for IMAGES_GALLERY stereotype. Now the images are always added to the gallery, although the save button in main entity is not pushed.
+- Searching in detail model for any displayed field includes references (before only it worked with plain properties)
+- Link for modify references available to users.
+- In list mode java.sql.Timestamp allows filter by year, month and year/month.
+- Informative message on adding new image to a Gallery.
+- Seaching by year/month in data types is allowed in list mode.
+- Images gallery show identification data about the object that own the images
+- Top button bar shows icon and bottom button bar shows buttons, without redundancy
+- java.sql.Timestamp can be used for filtering in list mode using plain dates.
+
+XML SYNTAX
+- New attribute modify (to disable/enable 'modify link') in <reference-view/>
+- New attribute modify-reference (to disable/enable 'modify link') in <collection-view/>
+- New attribute scale (useful for creating a more accurate hiberante mapping) in <property/> (by Radoslaw)
+- New attribute aligned-by-columns for <group/> and <section/> in views. It allows layout the members by columns, as in a table.
+
+JAVA API
+- ModuleTestBase.getProperty now is public and static in order to access to xava-junit.property from any place.
+- New method ModuleTestBase.setLocale to change the locale of the client at runtime.
+- Strings.change allows sending null as string.
+- View class has this 3 new methods: putObject(), getObject() and removeObject() that allow to associated arbitrary objects to a view.
+- Method Dates.cloneWith2359() added. To clone a date but with time 23:59:59 999
+- INCOMPATIBITY: Dates.clonWithoutTime() renamed to Dates.cloneWithoutTime()
+
+MISC
+- Style works fine in Liferay, adapting well to all look & feels.
+- Updated to Hibernate 3.2.1
+- Liferay style integration improved.
+- XavaSuite works at 100% agains Liferay 4.1.3.
+- Logging using apache commons loggins instead of System.out/System.err/printStackTrace.
+- Default value (3000) for HTML_TEST/TEXTO_HTML stereotype.
+- StringArrayBytesConverter supports Blob as column type in DB.
+- StringTimeFormatter (used by TIME/HORA stereotype) format using 5 digits.
+- Referencing in 'from' attribute of a calculator inside an aggregate to properties of the parent model are allowed (look at section 3.8.4 of reference guide)
+- ConcatCaculator now admits until 5 strings/ints
+- MetaProperty.parse converts empty string in null (instead of 0) for all value of type Number. This can produce some little INCOMPATIBILITIES (now blanks are shown where before 0 was shown).
+- It's possible to create a folder named 'public' inside our OX project then all JSP inside it will be always public and accessibles even in a Portal.
+- Date format and parse are done depending on browser locale.
+- Ant target 'redeployPorlets' added to OpenXava/build.xml and used from all OX projects.
+- java.sql.Time are parsed using 24 hours format in all locales by default.
+- Some correction in translations for object_not_found.
+- ModuleTestBase.setValue(String model, String name, String value) throw onchange events as the
+setValue(String name, value) does.
+- JasperReport version returns to 1.1.1, because 1.2 has problems in some J2EE/portals server (WAS 5.1 + WPS 5.1 in an IBM iSeries)
+- The ant target 'clearGeneratedCode' does not fail although the gen-src (used only in EJB) does not exist.
+- portlet.xml is generated using UTF-8.
+- NotNullDateConverter now supports java.util.Date.
+- java.sql.Time supported (including JasperReport generation).
+- TimeFormatter renamed to StringTimeFormatter.
+- IBM WebSphere Portal 6.0 tested and supported
+- IChangeModeAction allows to change to PREVIOUS_MODE, in addition to DETAIL and LIST.
+- Using <env-var name="XAVA_LIST_ACTION" value=""/> on defining a module in application.xml the detail action in each row is missing.
+- The buttonBarOnTop and buttonBarOnBottom properties of xava.properties are not longer used
+
+FIXES
+- Fix: htmlEditor does not work inside portal
+- Fix: "order by" links in list mode are displayed ugly in JetSpeed2.
+- Fix: String (or any other type) for property type and byte [] for cmp-type supported in Hibernate.
+- Fix: Stacktrace is shown in trace when a label is not in i18n files.
+- Fix: default value calculators do not work in collection of entities displayed as aggregates
+- Fix: Calculated properties inside a section that depend on a property on other section is not recalculated well.
+- Fix: util.Server restore XHibernate.isCmt state correctly. In order to use Server from calcultors when you use hibernate + ejb.
+- Fix: Javascript calendar for date fails in Liferay.
+- Fix: Actions of references do not work inside nested sections.
+- Fix: Filtering in list by java.sql.Time does not work.
+- Fix: Filtering in list mode using other operators than '=' fails using Timestamp.
+- Fix: Focus does not work well inside a portal.
+- Fix: A blank line at first of the module using Internet Explorer.
+- Fix: Exporting to excel does not work inside JetSpeed 2.
+- Fix: On creating a new object from reference, when we are creating an object from a reference (more than 1 nested level) the reference in the original view is not filled.
+- Fix: Parsing numbers in Polish fails if the number is > 1000
+- Fix: Searching an object with a single reference (with a single column) as key fails in hibernate.
+- Fix: createWebsphereEar ant target broken
+- Fix: <set/> with 'from' attribute does not work in <remove-validator/>
+- Fix: On removing an element from a collection using check box the dependent data was not updated.
+- Fix: If you try to filter pressing return (without click in filter) when searching a reference a error message was displayed.
+- Fix: When customize a list searching references always return to the main list mode of module.
+- Fix: When a new object is created from reference UI (with + icon), and it has a autogenerated hidden key, the reference is not filled with the new created object.
+- Fix: Defining a calculated property that mix <set/>s with 'value' and 'from' fails
+- Fix: Fails in tab when ordering by primary key in Informix
+
+
+OpenXava 2.0.3 (2006-10-02)
+---------------------------
+UI BEHAVIOUR
+- It's possible to remove several rows from collection at once, using a checkbox + action
+- When you navigate or search to a new object all collections closes the detail view. In this way a lot of incorrect data display problems are removed.
+
+XML SYNTAX
+- Attribute 'maximum' (for validating maximum item count) allowed in <collection /> element.
+- order in finder supports using a property of a reference inside an aggregate (address.state.name for example) for Hibernate and JPA.
+- <action/> inside <members>, <property-view/> or <reference-view/> have the attribute 'always-enabled', when this attribute is true the action is always present, even if the view, property or reference are not editable.
+- <action /> allowed inside members(groups and section) of view. In order to put an arbitrary action inside a view.
+
+JAVA API
+- The method getJRXML of JasperReportBaseAction admit full file path for specifying a resource of file system, before only resources from classpath could be readed.
+- View.setValue throws exception if member to update is not shown in view
+- Added method treeToPlain to Maps utility class.
+- Added method assertNoMessage to ModuleTestBase
+- Maps.putValueFromQualifiedName for put a value in a tree format map using a qualified name.
+- MapFacade.addCollectionElement method added and use from standard OpenXava actions.
+
+MISC
+- New stereotype: HTML_TEXT/TEXTO_HTML.
+- Chapter 2 of reference guide uses 'updateSchema' for creating database.
+- JPA code in POJOs only is generated if JPA persistence provider is set, or the property 'jpaCodeInPOJOs' in xava.properties is set to true. In this way POJOs can be compiled using a java 1.4 compiler.
+- Default validators for type or stereotype are supported. They can be defined in validators.xml.
+- If component name does not match with xml file name a meaningful message is produced
+- <xava:descriptionsList/> JSP taglib added.
+- <xava:message/> JSP taglib added.
+- Calculated properties with IModelCalculator or IEntityCalculator are recalculated in view when some dependent value changed and an POJO (not EJB) populated with the current view data is injected in calculator before calculation.
+- Custom JSP are allowed in root folder.
+- It's possible to overwrite standard messages of OpenXava.
+- XavaResources.properties dropped from OpenXava. All its content is moved to Messages.properties.
+- Code generation for EJB2 exclude some finder cases only supported in Hibernate/EJB3
+- Added 'as-aggregate' to <reference-view/> to allow entity references behave as aggregate references.
+- It's possible override for our application a defaut controller of OpenXava (Collection, References, Typical, etc).
+- OpenXava/xava/controllers.xml is renamed to OpenXava/xava/default-controllers.xml.
+
+FIXES
+- Fix: checkbox of rows in collection is not shown when collections are not editable
+- Fix: SaveAction with resetAfter=false clear the data of references
+- Fix: as-aggregate for in <reference-view/> does not work if the key of reference is autogenerated.
+- Fix: View.setValueNotifying and View.setValuesExecutingOnChangeActions does not execute the same action more than once.
+- Fix: Now CRUD.searchByViewKey does not throw on-change event for key in references, and CRUD.searchExecutingOnChange lanza on-change event for key in references. Now works as reference guide explains.
+- Fix: OnChange action associated to a view used for create a new reference crash if add error or messages
+- Fix: Editable mode of collection of entities inside an section fails.
+- Fix: assertListRowCount(0) works fine in junit tests
+- Fix: View.setEditable from inside a XAVA_SEARCH_ACTION in list mode does not affect to collections with <collection-view/>
+- Fix: validator in aggregate that references to its parent of which key is single crash.
+- Fix: If the user removing a column from tab and after he filter by a aggregate value then fails: Filter is not done, and the list is not well displayed
+
+OpenXava 2.0.2 (2006-08-01)
+---------------------------
+- On creating a new object from a reference the reference view is filled automatically with the just created object.
+- Added 'as-aggregate' to <collection-view/> to allow entity collections behave as aggregate collections.
+- Added exportSchema and updateSchema to OpenXava/build.xml (see example in MySchool/MiEscuela build.xml)
+- It's possible to refine the default behavior of a collection-view with new new-action, save-action, hide-detail-action and remove-action elements in collection-view
+- add/removeListAction and add/removeDetailAction added to view. This allow add/remove programmatically actions to a collection view.
+- hiddenDetail action of Collection controller in controllers.xml is renamed to hideDetail.
+- New stereotype ZEROS_FILLED/RELLENADO_CON_CEROS
+- Feedback to the user of standard action are improved, specially those of collection.
+- Searching a reference using radio button instead of checkbox, because only an item can be selected.
+- Allows spaces at end of persistenceProviderClass property value in xava.propeties.
+- In upload forms (multiplar) any number of actions is allowed.
+- In IMAGES_GALLERY stereotype there is a cancel action in the form for upload image.
+- Added explicit support for identity (auto-increment) database columns by means of the new IdentityCalculator.
+- IPropertyAction added, to allow inject property name and view to an action defined in an <property-view/>
+- SearchByViewKeyAction has new protected methods for refining its behaviour easily.
+- list.jsp admit the parameter singleSelection to indicate if the list has to use chechbox or radio button.
+- CreateNewFromReferenceAction and SaveNewAction now have a property 'referenceSubview' (of View type) that has to be injected in controllers.xml. If you have some custom action that extends them remember modify your controllers.xml
+- The order of elements in entity/aggregate are more flexible.
+- Converters (defined in converters.xml or MyComponent.xml) are applied for not generated code too. In this case conversion is only used for list mode, and the programmer is responsible to include the conversion in get/set code.
+- Some adaptation a oracle syntax: Inner joins for tab works fine with Oracle (" as " dropped).
+ OpenXava is refined in order to avoid this jetspeed flaw
+- All text editors are limited to 100 displayed charecters as maximum. You can customize it for you applicaction using maxSizeForTextEditor in xava.properties.
+- The textEditor.jsp editor has a new parameter 'maxSize' that is assigned to the 'size' attribute of html <input /> element. You can use it in your own steroetypes.
+- workspace.dir in openxava.properties (or equivalent) is ignore by OpenXava. Therefore, from now on you can rename the folder of your workspace without worrying about to change your openxava.properties.
+- Key with 0 as value works in searching
+- The ERROR messages on deleting the last object are not shown if removal is done correctly.
+- xava-junit.properties support the 'application' property to indicate the default value for
+	the application to all the junit test the project.
+- Image editor does not show the broken image when there is no image.
+- Labels.get and Labels.exists methods do not fail, instead returns a default value.
+- XavaResource.getString never fails. This is for avoid some bug in jetspeed2 request implementations.
+- Fix: descriptions-list with order and without condition fails
+- Fix: collections of references to entities are full editable inside sections.
+- Fix: Sterotype IMAGES_GALLERY crash when the property is not in i18n files.
+- Fix: request.getLocale() throws NullPointerException in some circumstance inside Jetspeed2.
+- Fix: actions which description contains ' fails
+- Fix: Numeric text fields are aligned to right (maybe it was broken in some point)
+- Fix: Bug in CollectionBaseAction.getObjects()
+- Fix: collection of aggregates inside group inside section fails
+- Fix: Searching in detail fails with boolean and properties with converters
+- Fix: Searching in detail fails when more than one match to the searching
+
+OpenXava 2.0.1 (2006-06-29)
+---------------------------
+- Support for EJB3 JPA: 100% supported, but still in beta stage until 2.1.
+	> EntityManager can be used inside your own actions.
+	> JPAPersistenceManager available and 100% tested
+	> XPersistence class
+- keystroke supported for actions (in controllers.xml)
+- IHibernateIdGeneratorCalculator added, to customize the .hbm.xml generated code for id generators.
+- Search action in detail mode supports searching by any field or fields. Before only 'by primary key' was supported
+- Support for sequence id generator for Hibernate/EJB3.
+- Method XSystem.isJava5OrBetter() added.
+- Formatter is not required for stereotype that uses 'descriptionsEditor.jsp', including the case of multiple key with references.
+- Attributes 'editable' and 'throwPropertyChanged' added to <xava:editor /> taglib
+- Searching references of which key is hidden can be done using the first displayed field of reference.
+- PropertiesManager.executeGet and executeGets support qualified properties.
+- New method MapFacade.getValuesByAnyProperty to search by any property (not only the key)
+- Nes method Is.empty to ascertain if the argument (an object) is null, empty string or 0.
+- Actions with confirmation show a meaningful confirmation message (from description of action)
+- Keystrokes (control-1 to control-9) availables for section change.
+- Controls duplicated form submit: In this way last action is not repeated accessing portlets in WebSphere Portal.
+- Updated to httpunit 1.6.2
+- Grammatical corrections to reference guide
+- Fix: In Hibernate int key with NUMERIC in db fails.
+- Qualified properties allowed in <xava:editor /> taglib
+- <action/> element added to <reference-view/> in <view>. Works as in case of <property-view/>
+- Eclipse validation droped from OpenXava project, in order to avoid errors in folder xdoclet
+
+OpenXava 2.0 (2006-05-22)
+-------------------------
+- Model layer generated using POJOs.
+- Persistence managed by Hibernate.
+- Works with a simple Tomcat.
+
