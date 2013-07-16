@@ -5,6 +5,7 @@ import java.rmi.*;
 import java.util.*;
 
 import javax.ejb.*;
+import javax.persistence.Entity;
 
 import org.apache.commons.logging.*;
 
@@ -148,7 +149,15 @@ abstract public class POJOPersistenceProviderBase implements IPersistenceProvide
 			PropertiesManager mp = new PropertiesManager(object);
 			removeCalculatedOnCreateValues(metaModel, values);
 			mp.executeSets(values);					
-			persist(object);			
+			/*EX: 01-If object is not entity, ignore save process//
+			persist(object);
+			 */
+			if (null!=object.getClass().getAnnotation(Entity.class)){
+				persist(object);
+			}else{
+				log.warn("Class " + object.getClass().getName() + " is not Entity, ignore persistence");
+			}
+			/*EX: 01-END*/		
 			return object;
 		}
 		catch (RuntimeException ex) {  
