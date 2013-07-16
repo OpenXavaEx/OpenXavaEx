@@ -1,0 +1,23 @@
+<?xml version = "1.0" encoding = "ISO-8859-1"?>
+
+<!DOCTYPE controllers SYSTEM "dtds/controllers.dtd"><controllers>
+	<controller name="Typical">
+		<extends controller="Navigation"/>
+		<extends controller="CRUD"/>
+		<action name="deleteSelected" mode="list" confirm="true"
+			class="org.openxava.actions.DeleteSelectedAction"
+			image="delete.gif"
+			keystroke="Control D"/>
+		<action name="search" mode="list" 			 
+			class="org.openxava.actions.OpenSearchDialogAction" 
+			image="find.gif" 
+			keystroke="control B"/> 
+	</controller>
+	
+	<controller name="ReportEx">
+		<action name="search" mode="detail"
+			class="org.openxava.ex.model.base.BaseReportQuery$_ReportQueryAction" 
+			image="find.gif" 
+			keystroke="control B"/>
+	</controller>
+</controllers>

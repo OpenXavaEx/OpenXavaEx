@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.openxava.controller.ModuleContext;
 import org.openxava.ex.cl.ClassLoaderUtil;
+import org.openxava.ex.jsp.WebResourceRegister;
 import org.openxava.ex.utils.FreeMarkerEngine;
 import org.openxava.formatters.IFormatter;
 import org.openxava.model.meta.MetaProperty;
@@ -26,9 +27,12 @@ import freemarker.template.TemplateException;
  */
 public class ShellEditorContext {
 	public static final String PROP_SHELL_CLASS = "xava-ex.editor.shell.class";
+	public static final String REQUEST_ATTR_KEY_WebResourceRegister = "xava-ex.editor.shell.WebResourceRegister";
 	
 	public static final String render(ShellEditorContext ctx){
-		return getEditor(ctx).render(ctx);
+		String html = getEditor(ctx).render(ctx);
+		String tags = WebResourceRegister.outHtml(ctx.contextPath);
+		return tags + html;
 	}
 	public static final String renderReadOnly(ShellEditorContext ctx){
 		return getEditor(ctx).renderReadOnly(ctx);
@@ -68,6 +72,11 @@ public class ShellEditorContext {
 		this.request = request;
 		this.rendererClassName = request.getParameter(PROP_SHELL_CLASS);
 		this.contextPath = request.getContextPath();
+		//Check and reset the WebResourceRegister
+		if (null==request.getAttribute(REQUEST_ATTR_KEY_WebResourceRegister)){
+			WebResourceRegister.reset();
+			request.setAttribute(REQUEST_ATTR_KEY_WebResourceRegister, "initialized");
+		}
 	}
 	public ModuleContext getContext() {
 		return context;

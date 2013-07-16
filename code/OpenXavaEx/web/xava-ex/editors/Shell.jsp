@@ -1,6 +1,8 @@
 <%@page import="org.openxava.ex.editor.shell.ShellEditorContext"%>
 <%@page import="org.openxava.util.XavaPreferences"%>
 <%@page import="org.openxava.util.Is"%>
+<%@page import="org.apache.commons.lang3.StringEscapeUtils"%>
+
 <jsp:useBean id="errors" class="org.openxava.util.Messages" scope="request"/>
 <jsp:useBean id="context" class="org.openxava.controller.ModuleContext" scope="session"/>
 <jsp:useBean id="style" class="org.openxava.web.style.Style" scope="request"/>
@@ -39,4 +41,4 @@ if (editable || !readOnlyAsLabel) {
 <%
 }
 %>
-<input type="hidden" id="<%=propertyKey%>" name="<%=propertyKey%>" value="<%=fvalue%>">
+<input type="hidden" id="<%=propertyKey%>" name="<%=propertyKey%>" value="<%=StringEscapeUtils.escapeHtml4(fvalue)%>">

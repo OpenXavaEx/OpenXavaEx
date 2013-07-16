@@ -14,7 +14,9 @@ import org.openxava.annotations.ReferenceView;
 import org.openxava.annotations.Required;
 import org.openxava.annotations.Stereotype;
 import org.openxava.annotations.Tab;
+import org.openxava.annotations.Tabs;
 import org.openxava.annotations.View;
+import org.openxava.annotations.Views;
 import org.openxava.demoapp.model.purchase.RequirementFormDetail;
 import org.openxava.ex.model.base.BaseMasterDataModel;
 
@@ -22,8 +24,14 @@ import org.openxava.ex.model.base.BaseMasterDataModel;
 @Table(name="MD_SKU")
 //BP: Can use a non-persistence in @Tab and @View
 //BP: "e" means the main data table
-@Tab(baseCondition = "e.enabled=true", properties="code, name, vendor.name, uom.displayName, price, descr")
-@View(name="V-SKU-code-name", members="code; nameWithUom")
+@Tabs({
+	@Tab(baseCondition = "e.enabled=true", properties="code, name, vendor.name, uom.displayName, price, descr")
+})
+@Views({
+	@View(name="Search", members="code; name"),	//BP: Use "Search" View as the search dialog
+	@View(name="V-SKU-Simple", members="code; nameWithUom"),
+	@View(name="V-SKU-code-name", members="code; nameWithUom")
+})
 public class SKU extends BaseMasterDataModel{
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
 	@ReferenceView("V-UOM-code-name")	//Code and name

@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.openxava.annotations.Tab;
+import org.openxava.annotations.View;
+import org.openxava.annotations.Views;
 import org.openxava.ex.model.base.BaseMasterDataModel;
 
 /**
@@ -15,6 +17,9 @@ import org.openxava.ex.model.base.BaseMasterDataModel;
 @Entity
 @Table(name="MD_Vendor")
 @Tab(baseCondition = "enabled=true", properties="code, name, leadTimeDays, descr")
+@Views({
+	@View(name="V-Vendor-Simple", members="code; name")
+})
 public class Vendor extends BaseMasterDataModel{
 	@Column
 	private int leadTimeDays;

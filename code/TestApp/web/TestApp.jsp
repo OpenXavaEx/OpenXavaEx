@@ -60,7 +60,7 @@ if (null!=mainApp){
 				},{
 					name:"Reports", open:true,
 					children:[{
-						name:"UOM Verdor LeadTime(Days)", _url:"<%=modulesUrl%>/UomVendorLeadTimeReport"
+						name:"Sku Vendor LeadTime(Days)", _url:"<%=modulesUrl%>/SkuVendorLeadTimeReport"
 					}]
 				}]
 			},{
