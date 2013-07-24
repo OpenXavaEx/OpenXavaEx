@@ -9,12 +9,15 @@
     <!-- Tomcat + Hypersonic -->
     <persistence-unit name="default">
     	<provider>org.hibernate.ejb.HibernatePersistence</provider>
-    	<non-jta-data-source>java:comp/env/jdbc/@datasource@</non-jta-data-source>
+    	<non-jta-data-source>${PROP_DATASOURCE_JNDI_NAME}</non-jta-data-source><!-- java:comp/env/jdbc/@datasource@ -->
     	<class>org.openxava.session.GalleryImage</class>
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.dialect" value="${PROP_HIBERNATE_DIALECT}"/><!-- org.hibernate.dialect.Oracle10gDialect -->
+            <property name="hibernate.default_schema" value="${PROP_HIBERNATE_DEFAULT_SCHEMA}"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/> 
         </properties>
-    </persistence-unit>    
+    </persistence-unit>
         
     <!-- JBoss + Hypersonic 
     <persistence-unit name="default">
