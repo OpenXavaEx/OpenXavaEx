@@ -54,6 +54,7 @@ public class TokenCookieSSOFilter implements Filter {
 			//Integrate UserInfo with OpenXava
 			UserInfo ui = (UserInfo)req.getSession().getAttribute(SSO_USERINFO_IN_SESSION);
 			if (null!=ui && null!=ui.getId()){
+				System.out.println(">>> ["+this.getClass().getSimpleName() + "] SSO User id='" + ui.getId() + "' .");
 				//ref: org.openxava.util.Users#setCurrent(HttpServletRequest)
 				req.getSession().setAttribute("xava.user", ui.getId());
 				req.getSession().setAttribute("xava.portal.user", ui.getId());
@@ -69,12 +70,20 @@ public class TokenCookieSSOFilter implements Filter {
 	}
 	private void doCookieSSO(HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
 		Cookie[] cookies = req.getCookies();
+		if (null==cookies) return;
 		for (int i = 0; i < cookies.length; i++) {
 			Cookie cookie = cookies[i];
 			if (null!=cookie && SSO_TOKEN_COOKIE.equalsIgnoreCase(cookie.getName()) && cookie.getMaxAge()!=0 ){
-				String localUrl = checkUrl + cookie.getValue();
+				String cv = cookie.getValue();
+				System.out.println(">>> ["+this.getClass().getSimpleName() + "] Check cookie '"+SSO_TOKEN_COOKIE+"' with value='" + cv + "' ...");
+				if (null==cv || cv.trim().length()==0){
+					return;
+				}
+				String localUrl = checkUrl + cv;
 				//Remove cookie after read it
 				cookie.setMaxAge(0);	//if zero, deletes the cookie
+				cookie.setPath("/");
+				cookie.setValue("");
 				resp.addCookie(cookie);
 				//Read output into Properties object
 				URL url = new URL(localUrl);
