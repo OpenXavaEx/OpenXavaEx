@@ -2,9 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jetty/jetty-server-7.6.10.v20130312.jar" sourcepath="lib/jetty-src/jetty-server-src.zip"/>
-	<classpathentry kind="lib" path="lib/jetty/jetty-servlet-7.6.10.v20130312.jar" sourcepath="lib/jetty-src/jetty-servlet-src.zip"/>
-	<classpathentry kind="lib" path="lib/jetty/jetty-webapp-7.6.10.v20130312.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/servlet-api-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jsp/javax.el-2.1.0.v201105211819.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jsp/javax.servlet.jsp-2.1.0.v201105211820.jar"/>
@@ -24,6 +21,9 @@
 	<classpathentry kind="lib" path="lib/dbcp/commons-pool-1.6.jar" sourcepath="lib/dbcp/commons-pool-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jsp/org.eclipse.jdt.core-3.7.1.jar"/>
 	<classpathentry kind="lib" path="lib/jdbc/oracle-11.2.0/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-server-7.6.10.v20130312.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-webapp-7.6.10.v20130312.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-servlet-7.6.10.v20130312.jar"/>
 	<classpathentry kind="lib" path="lib/jdbc/mysql-connector-java-5.1.24.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OpenXava"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OpenXavaEx"/>

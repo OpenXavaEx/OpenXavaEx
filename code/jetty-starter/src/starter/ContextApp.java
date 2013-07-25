@@ -31,6 +31,7 @@ import org.openxava.ex.dwr.ForceUtf8DwrServlet;
 import org.openxava.ex.tools.DynamicLoaderFilter;
 import org.openxava.ex.tools.SchemaUpdateServlet;
 import org.openxava.ex.tools.TokenCookieSSOFilter;
+import org.openxava.ex.utils.VersionInfo;
 import org.openxava.web.servlets.ImagesServlet;
 import org.openxava.web.servlets.ModuleServlet;
 
@@ -111,7 +112,7 @@ public class ContextApp {
         		buildFolderResource("jetty-starter/war-patch"),
         		//buildFolderResource("jetty-starter/war-base"),
         		buildFolderResource("OpenXavaEx/web"),
-        		buildFolderResource("OpenXava/web"),
+        		(VersionInfo.isDevVersion()?buildFolderResource("OpenXavaDEV/web"):buildFolderResource("OpenXava/web")),
         		buildFolderResource(es.ctxPath + "/web"),
         		null
         );
