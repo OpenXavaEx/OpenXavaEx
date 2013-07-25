@@ -11,7 +11,6 @@ import javax.persistence.Version;
 import org.hibernate.annotations.*;
 import org.openxava.annotations.*;
 import org.openxava.calculators.CurrentTimestampCalculator;
-import org.openxava.util.*;
 
 /**
  * The base model for all kinds of MasterData
