@@ -64,11 +64,15 @@ if (null!=mainApp){
 					}]
 				}]
 			},{
-					name:"StudentTest", open:true,
-					children: [{
-						name:"Student", _url:"<%=modulesUrl%>/Student"
-					}]
+				name:"OX Demo", open:true,
+				children: [{
+					name:"Product", _url:"<%=modulesUrl%>/Product"
 				},{
+                    name:"Customer", _url:"<%=modulesUrl%>/Customer"
+				},{
+                    name:"Invoice", _url:"<%=modulesUrl%>/Invoice"
+				}]
+			},{
 				name:"System", open:true,
 				children: [{
 					name:"Schema Update", open:true,

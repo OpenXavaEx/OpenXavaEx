@@ -3,7 +3,6 @@
 	<name>TestApp</name>
 	<comment></comment>
 	<projects>
-		<project>OpenXava</project>
 		<project>OpenXavaEx</project>
 	</projects>
 	<buildSpec>
@@ -26,4 +25,3 @@
 		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
 	</natures>
 </projectDescription>
-		
