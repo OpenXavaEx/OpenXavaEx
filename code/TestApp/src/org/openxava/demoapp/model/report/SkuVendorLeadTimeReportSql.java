@@ -12,11 +12,16 @@ import org.openxava.annotations.View;
 import org.openxava.demoapp.model.md.SKU;
 import org.openxava.demoapp.model.md.Vendor;
 import org.openxava.ex.annotation.query.Condition;
+import org.openxava.ex.annotation.query.FieldProp;
+import org.openxava.ex.annotation.query.FieldTmpl;
+import org.openxava.ex.annotation.query.FieldTmpls;
 import org.openxava.ex.annotation.query.Sql;
 import org.openxava.ex.model.base.BaseReportSqlQuery;
+import org.openxava.ex.model.pqgrid.PQGridClientModel;
+import org.openxava.ex.model.pqgrid.PQGridClientModel.ColModelDetail;
 
 @View(members="#maxLeadTimeDays; sku, vendor; queryResult")
-@Tab(properties="skuCode, skuName, venderCode,venderName, leadTimeDays, *")
+@Tab(properties="*, skuName, vendorCode, *, leadTimeDays, modifyTime") //BP: Use left-*-right to adjust the default column order
 @Sql("SELECT sku.code as skuCode, sku.name as skuName, sku.version as modifyTime," + 
 	 "       v.code as vendorCode, v.name as vendorName, v.leadTimeDays" +
 	 "  FROM md_sku sku, md_vendor v" +
@@ -24,10 +29,21 @@ import org.openxava.ex.model.base.BaseReportSqlQuery;
 	 "   AND sku.enabled = 1" +
 	 "   AND ${#Where}" +
 	 " ORDER BY 1,3")
+@FieldTmpls({
+	@FieldTmpl(fieldName="skuName", value={
+		@FieldProp(name=PQGridClientModel.WIDTH, value="220")
+	}),
+	@FieldTmpl(fieldName="VendorName", value={
+			@FieldProp(name=PQGridClientModel.WIDTH, value="180")
+	}),
+	@FieldTmpl(fieldName="modifyTime", value={
+			@FieldProp(name=PQGridClientModel.PROTOTYPE, value=ColModelDetail.PROTOTYPE_date)
+	})
+})
 public class SkuVendorLeadTimeReportSql extends BaseReportSqlQuery{
 	@Column
 	@Condition("v.leadTimeDays <= ${maxLeadTimeDays}")
-	private int maxLeadTimeDays;
+	private Integer maxLeadTimeDays;
 	
 	@ManyToOne(fetch=FetchType.LAZY, optional=true) @NoCreate @NoModify
 	@ReferenceView("V-Vendor-Simple") //@NoFrame
@@ -51,10 +67,10 @@ public class SkuVendorLeadTimeReportSql extends BaseReportSqlQuery{
 	public void setVendor(Vendor vendor) {
 		this.vendor = vendor;
 	}
-	public int getMaxLeadTimeDays() {
+	public Integer getMaxLeadTimeDays() {
 		return maxLeadTimeDays;
 	}
-	public void setMaxLeadTimeDays(int maxLeadTimeDays) {
+	public void setMaxLeadTimeDays(Integer maxLeadTimeDays) {
 		this.maxLeadTimeDays = maxLeadTimeDays;
 	}
 }

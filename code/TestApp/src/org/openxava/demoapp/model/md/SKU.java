@@ -1,15 +1,20 @@
 package org.openxava.demoapp.model.md;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.Hidden;
+import org.openxava.annotations.PostCreate;
 import org.openxava.annotations.ReferenceView;
 import org.openxava.annotations.Required;
 import org.openxava.annotations.Stereotype;
@@ -19,11 +24,13 @@ import org.openxava.annotations.View;
 import org.openxava.annotations.Views;
 import org.openxava.demoapp.model.purchase.RequirementFormDetail;
 import org.openxava.ex.model.base.BaseMasterDataModel;
+import org.openxava.jpa.XPersistence;
+import org.openxava.util.Users;
 
 @Entity
 @Table(name="MD_SKU")
-//BP: Can use a non-persistence in @Tab and @View
-//BP: "e" means the main data table
+//BP: Can use a non-persistence property(field) in @Tab and @View
+//BP: in @Tab baseCondition, "e" means the main data table
 @Tabs({
 	@Tab(baseCondition = "e.enabled=true", properties="code, name, vendor.name, uom.displayName, price, descr")
 })
@@ -86,5 +93,35 @@ public class SKU extends BaseMasterDataModel{
 	@Transient @Hidden
 	public String getNameWithUom(){
 		return this.getName() + " ("+this.getUom().getName()+")";
+	}
+	
+	/** BP: Use @PostCreate instead of @PostPersist to handle the data insert event;
+	 *  BP: @PostCreate method must be public
+	 *  BP: JPA's @Post* occurs without the transaction */
+	@PostCreate
+	public void onInsert(){
+		logThis("Insert");
+	}
+	/** BP: Use @PreUpdate to handle the data update event */
+	@PreUpdate
+	private void onUpdate(){
+		logThis("Update");
+	}
+	/** BP: Use @PreRemove to handle the data delete event */
+	@PreRemove
+	private void onRemove(){
+		logThis("Remove");
+	}
+	private void logThis(String action) {
+		SkuChangeLog l = new SkuChangeLog();
+		l.setAction(action);
+		l.setChangeTime(new Timestamp(System.currentTimeMillis()));
+		l.setSkuId(this.getId());
+		l.setSkuName(this.getName());
+		//BP: Get login user information
+		l.setUserName(Users.getCurrentUserInfo().getGivenName());
+		EntityManager em = XPersistence.getManager();
+		//BP: EntityManager: Use "merge" instead of "persist"
+		em.merge(l);
 	}
 }

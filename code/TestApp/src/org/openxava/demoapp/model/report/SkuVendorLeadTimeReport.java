@@ -27,9 +27,9 @@ import org.openxava.ex.model.pqgrid.PQGridClientModel;
 import org.openxava.ex.utils.Misc;
 
 @View(members="#recordCount; sku, vendor; queryResult")
-@Tab(properties="skuCode, skuName, venderCode,venderName, leadTimeDays, *")
+@Tab(properties="skuCode, skuName, VendorCode, VendorName, leadTimeDays, *")
 @FieldTmpls({
-	@FieldTmpl(fieldName="VenderName", value={
+	@FieldTmpl(fieldName="VendorName", value={
 		@FieldProp(name=PQGridClientModel.WIDTH, value="180")
 	})
 })
@@ -71,15 +71,15 @@ public class SkuVendorLeadTimeReport extends BaseReportQuery{
 		Map<String, Map<String,Object>> randomData = new TreeMap<String, Map<String,Object>>();
 		for(int i=0; i<this.recordCount; i++){
 			randomData.put(UUID.randomUUID().toString(), Misc.$attrs(
-					"skuCode", "001", "skuName", "电脑", "venderCode", "HP", "venderName", "惠普", "leadTimeDays", 30,
+					"skuCode", "001", "skuName", "电脑", "VendorCode", "HP", "VendorName", "惠普", "leadTimeDays", 30,
 					"modifyTime", new Date(System.currentTimeMillis()-new Double(Math.random() * 100D).intValue()*24*60*60*1000),
 					"credit", Math.random() * 100000D));
 			randomData.put(UUID.randomUUID().toString(), Misc.$attrs(
-					"skuCode", "002", "skuName", "打印机", "venderCode", "HP", "venderName", "惠普", "leadTimeDays", 30,
+					"skuCode", "002", "skuName", "打印机", "VendorCode", "HP", "VendorName", "惠普", "leadTimeDays", 30,
 					"modifyTime", new Date(System.currentTimeMillis()-new Double(Math.random() * 100D).intValue()*24*60*60*1000),
 					"credit", Math.random() * 100000D));
 			randomData.put(UUID.randomUUID().toString(), Misc.$attrs(
-					"skuCode", "011", "skuName", "存储", "venderCode", "IBM", "venderName", "IBM", "leadTimeDays", 60,
+					"skuCode", "011", "skuName", "存储", "VendorCode", "IBM", "VendorName", "IBM", "leadTimeDays", 60,
 					"modifyTime", new Date(System.currentTimeMillis()-new Double(Math.random() * 100D).intValue()*24*60*60*1000),
 					"credit", Math.random() * 100000D));
 		}

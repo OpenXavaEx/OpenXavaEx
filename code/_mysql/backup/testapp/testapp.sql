@@ -16,6 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `customer`
+--
+
+DROP TABLE IF EXISTS `customer`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `customer` (
+  `number` int(11) NOT NULL,
+  `name` varchar(40) default NULL,
+  `photo` tinyblob,
+  PRIMARY KEY  (`number`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `customer`
+--
+
+LOCK TABLES `customer` WRITE;
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `images`
 --
 
@@ -37,6 +61,90 @@ SET character_set_client = @saved_cs_client;
 LOCK TABLES `images` WRITE;
 /*!40000 ALTER TABLE `images` DISABLE KEYS */;
 /*!40000 ALTER TABLE `images` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `invoice`
+--
+
+DROP TABLE IF EXISTS `invoice`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `invoice` (
+  `id` varchar(32) NOT NULL,
+  `date` datetime default NULL,
+  `number` int(11) default NULL,
+  `remarks` varchar(255) default NULL,
+  `vatPercentage` int(11) default NULL,
+  `year` int(11) default NULL,
+  `customer_number` int(11) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FKD80EDB0D3D6769C9` (`customer_number`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `invoice`
+--
+
+LOCK TABLES `invoice` WRITE;
+/*!40000 ALTER TABLE `invoice` DISABLE KEYS */;
+/*!40000 ALTER TABLE `invoice` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `invoicedetail`
+--
+
+DROP TABLE IF EXISTS `invoicedetail`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `invoicedetail` (
+  `id` varchar(32) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `invoice_id` varchar(32) default NULL,
+  `product_number` int(11) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK33BEA1BE48069759` (`invoice_id`),
+  KEY `FK33BEA1BE475FCE47` (`product_number`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `invoicedetail`
+--
+
+LOCK TABLES `invoicedetail` WRITE;
+/*!40000 ALTER TABLE `invoicedetail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `invoicedetail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `log_sku_change`
+--
+
+DROP TABLE IF EXISTS `log_sku_change`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `log_sku_change` (
+  `id` varchar(32) NOT NULL,
+  `action` varchar(255) default NULL,
+  `changeTime` datetime default NULL,
+  `skuId` varchar(255) default NULL,
+  `skuName` varchar(255) default NULL,
+  `userName` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `log_sku_change`
+--
+
+LOCK TABLES `log_sku_change` WRITE;
+/*!40000 ALTER TABLE `log_sku_change` DISABLE KEYS */;
+INSERT INTO `log_sku_change` VALUES ('ff8081814056b771014056b909150001','Insert','2013-08-07 11:01:38','ff8081814056b771014056b8e43f0000','测试01','tester'),('ff8081814056b771014056b95f470002','Update','2013-08-07 11:02:03','ff8081814056b771014056b8e43f0000','测试01-修改后','tester'),('ff8081814056b771014056b9a09a0003','Remove','2013-08-07 11:02:20','ff8081814056b771014056b8e43f0000','测试01-修改后','tester');
+/*!40000 ALTER TABLE `log_sku_change` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -138,6 +246,29 @@ INSERT INTO `md_vendor` VALUES ('ff8081813f91b1cc013f91bcbfae0005','IBM','Intern
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ox_sys_dummy`
+--
+
+DROP TABLE IF EXISTS `ox_sys_dummy`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `ox_sys_dummy` (
+  `DTYPE` varchar(31) NOT NULL,
+  `id` varchar(31) NOT NULL default 'OK',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ox_sys_dummy`
+--
+
+LOCK TABLES `ox_sys_dummy` WRITE;
+/*!40000 ALTER TABLE `ox_sys_dummy` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ox_sys_dummy` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `po_prd`
 --
 
@@ -222,6 +353,30 @@ LOCK TABLES `po_prr` WRITE;
 INSERT INTO `po_prr` VALUES ('ff8081813f91d7ac013f91d90a090003','空运',1,'ff8081813f91c906013f91d4f98c0005'),('ff8081813f91d7ac013f91d9677d0004','符合部门年度预算',3,'ff8081813f91c906013f91d4f98c0005'),('ff8081813f91d7ac013f91d9a81c0005','供应商零售价',0,'ff8081813f91c906013f91d4f98c0005');
 /*!40000 ALTER TABLE `po_prr` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `product` (
+  `number` int(11) NOT NULL,
+  `description` varchar(40) default NULL,
+  `unitPrice` decimal(19,2) default NULL,
+  PRIMARY KEY  (`number`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `product`
+--
+
+LOCK TABLES `product` WRITE;
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -232,4 +387,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-06-29 21:33:00
+-- Dump completed on 2013-08-07  3:03:26

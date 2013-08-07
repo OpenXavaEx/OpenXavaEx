@@ -42,7 +42,9 @@ if (null!=mainApp){
 						name:"Vendor", 	_url:"<%=modulesUrl%>/Vendor"
 					},{
 						name:"SKU", 	_url:"<%=modulesUrl%>/SKU"
-					}]
+					},{
+                        name:"SKU Change Log",     _url:"<%=modulesUrl%>/SkuChangeLog"
+                    }]
 				},{
 					name:"Purchase", open:true,
 					children: [{
@@ -61,6 +63,8 @@ if (null!=mainApp){
 					name:"Reports", open:true,
 					children:[{
 						name:"Sku Vendor LeadTime(Days)", _url:"<%=modulesUrl%>/SkuVendorLeadTimeReport"
+					},{
+						name:"Sku Vendor LeadTime(Days) - SQL", _url:"<%=modulesUrl%>/SkuVendorLeadTimeReportSql"
 					}]
 				}]
 			},{

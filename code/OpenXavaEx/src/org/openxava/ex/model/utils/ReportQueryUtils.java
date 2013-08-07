@@ -190,6 +190,9 @@ public class ReportQueryUtils {
         List<String> fragments = new ArrayList<String>();
         for (Field f: flds) {
             Condition cond = f.getAnnotation(Condition.class);
+            if (null==cond){
+            	continue;
+            }
             String fragment = cond.value();
             if (null==fragment || fragment.trim().length() <= 0){
                 throw new UnsupportedOperationException(
@@ -200,6 +203,9 @@ public class ReportQueryUtils {
             if (null!=val){
                 fragments.add(fragment);
             }
+        }
+        if (fragments.size()<1){
+        	fragments.add("1=1");
         }
         sql = sql.replace(sqlAnno.conditionTag(), StringUtils.join(fragments, " AND "));
         //Parse sql AS prepareStatement
@@ -214,7 +220,8 @@ public class ReportQueryUtils {
                 if (null==propVal) propVal = "";
                 st.setVariable(var, propVal.toString());
             }else{
-                Object propVal = context.getValue(var);
+            	String xpath = var.replace('.', '/');	//You can use the property as vendor.id, but JXPath need vendor/id
+                Object propVal = context.getValue(xpath);
                 st.setVariable(var, "?");
                 sr.parameters.add(propVal);
             }
