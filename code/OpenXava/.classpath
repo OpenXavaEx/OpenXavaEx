@@ -18,7 +18,6 @@
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate-validator.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/javassist.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-validator.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/mailapi.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/htmlunit.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/commons-io.jar"/>
 	<classpathentry kind="lib" path="lib/sac.jar"/>
@@ -35,6 +34,8 @@
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/slf4j-jdk14.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/poi-3.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.java"/>
@@ -49,7 +50,7 @@
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/xalan.jar"/>
 	<classpathentry kind="lib" path="lib/serializer.jar"/>
-	<classpathentry kind="lib" path="web/WEB-INF/lib/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate-classic-validator.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/validation-api.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/jaxb-api.jar"/>
