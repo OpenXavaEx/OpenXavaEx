@@ -110,7 +110,7 @@ public class ReportQueryUtils {
             }
             //Fill data
             List<Map<String,Object>> data = new ArrayList<Map<String,Object>>();
-            rsData.beforeFirst();
+            //rsData.beforeFirst();	//Some kinds of ResultSet is "forward only"
             while(rsData.next()){
                 Map<String,Object> line = new HashMap<String,Object>();
                 for(String colName: fields){
@@ -200,7 +200,7 @@ public class ReportQueryUtils {
                         + cls.getName() + " - " + f.getName() + ", value() is BLANK");
             }
             Object val = FieldUtils.readField(f, condObj, true);
-            if (null!=val){
+            if ( (null!=val) && (! "".equals(val)) ){
                 fragments.add(fragment);
             }
         }
