@@ -22,7 +22,7 @@ import org.openxava.ex.model.pqgrid.PQGridClientModel.ColModelDetail;
 
 @View(members="#maxLeadTimeDays; sku, vendor; queryResult")
 @Tab(properties="*, skuName, vendorCode, *, leadTimeDays, modifyTime") //BP: Use left-*-right to adjust the default column order
-@Sql("SELECT sku.code as skuCode, sku.name as skuName, sku.version as modifyTime," + 
+@Sql("SELECT sku.id as skuId, sku.code as skuCode, sku.name as skuName, sku.version as modifyTime," + 
 	 "       v.code as vendorCode, v.name as vendorName, v.leadTimeDays" +
 	 "  FROM md_sku sku, md_vendor v" +
  	 " WHERE sku.vendor_id = v.id" +
@@ -30,11 +30,17 @@ import org.openxava.ex.model.pqgrid.PQGridClientModel.ColModelDetail;
 	 "   AND ${#Where}" +
 	 " ORDER BY 1,3")
 @FieldTmpls({
+	@FieldTmpl(fieldName="skuId", value={
+			@FieldProp(name=PQGridClientModel.HIDDEN, value="true")
+		}),
 	@FieldTmpl(fieldName="skuName", value={
-		@FieldProp(name=PQGridClientModel.WIDTH, value="220")
-	}),
+			@FieldProp(name=PQGridClientModel.WIDTH, value="220"),
+			//FIXME: Can't support related url in IE9
+			@FieldProp(name=PQGridClientModel.ACTION, value="client:window.parent.TestApp.openJspAction(ui, 'skuId', '/TestApp/TestApp/SkuInfo.jsp?skuId=')")
+		}),
 	@FieldTmpl(fieldName="VendorName", value={
-			@FieldProp(name=PQGridClientModel.WIDTH, value="180")
+			@FieldProp(name=PQGridClientModel.WIDTH, value="180"),
+			@FieldProp(name=PQGridClientModel.ACTION, value="client:alert('Current Vendor ['+ui.dataModel.data[ui.rowIndx][ui.dataIndx]+']')")
 	}),
 	@FieldTmpl(fieldName="modifyTime", value={
 			@FieldProp(name=PQGridClientModel.PROTOTYPE, value=ColModelDetail.PROTOTYPE_date)
