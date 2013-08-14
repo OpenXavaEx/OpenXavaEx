@@ -186,6 +186,16 @@ response.setDateHeader("Expires", -10);
 <%
 	if (!isPortlet) {
 %>
+    <!-- The project bootstarp javascript libs (In [project name]/js folder) -->
+    <%
+        String[] prjJses = (String[])application.getResourcePaths(contextPath + "/js").toArray(new String[0]);
+        Arrays.sort(prjJses);
+        for (int i = 0; i < prjJses.length; i++) {
+            if (prjJses[i].endsWith(".js")) {
+            %><script type="text/javascript" src="<%=contextPath%><%=prjJses[i]%>?ox=<%=version%>"></script><%
+            }
+        }
+    %>
 </head> 
 <body bgcolor="#ffffff">
 <%=style.getNoPortalModuleStartDecoration(managerHome
