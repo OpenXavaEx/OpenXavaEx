@@ -13,6 +13,46 @@
 		var d = data[rowIndx][dataIndx];
 		return d;
 	}
+	var _doRealRender = function(ui){
+		var cm = ui.column;
+		var val = "";
+		if (cm.prototype){
+			var render = eval(cm.prototype+"Render");
+			val = render.call(this, ui);
+		}else{
+			val = _getUiData(ui);
+		}
+		if (cm.action){
+			var actStyle = cm.actionStyle?cm.actionStyle:"";
+			val = '<a href="javascript:void(0)" class="xava-ex-pqgrid-action"'+actStyle+'>' + val + '</a>';
+		}
+		return val;
+	}
+	var _doRealEditor = function(ui){
+		var cm = this;
+		if (cm.prototype){
+			var editor = eval(cm.prototype+"Editor");
+			editor.call(this, ui);
+		}else{
+	        var $cell = ui.$cell, data = ui.data, rowIndx = ui.rowIndxPage, colIndx = ui.colIndx;
+	        var val = _getUiData(ui);
+			var input = _createEditInput($cell, val);
+			input.select();
+		}
+	}
+	var _doRealGetEditCellData =function(ui){
+		var cm = this;
+		if (cm.prototype){
+			var getEditCellData = eval(cm.prototype+"GetEditCellData");
+			var text = getEditCellData.call(this, ui);
+			return text;
+		}else{
+			var $cell = ui.$cell;
+			var text = $cell.children().val();
+			return text;
+		}
+	}
+	
 	var _createEditInput = function($cell, textValue){
         $cell.css('padding', '0');
         var cellH = $cell.css("height");
@@ -47,18 +87,59 @@
 	}
 
 	/**
-	 * Apply the prototype for gridModel
+	 * Prepare editor, renderer, and other properties for gridModel
 	 */
-	var applyPrototype = function(gridModel){
+	var prepare = function(gridModel){
 		var colModel = gridModel.colModel;
 		for(var i=0; i<colModel.length; i++){
 			var cm = colModel[i];
-			if (!cm.prototype) cm.prototype = "default";
-			cm.render = eval(cm.prototype+"Render");
-			cm.editor = eval(cm.prototype+"Editor");
-			cm.getEditCellData = eval(cm.prototype+"GetEditCellData");
+			cm.render = defaultRender;
+			cm.editor = defaultEditor;
+			cm.getEditCellData = defaultGetEditCellData;
 		}
 	}
+	
+	/**
+	 * Do action:
+	 *   - server: The open-xava action, run at server side
+	 *   - client: run client side javascript function name, with argument "ui" object
+	 */
+	var doAction = function(event, ui){
+		var cm = ui.column;
+		var act = cm.action;
+		if (act.indexOf("server:") == 0){
+			var actionName = act.substring(7);
+			alert(actionName);
+		}else if (act.indexOf("client:") == 0){
+			var js = act.substring(7);
+			var scope={};
+			if (js.indexOf("(")>0 || js.indexOf(" ")>0 || js.indexOf("\"")>0 || js.indexOf("\'")>0 || js.indexOf("=")>0){
+				//script is not a function name
+				js = "scope.tmpfunc = function(ui){ \n" +
+					 "    var cancelEdit = false; \n" + 
+					 "    "+js+" \n" +
+					 "    return !cancelEdit; \n" +
+					 "}"
+			}
+			var tmpfunc = eval(js);
+			var result = tmpfunc.call(global, ui, event);
+			return result;
+		}else{
+			var err = "Unknown action type:["+act+"]";
+			alert(err); throw(err);
+		}
+	}
+	
+	var defaultRender = function(ui){
+		return _doRealRender.call(this, ui);
+	}
+	var defaultEditor = function(ui){
+		_doRealEditor.call(this, ui)
+	}
+	var defaultGetEditCellData =function(ui){
+		return _doRealGetEditCellData.call(this, ui);
+	}
+	
 	var dateRender = function(ui){
 		return _doDateTimeRender(ui, "YYYY/MM/DD");
 	}
@@ -129,24 +210,11 @@
 		var number = $cell.children().autoNumeric("get");
 		return number;
 	}
-	var defaultRender = function(ui){
-		var val = _getUiData(ui);
-		return val;
-	}
-	var defaultEditor = function(ui){
-        var $cell = ui.$cell, data = ui.data, rowIndx = ui.rowIndxPage, colIndx = ui.colIndx;
-        var val = _getUiData(ui);
-		var input = _createEditInput($cell, val);
-		input.select();
-	}
-	var defaultGetEditCellData =function(ui){
-		var $cell = ui.$cell;
-		var text = $cell.children().val();
-		return text;
-	}
 	
 	//Export ...
     global.xavaEx.PQGrid = {
-    		applyPrototype: applyPrototype
+    		prepare: prepare,
+    		doAction: doAction,
+    		"":""	//The END
     };
 })(this);

@@ -73,9 +73,13 @@
                 gridModel.dataModel.rPP = 10;
                 gridModel.dataModel.rPPOptions = [10, 20, 30, 40, 50, 100, 500, 1000];
                 
-                xavaEx.PQGrid.applyPrototype(gridModel);
+                gridModel.cellClick = function( event, ui ) {
+                    return xavaEx.PQGrid.doAction(event, ui);
+                }
+                
+                xavaEx.PQGrid.prepare(gridModel);
                 $("#pgGrid").pqGrid(gridModel);
-                $( "#pgGrid" ).pqGrid( {width: perfectWidth} );  //Parent page's scrollbar may change after table render
+                $("#pgGrid").pqGrid( {width: perfectWidth} );  //Parent page's scrollbar may change after table render
             }else{
             	$("#pgGrid").append("<h2>Resule not found</h2>");
             }

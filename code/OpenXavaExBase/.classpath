@@ -9,6 +9,7 @@
 	<classpathentry exported="true" kind="lib" path="/OpenXava/web/WEB-INF/lib/commons-io.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/freemarker-2.3.19.jar" sourcepath="lib/freemarker-2.3.19-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-jxpath-1.3.jar" sourcepath="lib/commons-jxpath-1.3-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-dbutils-1.5.jar" sourcepath="lib/commons-dbutils-1.5-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

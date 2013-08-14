@@ -16,8 +16,10 @@ public class PQGridClientModel extends BaseReportQueryClientModel {
 	public static final String DATATYPE = "dataType";
 	public static final String WIDTH = "width";
 	public static final String EDITBALE = "editable";
+	public static final String HIDDEN = "hidden";
 	public static final String PROTOTYPE = "prototype";
 	public static final String NUMBER_PRECISION = "numberPrecision";
+	public static final String ACTION = "action";
 
 	public static class DataModel{
 		public List<Map<String, Object>> data =  new ArrayList<Map<String,Object>>();
@@ -31,6 +33,8 @@ public class PQGridClientModel extends BaseReportQueryClientModel {
 		public static final String ALIGN_right = "right";
 		public static final String EDITBALE_true = "true";
 		public static final String EDITBALE_false = "false";
+		public static final String HIDDEN_true = "true";
+		public static final String HIDDEN_false = "false";
 		
 		public static final String PROTOTYPE_date = "date";
 		public static final String PROTOTYPE_datetime = "datetime";
@@ -39,6 +43,7 @@ public class PQGridClientModel extends BaseReportQueryClientModel {
 		public static final String DEFAULT_DATATYPE = DATATYPE_string;
 		public static final String DEFAULT_ALIGN = ALIGN_left;
 		public static final String DEFAULT_EDITBALE = EDITBALE_false;
+		public static final String DEFAULT_HIDDEN = HIDDEN_false;
 		public static final String DEFAULT_WIDTH = "100";
 		
 		public static final String DEFAULT_PROTOTYPE = "";
@@ -51,12 +56,17 @@ public class PQGridClientModel extends BaseReportQueryClientModel {
 		public String dataType;
 		public String align;
 		public boolean editable;
+		public boolean hidden;
 		
 		/** A prototype is the prefix of client javascript methods: render, editor, and getEditCellData */
 		public String prototype;
 		/** If prototype=number, define the precision of decimal part */
 		public int numberPrecision;
 		
+		/**
+		 * The column action, support server side OpenXava Action, or client side javascript.
+		 */
+		public String action;
 		
 		public static String findAlign(Map<String, String> props){
 			return _find(props, ALIGN, DEFAULT_ALIGN);
@@ -72,12 +82,19 @@ public class PQGridClientModel extends BaseReportQueryClientModel {
 			String e = _find(props, EDITBALE, DEFAULT_EDITBALE);
 			return "true".equalsIgnoreCase(e);
 		}
+		public static boolean findHidden(Map<String, String> props){
+			String h = _find(props, HIDDEN, DEFAULT_HIDDEN);
+			return "true".equalsIgnoreCase(h);
+		}
 		public static String findPrototype(Map<String, String> props){
 			return _find(props, PROTOTYPE, DEFAULT_PROTOTYPE);
 		}
 		public static int findNumberPrecision(Map<String, String> props){
 			String p = _find(props, NUMBER_PRECISION, DEFAULT_NUMBER_PRECISION);
 			return Integer.parseInt(p);
+		}
+		public static String findAction(Map<String, String> props){
+			return _find(props, ACTION, null);
 		}
 		private static String _find(Map<String, String> props, String key, String def){
 			String s = props.get(key);

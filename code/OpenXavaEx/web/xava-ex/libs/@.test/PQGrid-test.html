@@ -76,17 +76,24 @@
 	        	editModel: {clicksToEdit: 1, saveKey: 13},
 	        	quitEditMode: function( event, ui ) {
 	        		$(this).pqGrid("saveEditCell");		//FIX: Use mouse to leave a cell shouldn't update value into data
+	        	},
+	        	cellClick: function( event, ui ) {
+	        		return xavaEx.PQGrid.doAction(event, ui);
 	        	}
 	        };
 	        gridModel.colModel = [
 	            { dataIndx:"rank", title: "Rank", width: 100, dataType: "integer",
-	            	numberPrecision: 0, prototype: "number"},
-	        	{ dataIndx:"company", title: "Company", width: 200, dataType: "string" },
-	        	{ dataIndx:"statDate", title: "Stat date", width: 100, dataType: "string", align: "center", prototype: "date"},
+	            	    numberPrecision: 0, prototype: "number"},
+	        	{ dataIndx:"company", title: "Company", width: 200, dataType: "string",
+	            		action:"server:PostToBack"},
+	        	{ dataIndx:"statDate", title: "Stat date", width: 100, dataType: "string", align: "center",
+	            	    prototype: "date", action:"client:test_ShowStartDate"},
 	        	{ dataIndx:"revenues", title: "Revenues ($ millions)", width: 150, dataType: "float", align: "right",
-	        		numberPrecision: 2, prototype: "number"},
-	        	{ dataIndx:"profits", title: "Profits ($ millions)", width: 150, dataType: "float", align: "right", editable: false},
-	        	{ dataIndx:"dateTs", title: "Data Timestamp", width: 150, dataType: "string", align: "center", prototype: "datetime"}
+	        		    numberPrecision: 2, prototype: "number", action:"unknown:alert('OK')"},
+	        	{ dataIndx:"profits", title: "Profits ($ millions)", width: 150, dataType: "float", align: "right", editable: false,
+	        			action:"client:alert('Current value is ['+ui.dataModel.data[ui.rowIndx][ui.dataIndx]+']')"},
+	        	{ dataIndx:"dateTs", title: "Data Timestamp", width: 150, dataType: "string", align: "center",
+	        			prototype: "datetime"}
 	        ];
 	        gridModel.dataModel = {
 	        	data: data,
@@ -95,7 +102,7 @@
 	        	rPPOptions: [7, 10, 20, 30, 40, 50, 100, 500, 1000]
 	        };
 	        
-	        xavaEx.PQGrid.applyPrototype(gridModel);
+	        xavaEx.PQGrid.prepare(gridModel);
 	        $("#grid_div").pqGrid(gridModel);
 
 	        //Listen rPP change
@@ -112,6 +119,11 @@
 	        	data[1].company = "Wal-Mart" + new Date();	//TEST: Update data
 	        	$("#grid_div").pqGrid("refresh");
 	        });
+	        
+	        window.test_ShowStartDate = function(ui){
+	        	var res = prompt('Input 1 to edit current cell, else ignore editing');
+	        	return "1"==res;
+	        }
 	    });
 	</script>
 </body>

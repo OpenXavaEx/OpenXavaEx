@@ -133,8 +133,10 @@ public class PQGrid {
 					dtl.dataType = ColModelDetail.findDataType(props);
 					dtl.width = ColModelDetail.findWidth(props);
 					dtl.editable = ColModelDetail.findEditable(props);
+					dtl.hidden = ColModelDetail.findHidden(props);
 					dtl.prototype = ColModelDetail.findPrototype(props);
 					dtl.numberPrecision = ColModelDetail.findNumberPrecision(props);
+					dtl.action = ColModelDetail.findAction(props);
 					model.colModel.add(dtl);
 				}
 			}
