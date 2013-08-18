@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
+import javax.persistence.Query;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -110,6 +111,8 @@ public class SKU extends BaseMasterDataModel{
 	/** BP: Use @PreRemove to handle the data delete event */
 	@PreRemove
 	private void onRemove(){
+		logBeforeRemove();
+		
 		logThis("Remove");
 	}
 	private void logThis(String action) {
@@ -123,5 +126,18 @@ public class SKU extends BaseMasterDataModel{
 		EntityManager em = XPersistence.getManager();
 		//BP: EntityManager: Use "merge" instead of "persist"
 		em.merge(l);
+	}
+	
+	private void logBeforeRemove(){
+		Query q = XPersistence.getManager().createNativeQuery("SELECT COUNT(*) FROM MD_SKU");
+		Object o = q.getSingleResult();
+		Query u = XPersistence.getManager().createNativeQuery(
+				"INSERT INTO LOG_SKU_CHANGE (id,action,changeTime,skuId,skuName) VALUES(?,?,?,?,?)");
+		u.setParameter(1, System.currentTimeMillis());
+		u.setParameter(2, "BeforeRemove");
+		u.setParameter(3, new Timestamp(System.currentTimeMillis()));
+		u.setParameter(4, "<STAT>");
+		u.setParameter(5, "Total records: " + o);
+		u.executeUpdate();
 	}
 }
