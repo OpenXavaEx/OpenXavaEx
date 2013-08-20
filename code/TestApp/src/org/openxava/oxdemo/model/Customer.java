@@ -5,9 +5,10 @@ import javax.persistence.*;
 import org.openxava.annotations.*;
 
 @Entity
+@Table(name="DEMO_CUSTOMER")
 public class Customer {
 	
-	@Id
+	@Id @Column(name="cNo")
 	private int number;
 	
 	@Column(length=40) 

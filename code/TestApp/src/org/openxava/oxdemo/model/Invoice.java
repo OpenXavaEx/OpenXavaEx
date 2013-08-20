@@ -10,6 +10,7 @@ import org.openxava.calculators.*;
 import org.openxava.model.*;
 
 @Entity
+@Table(name="DEMO_INVOICE")
 @Views({
 	@View(members=
 		"year, number, date, vatPercentage;" +
@@ -31,10 +32,10 @@ public class Invoice extends Identifiable {
 	@Column(length=4) @Required
 	private int year;
 	
-	@Column(length=6) @Required
+	@Column(length=6, name="invNo") @Required
 	private int number;
 	
-	@Required @DefaultValueCalculator(CurrentDateCalculator.class) 
+	@Column(name="invDate") @Required @DefaultValueCalculator(CurrentDateCalculator.class) 
 	private Date date;
 	
 	@Column(length=2) @Required

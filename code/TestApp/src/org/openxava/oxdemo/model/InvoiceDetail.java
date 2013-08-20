@@ -8,6 +8,7 @@ import org.openxava.annotations.*;
 import org.openxava.model.*;
 
 @Entity
+@Table(name="DEMO_INVOICE_DTL")
 public class InvoiceDetail extends Identifiable {
 	
 	@ManyToOne

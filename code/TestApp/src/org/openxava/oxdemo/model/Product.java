@@ -7,9 +7,10 @@ import javax.persistence.*;
 import org.openxava.annotations.*;
 
 @Entity
+@Table(name="DEMO_PRODUCT")
 public class Product {
 	
-	@Id @Column(length=9)
+	@Id @Column(length=9, name="pNo")
 	private int number;
 	
 	@Column(length=40) @Required
