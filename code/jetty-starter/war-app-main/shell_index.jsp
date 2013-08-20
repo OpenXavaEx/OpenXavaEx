@@ -1,3 +1,5 @@
+<%@page import="java.net.URLEncoder"%>
+<%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="java.util.Map"%>
 <%
 String redirUrl = null;
@@ -10,6 +12,7 @@ if (null==userInfo || null==userInfo.get("id")){
 	//Redirect to index page of App
 	appCtx = System.getProperty("CTX_PATH");
 	redirUrl = "/" + appCtx + "/"+appCtx+".jsp?mainApp=/main";
+	redirUrl = "/main/bridge.jsp?to=" + URLEncoder.encode(redirUrl, "UTF-8");
 }
 response.sendRedirect(redirUrl);
 %>

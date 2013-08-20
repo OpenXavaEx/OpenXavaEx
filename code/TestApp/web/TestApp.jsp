@@ -121,6 +121,9 @@ if (null!=mainApp){
 </head>
 <body>
 	<table style="height:100%;width:100%" border="0">
+	    <tr>
+	      <td colspan="2" align="right"><a href="../main/shell_logout.jsp">Logout ...</a></td>
+	    </tr>
 		<tr style="height:20px;background-color:LightSteelBlue">
 			<td colspan="2"><h2>OpenXavaEx Demo</h2></td>
 		</tr>
@@ -129,7 +132,7 @@ if (null!=mainApp){
 			<td>
 				<div id="addressBar" style="padding:4px;padding-bottom:0px;color:darkgray">about:blank</div>
 				<hr/>
-				<iframe id="ifmWorkspace" name="ifmWorkspace " frameborder="0" src=""
+				<iframe id="ifmWorkspace" name="ifmWorkspace " frameborder="0" src="./TestApp/LoginInfo.jsp"
 				        style="width:100%;height:100%" scrolling="auto"></iframe>
 			</td>
 		</tr>

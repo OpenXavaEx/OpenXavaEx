@@ -1,3 +1,5 @@
+<%@page import="java.net.URLEncoder"%>
+<%@page import="org.openxava.ex.tools.TokenCookieSSOFilter"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%
@@ -17,6 +19,9 @@
 	}else{
 		//Do nothing, show login form
 	}
+	
+	String appCtx = System.getProperty("CTX_PATH");
+	String logoutUrl = "/" + appCtx + TokenCookieSSOFilter.SSO_LOGOUT_URL;
 %>
 <!DOCTYPE html>
 <html> <!-- FROM "Create a nice login form using CSS3 and HTML5": http://www.red-team-design.com/slick-login-form-with-html5-css3 -->
@@ -252,5 +257,7 @@
 			<a href="javascript:alert('Not implemented')">Register</a>
 		</fieldset>
 	</form>
+	<!-- Make the OpenXava Application logout -->
+	<img style="display:none" src="<%=logoutUrl%>"/>
 </body>
 </html>

@@ -32,6 +32,7 @@ import org.openxava.ex.tools.DynamicLoaderFilter;
 import org.openxava.ex.tools.SchemaUpdateServlet;
 import org.openxava.ex.tools.TokenCookieSSOFilter;
 import org.openxava.ex.utils.VersionInfo;
+import org.openxava.web.servlets.GenerateReportServlet;
 import org.openxava.web.servlets.ImagesServlet;
 import org.openxava.web.servlets.ModuleServlet;
 
@@ -129,6 +130,7 @@ public class ContextApp {
         ctx.addServlet(ForceUtf8DwrServlet.class, "/dwr/*");
         ctx.addServlet(ImagesServlet.class, "/xava/ximage");
         ctx.addServlet(ImagesServlet.class, "/ximage");
+        ctx.addServlet(GenerateReportServlet.class, "/xava/list.csv");
         
         //Schema Update Servlet
         ServletHolder susSh = new ServletHolder(SchemaUpdateServlet.class);
@@ -140,6 +142,7 @@ public class ContextApp {
 		ssoFh.setInitParameter(TokenCookieSSOFilter.TOKEN_CHECK_URL_INIT_PARAME,
 				"http://localhost:"+es.httpPort+"/main/bridge.jsp?token=");
         ctx.addFilter(ssoFh, "/modules/*", FilterMapping.REQUEST);
+        ctx.addFilter(ssoFh, "/"+es.ctxPath+".jsp", FilterMapping.REQUEST);
 		FilterHolder ssoFh2 = new FilterHolder(TokenCookieSSOFilter.class);
 		ssoFh2.setInitParameter(TokenCookieSSOFilter.TOKEN_CHECK_URL_INIT_PARAME, null);
         ctx.addFilter(ssoFh2, "*.jsp", FilterMapping.REQUEST);

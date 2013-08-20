@@ -35,6 +35,9 @@ public class TokenCookieSSOFilter implements Filter {
 	/** Session attribute name to store the UserInfo Object */
 	public static final String SSO_USERINFO_IN_SESSION = "SSO_USERINFO_IN_SESSION";
 	
+	/** The url to make current application logout(session invalidate) */
+	public static final String SSO_LOGOUT_URL = "/SSO+LOGOUT+NOW+.jsp";
+	
 	private String checkUrl;
 	
 	public void init(FilterConfig cfg) throws ServletException {
@@ -48,6 +51,15 @@ public class TokenCookieSSOFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpServletResponse resp = (HttpServletResponse)response;
 		try{
+			if (req.getRequestURI().endsWith(SSO_LOGOUT_URL)){	//Logout request
+				try {
+					req.getSession().invalidate();
+				} catch (Exception e) {
+					//Ignore it
+				}
+				resp.getWriter().write("OK");
+				return;
+			}
 			if (null!=this.checkUrl){
 				doCookieSSO(req, resp);
 			}
@@ -60,6 +72,11 @@ public class TokenCookieSSOFilter implements Filter {
 				req.getSession().setAttribute("xava.portal.user", ui.getId());
 				req.getSession().setAttribute("xava.portal.userinfo", ui);
 				Users.setCurrentUserInfo(ui);
+			}else{
+				req.getSession().removeAttribute("xava.user");
+				req.getSession().removeAttribute("xava.portal.user");
+				req.getSession().removeAttribute("xava.portal.userinfo");
+				Users.setCurrentUserInfo(new UserInfo());
 			}
 			
 			chain.doFilter(request, response);
