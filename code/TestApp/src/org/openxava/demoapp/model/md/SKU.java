@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
+import javax.persistence.FlushModeType;
 import javax.persistence.ManyToOne;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
@@ -13,6 +14,8 @@ import javax.persistence.Query;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openxava.annotations.DescriptionsList;
 import org.openxava.annotations.Hidden;
 import org.openxava.annotations.PostCreate;
@@ -41,6 +44,8 @@ import org.openxava.util.Users;
 	@View(name="V-SKU-code-name", members="code; nameWithUom")
 })
 public class SKU extends BaseMasterDataModel{
+	private static final Log log = LogFactory.getLog(SKU.class);
+	
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
 	@ReferenceView("V-UOM-code-name")	//Code and name
 	private UOM uom;
@@ -102,17 +107,18 @@ public class SKU extends BaseMasterDataModel{
 	@PostCreate
 	public void onInsert(){
 		logThis("Insert");
+		logStat("after-insert");
 	}
 	/** BP: Use @PreUpdate to handle the data update event */
 	@PreUpdate
 	private void onUpdate(){
+		logStat("before-update");
 		logThis("Update");
 	}
 	/** BP: Use @PreRemove to handle the data delete event */
 	@PreRemove
 	private void onRemove(){
-		logBeforeRemove();
-		
+		logStat("before-remove");
 		logThis("Remove");
 	}
 	private void logThis(String action) {
@@ -128,16 +134,26 @@ public class SKU extends BaseMasterDataModel{
 		em.merge(l);
 	}
 	
-	private void logBeforeRemove(){
-		Query q = XPersistence.getManager().createNativeQuery("SELECT COUNT(*) FROM MD_SKU");
-		Object o = q.getSingleResult();
-		Query u = XPersistence.getManager().createNativeQuery(
-				"INSERT INTO LOG_SKU_CHANGE (id,action,changeTime,skuId,skuName) VALUES(?,?,?,?,?)");
-		u.setParameter(1, System.currentTimeMillis());
-		u.setParameter(2, "BeforeRemove");
-		u.setParameter(3, new Timestamp(System.currentTimeMillis()));
-		u.setParameter(4, "<STAT>");
-		u.setParameter(5, "Total records: " + o);
-		u.executeUpdate();
+	private void logStat(String action){
+		log.info("Logging SKU data stat. information ...");
+		
+		FlushModeType oldType = XPersistence.getManager().getFlushMode();
+		try{
+			//BP: Change FlashMode manually, to avoid the "StackOverflow" on @PreUpdate
+			XPersistence.getManager().setFlushMode(FlushModeType.COMMIT);
+			
+			Query q = XPersistence.getManager().createNativeQuery("SELECT COUNT(*) FROM MD_SKU");
+			Object o = q.getSingleResult();
+			Query u = XPersistence.getManager().createNativeQuery(
+					"INSERT INTO LOG_SKU_CHANGE (id,action,changeTime,skuId,skuName) VALUES(?,?,?,?,?)");
+			u.setParameter(1, System.currentTimeMillis());
+			u.setParameter(2, action);
+			u.setParameter(3, new Timestamp(System.currentTimeMillis()));
+			u.setParameter(4, "<STAT>");
+			u.setParameter(5, "Total records: " + o);
+			u.executeUpdate();
+		}finally{
+			XPersistence.getManager().setFlushMode(oldType);
+		}
 	}
 }
