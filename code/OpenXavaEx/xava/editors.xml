@@ -4,16 +4,13 @@
 
 <editors>
 
-    <!-- Override the default Date editor, use format yyy/MM/dd -->
+    <!-- Override the default Date/Time editor, use format yyy/MM/dd or yyyy/MM/dd HH:mm:ss -->
     <editor name="DateCalendar" url="../../xava-ex/editors/dateCalendarEditor-yyyyMMdd.jsp">
         <formatter class="org.openxava.ex.formatter.DateFormatter" />
-        <for-type type="java.sql.Date" />
-    </editor>
-
-    <!-- Override the default DateTime editor, use format yyyy/MM/dd HH:mm:ss -->
-    <editor name="DateTimeCalendar" url="../../xava-ex/editors/dateTimeCombinedCalendarEditor-yyyyMMddHHmmss.jsp">
-        <formatter class="org.openxava.ex.formatter.DateTimeFormatter" />
         <for-type type="java.util.Date" />
+    </editor>
+    <editor name="DateTimeCalendar" url="../../xava-ex/editors/dateTimeCombinedCalendarEditor-yyyyMMddHHmmss.jsp">
+        <formatter class="org.openxava.ex.formatter.SqlTimestampFormatter" />
         <for-type type="java.sql.Timestamp" />
     </editor>
 
