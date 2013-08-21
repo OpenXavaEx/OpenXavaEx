@@ -21,7 +21,8 @@ public class SkuChangeLog {
 	private String skuId;
 	private String skuName;
 	private String userName;
-	private String action;	//Insert, Update, Remove
+	private String action;	//Insert, Update, Remove, ...
+	
 	private Timestamp changeTime;
 	
 	public String getSkuId() {
