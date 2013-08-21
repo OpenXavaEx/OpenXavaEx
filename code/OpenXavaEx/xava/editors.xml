@@ -18,6 +18,12 @@
         <for-type type="java.sql.Timestamp" />
     </editor>
 
+    <!-- Editor for PQGrid support, see: org.openxava.ex.model.base.BaseReportQuery -->
+    <editor name="EX_ReportQueryData_Editor" url="../../xava-ex/editors/Shell.jsp">
+        <property name="xava-ex.editor.shell.class" value="org.openxava.ex.model.pqgrid.PQGrid$_Editor" />
+        <formatter class="org.openxava.ex.model.pqgrid.PQGrid$_Formatter" />
+    </editor>
+
 	<!-- Override the default /editors/listEditor.jsp
 	<editor name="xava-ex-list-editor" url="../../xava-ex/editors/ListEditor.jsp">
 	  <for-tabs/>

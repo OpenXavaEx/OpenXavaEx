@@ -4,16 +4,11 @@
 
 <editors>
 
-	<editor name="EX_ReportQueryData_Editor" url="../../xava-ex/editors/Shell.jsp">
-		<property name="xava-ex.editor.shell.class" value="org.openxava.ex.model.pqgrid.PQGrid$_Editor" />
-		<formatter class="org.openxava.ex.model.pqgrid.PQGrid$_Formatter" />
+	<editor name="TestApp_PR_RequireDate_Editor" url="../../xava-ex/editors/Shell.jsp">
+		<property name="xava-ex.editor.shell.class" value="org.openxava.demoapp.model.purchase.RequirementFormDetail$RequireDateEditor" />
+		<formatter class="org.openxava.ex.formatter.date.SmartDateFormatter" />
 	</editor>
 
-	<editor name="PR_RequireDate_Editor" url="../../xava-ex/editors/Shell.jsp">
-		<property name="xava-ex.editor.shell.class" value="org.openxava.demoapp.model.purchase.RequirementFormDetail$RequireDateEditor" />
-		<formatter class="org.openxava.ex.formatter.DateFormatter" />
-	</editor>
-									
 	<!-- BP: Use smartDateTimeCombinedCalendarEditor to define the DateTime editor's format -->
     <editor name="TestApp_ToHour_DateTimeCalendar" url="../../xava-ex/editors/smartDateTimeCombinedCalendarEditor.jsp">
         <property name="org.openxava.ex.formatter.date.SmartDateFormatter.FORMAT" value="yyyy/MM/dd HH" />
@@ -30,5 +25,5 @@
         <property name="org.openxava.ex.formatter.date.SmartDateFormatter.CLASS" value="java.util.Date" />
         <formatter class="org.openxava.ex.formatter.date.SmartDateFormatter" />
     </editor>
-	
+
 </editors>

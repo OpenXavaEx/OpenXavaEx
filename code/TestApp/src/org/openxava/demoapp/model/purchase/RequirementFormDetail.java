@@ -53,7 +53,7 @@ public class RequirementFormDetail extends BaseBillDetailModel{
 	
 	@Column
 	@Required
-	@Editor("PR_RequireDate_Editor")
+	@Editor("TestApp_PR_RequireDate_Editor")
 	@Depends("sku.id")
 	private Date requireDate;
 
