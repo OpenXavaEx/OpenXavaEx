@@ -4,13 +4,17 @@
 
 <editors>
 
-    <!-- Override the default Date/Time editor, use format yyy/MM/dd or yyyy/MM/dd HH:mm:ss -->
-    <editor name="DateCalendar" url="../../xava-ex/editors/dateCalendarEditor-yyyyMMdd.jsp">
-        <formatter class="org.openxava.ex.formatter.DateFormatter" />
+    <!-- Override the default Date/Time editor, use format yyyy/MM/dd or yyyy/MM/dd HH:mm:ss -->
+    <editor name="DateCalendar" url="../../xava-ex/editors/smartDateTimeCombinedCalendarEditor.jsp">
+        <property name="org.openxava.ex.formatter.date.SmartDateFormatter.FORMAT" value="yyyy/MM/dd" />
+        <property name="org.openxava.ex.formatter.date.SmartDateFormatter.CLASS" value="java.util.Date" />
+        <formatter class="org.openxava.ex.formatter.date.SmartDateFormatter" />
         <for-type type="java.util.Date" />
     </editor>
-    <editor name="DateTimeCalendar" url="../../xava-ex/editors/dateTimeCombinedCalendarEditor-yyyyMMddHHmmss.jsp">
-        <formatter class="org.openxava.ex.formatter.SqlTimestampFormatter" />
+    <editor name="DateTimeCalendar" url="../../xava-ex/editors/smartDateTimeCombinedCalendarEditor.jsp">
+        <property name="org.openxava.ex.formatter.date.SmartDateFormatter.FORMAT" value="yyyy/MM/dd HH:mm:ss" />
+        <property name="org.openxava.ex.formatter.date.SmartDateFormatter.CLASS" value="java.sql.Timestamp" />
+        <formatter class="org.openxava.ex.formatter.date.SmartDateFormatter" />
         <for-type type="java.sql.Timestamp" />
     </editor>
 

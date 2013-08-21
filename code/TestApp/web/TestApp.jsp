@@ -68,15 +68,20 @@ if (null!=mainApp){
 					}]
 				}]
 			},{
-				name:"OX Demo", open:true,
-				children: [{
-					name:"Product", _url:"<%=modulesUrl%>/Product"
-				},{
+                name:"OX Demo", open:true,
+                children: [{
+                    name:"Product", _url:"<%=modulesUrl%>/Product"
+                },{
                     name:"Customer", _url:"<%=modulesUrl%>/Customer"
-				},{
+                },{
                     name:"Invoice", _url:"<%=modulesUrl%>/Invoice"
-				}]
-			},{
+                }]
+            },{
+                name:"TestCases", open:true,
+                children: [{
+                    name:"DateTimeTestCase", _url:"<%=modulesUrl%>/DateTimeTestCase"
+                }]
+            },{
 				name:"System", open:true,
 				children: [{
 					name:"Schema Update", open:true,

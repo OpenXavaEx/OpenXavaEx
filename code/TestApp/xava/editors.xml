@@ -14,4 +14,21 @@
 		<formatter class="org.openxava.ex.formatter.DateFormatter" />
 	</editor>
 									
+	<!-- BP: Use smartDateTimeCombinedCalendarEditor to define the DateTime editor's format -->
+    <editor name="TestApp_ToHour_DateTimeCalendar" url="../../xava-ex/editors/smartDateTimeCombinedCalendarEditor.jsp">
+        <property name="org.openxava.ex.formatter.date.SmartDateFormatter.FORMAT" value="yyyy/MM/dd HH" />
+        <property name="org.openxava.ex.formatter.date.SmartDateFormatter.CLASS" value="java.sql.Timestamp" />
+        <formatter class="org.openxava.ex.formatter.date.SmartDateFormatter" />
+    </editor>
+    <editor name="TestApp_ToMonth_DateCalendar" url="../../xava-ex/editors/smartDateTimeCombinedCalendarEditor.jsp">
+        <property name="org.openxava.ex.formatter.date.SmartDateFormatter.FORMAT" value="yyyy/MM" />
+        <property name="org.openxava.ex.formatter.date.SmartDateFormatter.CLASS" value="java.sql.Date" />
+        <formatter class="org.openxava.ex.formatter.date.SmartDateFormatter" />
+    </editor>
+    <editor name="TestApp_ToMinute_DateCalendar" url="../../xava-ex/editors/smartDateTimeCombinedCalendarEditor.jsp">
+        <property name="org.openxava.ex.formatter.date.SmartDateFormatter.FORMAT" value="yyyy/MM/dd HH:mm" />
+        <property name="org.openxava.ex.formatter.date.SmartDateFormatter.CLASS" value="java.util.Date" />
+        <formatter class="org.openxava.ex.formatter.date.SmartDateFormatter" />
+    </editor>
+	
 </editors>
