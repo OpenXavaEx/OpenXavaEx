@@ -10,6 +10,7 @@ import org.apache.commons.logging.*;
 import org.hibernate.Hibernate;
 import org.openxava.calculators.*;
 import org.openxava.component.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.jpa.*;
 import org.openxava.model.*;
 import org.openxava.model.meta.*;
@@ -1067,7 +1068,8 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 	private Object instanceAggregate(MetaAggregateForReference metaAggregate, Map values)
 		throws ValidationException, XavaException, RemoteException {
 		try {
-			Object object = Class.forName(metaAggregate.getBeanClass()).newInstance();
+			//Object object = Class.forName(metaAggregate.getBeanClass()).newInstance();
+			Object object = ClassLoaderUtil.forName(getClass(), metaAggregate.getBeanClass()).newInstance();
 			PropertiesManager man = new PropertiesManager(object);			
 			removeViewProperties(metaAggregate, values);
 			removeCalculatedFields(metaAggregate, values); 

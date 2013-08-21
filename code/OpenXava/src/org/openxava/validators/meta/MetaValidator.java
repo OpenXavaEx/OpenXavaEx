@@ -1,6 +1,7 @@
 package org.openxava.validators.meta;
 
 import org.apache.commons.logging.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 import org.openxava.util.meta.*;
 import org.openxava.validators.*;
@@ -53,7 +54,8 @@ public class MetaValidator extends MetaSetsContainer {
 	 */
 	public IValidator createValidator() throws XavaException {
 		try {
-			Object o = Class.forName(getClassName()).newInstance();
+			//Object o = Class.forName(getClassName()).newInstance();
+			Object o = ClassLoaderUtil.forName(getClass(), getClassName()).newInstance();
 			if (!(o instanceof IValidator)) {
 				throw new XavaException("validator_invalid_class", getClassName());
 			}
@@ -91,7 +93,8 @@ public class MetaValidator extends MetaSetsContainer {
 	 */
 	public IPropertyValidator createPropertyValidator() throws XavaException {
 		try {
-			Object o = Class.forName(getClassName()).newInstance();
+			//Object o = Class.forName(getClassName()).newInstance();
+			Object o = ClassLoaderUtil.forName(getClass(), getClassName()).newInstance();
 			if (!(o instanceof IPropertyValidator)) {
 				throw new XavaException("property_validator_invalid_class", getClassName());
 			}
@@ -129,7 +132,8 @@ public class MetaValidator extends MetaSetsContainer {
 	 */
 	public IRemoveValidator createRemoveValidator() throws XavaException {
 		try {
-			Object o = Class.forName(getClassName()).newInstance();
+			//Object o = Class.forName(getClassName()).newInstance();
+			Object o = ClassLoaderUtil.forName(getClass(), getClassName()).newInstance();
 			if (!(o instanceof IRemoveValidator)) {
 				throw new XavaException("remove_validator_invalid_class", getClassName());
 			}

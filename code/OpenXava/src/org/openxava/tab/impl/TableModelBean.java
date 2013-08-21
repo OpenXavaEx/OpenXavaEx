@@ -8,6 +8,7 @@ import javax.ejb.*;
 import javax.swing.event.*;
 
 import org.apache.commons.logging.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 
 /**
@@ -77,7 +78,8 @@ public class TableModelBean implements IXTableModel, java.io.Serializable {
 		Class rs = Object.class;
 		if (columnsClasses != null) {
 			try {
-				rs = Class.forName(columnsClasses[columnIndex]);
+				//rs = Class.forName(columnsClasses[columnIndex]);
+				rs = ClassLoaderUtil.forName(getClass(), columnsClasses[columnIndex]);
 			}
 			catch (ClassNotFoundException ex) {
 				log.error(XavaResources.getString("class_not_found_for_column_warning", new Integer(columnIndex)), ex);

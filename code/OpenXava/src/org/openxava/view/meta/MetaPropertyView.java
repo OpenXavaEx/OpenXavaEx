@@ -2,6 +2,7 @@ package org.openxava.view.meta;
 
 import org.apache.commons.logging.*;
 import org.openxava.actions.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 
 /**
@@ -55,7 +56,8 @@ public class MetaPropertyView extends MetaMemberView implements java.io.Serializ
 	
 	public IOnChangePropertyAction createOnChangeAction() throws XavaException {
 		try {
-			Object o = Class.forName(getOnChangeActionClassName()).newInstance();
+			//Object o = Class.forName(getOnChangeActionClassName()).newInstance();
+			Object o = ClassLoaderUtil.forName(getClass(), getOnChangeActionClassName()).newInstance();
 			if (!(o instanceof IOnChangePropertyAction)) {
 				throw new XavaException("on_change_action_implements_error", IOnChangePropertyAction.class.getName(), getOnChangeActionClassName());
 			}

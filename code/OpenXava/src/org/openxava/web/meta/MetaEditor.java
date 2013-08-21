@@ -5,6 +5,7 @@ import java.util.*;
 
 
 import org.apache.commons.logging.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.formatters.*;
 import org.openxava.model.meta.*;
 import org.openxava.util.*;
@@ -158,7 +159,8 @@ public class MetaEditor {
 			throw new XavaException("no_formatter_class_error");
 		}
 		try {
-			Object formatter =  Class.forName(className).newInstance();
+			//Object formatter =  Class.forName(className).newInstance();
+			Object formatter = ClassLoaderUtil.forName(getClass(), className).newInstance();
 			if (metaSets != null) {
 				PropertiesManager pm = new PropertiesManager(formatter);
 				for (Iterator it = metaSets.iterator(); it.hasNext(); ) {

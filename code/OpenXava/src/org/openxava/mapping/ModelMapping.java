@@ -7,6 +7,7 @@ import org.apache.commons.collections.map.*;
 import org.apache.commons.logging.*;
 import org.openxava.component.*;
 import org.openxava.converters.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.hibernate.*;
 import org.openxava.jpa.*;
 import org.openxava.model.meta.*;
@@ -74,7 +75,8 @@ abstract public class ModelMapping implements java.io.Serializable {
 		if (!codeGenerationTimeObtained) {
 			codeGenerationTimeObtained = true;
 			try {
-				Class.forName("CodeGenerator");
+				//Class.forName("CodeGenerator");
+				ClassLoaderUtil.forName(ModelMapping.class, "CodeGenerator");
 				codeGenerationTime = true;
 			}
 			catch (Exception ex) {

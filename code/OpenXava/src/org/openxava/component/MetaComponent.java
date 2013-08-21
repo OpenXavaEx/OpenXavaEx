@@ -45,7 +45,13 @@ public class MetaComponent implements Serializable {
 	private boolean _transient; 
 	
 		
-	
+	/**
+	 * FIXME: Add the reset function for DynamicClassLoader
+	 */
+	public static final void reset4Reload(){
+		components.clear();
+	}
+
 	/**
 	 * 
 	 * @exception ElementNotFoundException  If component does not exist.

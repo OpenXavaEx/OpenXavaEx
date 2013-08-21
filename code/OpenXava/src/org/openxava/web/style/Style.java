@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.PropertiesReader;
 import org.openxava.util.XavaPreferences;
 import org.openxava.util.XavaResources;
@@ -65,7 +66,8 @@ public class Style {
 			try {
 				for (Object styleClass: getStyleClasses()) {
 					try {
-						Style style = (Style) Class.forName((String) styleClass).newInstance();
+						//Style style = (Style) Class.forName((String) styleClass).newInstance();
+						Style style = (Style) ClassLoaderUtil.forName(Style.class, (String) styleClass).newInstance();
 						if (style.isForBrowse(browser)) {
 							instance = style;							
 							break;
@@ -91,7 +93,8 @@ public class Style {
 	public static Style getInstance() { 
 		if (instance == null) {
 			try {
-				instance = (Style) Class.forName(XavaPreferences.getInstance().getStyleClass()).newInstance();
+				//instance = (Style) Class.forName(XavaPreferences.getInstance().getStyleClass()).newInstance();
+				instance = (Style) ClassLoaderUtil.forName(Style.class, XavaPreferences.getInstance().getStyleClass()).newInstance();
 				instance.cssFile = XavaPreferences.getInstance().getStyleCSS();
 			}
 			catch (Exception ex) {

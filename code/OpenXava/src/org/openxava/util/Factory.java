@@ -5,6 +5,7 @@ import java.net.*;
 import java.util.*;
 
 import org.apache.commons.logging.*;
+import org.openxava.ex.cl.ClassLoaderUtil;
 
 /**
  * Generic class to implement object factories. <p>
@@ -141,7 +142,8 @@ public class Factory {
 		  if (className == null) {
 		  	throw new InitException("factory_class_not_found", name, propertiesFile);
 		  }
-		  theClass = Class.forName(className);
+		  //theClass = Class.forName(className);
+		  theClass = ClassLoaderUtil.forName(getClass(), className);
 		  classes.put(name, theClass);
 		}
   	return theClass;
