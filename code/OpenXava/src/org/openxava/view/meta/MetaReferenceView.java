@@ -2,7 +2,6 @@ package org.openxava.view.meta;
 
 import org.apache.commons.logging.*;
 import org.openxava.actions.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 
 
@@ -29,8 +28,7 @@ public class MetaReferenceView extends MetaMemberView implements java.io.Seriali
 
 	public IOnChangePropertyAction createOnChangeSearchAction() throws XavaException { 
 		try {			
-			//Object o = Class.forName(getOnChangeSearchActionClassName()).newInstance();
-			Object o = ClassLoaderUtil.forName(getClass(), getOnChangeSearchActionClassName()).newInstance();
+			Object o = Class.forName(getOnChangeSearchActionClassName()).newInstance();
 			if (!(o instanceof IOnChangePropertyAction)) {
 				throw new XavaException("on_change_action_implements_error", IOnChangePropertyAction.class.getName(), getOnChangeSearchActionClassName());
 			}

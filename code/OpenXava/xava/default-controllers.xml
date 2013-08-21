@@ -58,20 +58,9 @@ here that you want to override.
 		<action name="deleteRow" mode="NONE" confirm="true"
 			class="org.openxava.actions.DeleteSelectedAction"
 			image="delete.gif"
-			in-each-row="true"/>								</controller>		<controller name="Print">								
-		<action name="generatePdf" mode="list"
-			class="org.openxava.actions.GenerateReportAction"
-			image="pdf.gif"
-			keystroke="Control Alt P">
-			<set property="type" value="pdf"/>
-		</action>
+			in-each-row="true"/>								</controller>		<controller name="Print">										<action name="generatePdf" mode="list"			class="org.openxava.actions.GenerateReportAction"			image="pdf.gif"			keystroke="Control Alt P">			<set property="type" value="pdf"/>		</action>
 
-		<action name="generateExcel" mode="list"
-			class="org.openxava.actions.GenerateReportAction"
-			image="excel.gif"
-			keystroke="Control Alt X">
-			<set property="type" value="csv"/>	
-		</action>
+		<action name="generateExcel" mode="list"			class="org.openxava.actions.GenerateReportAction"			image="excel.gif"			keystroke="Control Alt X">			<set property="type" value="csv"/>			</action>
 		
 	</controller>	
 	

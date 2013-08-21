@@ -25,7 +25,6 @@ import org.openxava.annotations.*;
 import org.openxava.calculators.*;
 import org.openxava.component.*;
 import org.openxava.converters.typeadapters.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.filters.*;
 import org.openxava.filters.meta.*;
 import org.openxava.jpa.*;
@@ -297,8 +296,7 @@ public class AnnotatedClassParser {
 	}
 	
 	private void addAggregateForCollection(MetaModel model, String typeName, String containerReference) throws Exception {
-		//Class type = Class.forName(typeName);
-		Class type = ClassLoaderUtil.forName(this.getClass(), typeName);
+		Class type = Class.forName(typeName);
 		String modelName = type.getSimpleName();
 		if (!model.getMetaComponent().hasMetaAggregate(modelName)) {
 			MetaAggregateForCollection metaAggregate = new MetaAggregateForCollection();
@@ -569,8 +567,7 @@ public class AnnotatedClassParser {
 		if (entityFirstLevelSubclasses == null) {
 			entityFirstLevelSubclasses = new HashMap<Class, Collection<Class>>();
 			for (String entityClassName: getManagedClassNames()) {
-				//Class entityClass = Class.forName(entityClassName);
-				Class entityClass = ClassLoaderUtil.forName(getClass(), entityClassName);
+				Class entityClass = Class.forName(entityClassName);
 				Class superClass = entityClass.getSuperclass();
 				if (superClass.isAnnotationPresent(Entity.class)) {
 					Collection<Class> subclasses = entityFirstLevelSubclasses.get(superClass);
@@ -759,9 +756,7 @@ public class AnnotatedClassParser {
 	
 	
 	private void addConverter(PropertyMapping mapping, Type type, Columns columns) throws Exception {					
-		//if (CompositeUserType.class.isAssignableFrom(Class.forName(type.type()))) {				
-		Class<?> clsType = ClassLoaderUtil.forName(getClass(), type.type());
-		if (CompositeUserType.class.isAssignableFrom(clsType)) {				
+		if (CompositeUserType.class.isAssignableFrom(Class.forName(type.type()))) {				
 			mapping.setMultipleConverterClassName(HibernateCompositeTypeConverter.class.getName());
 			
 			MetaSet typeMetaSet = new MetaSet(); 
@@ -2387,8 +2382,7 @@ public class AnnotatedClassParser {
 		try {
 			// This first in order that it work fine with XML components without persistence.xml
 			String className = "org.openxava.session." + name;
-			//Class.forName(className);
-			ClassLoaderUtil.forName(getClass(), className);
+			Class.forName(className);
 			return className;
 		}
 		catch (ClassNotFoundException ex) {				
@@ -2403,8 +2397,7 @@ public class AnnotatedClassParser {
 		for (String packageName: getManagedClassPackages()) {
 			className = packageName + name;			
 			try {			
-				//Class.forName(className);
-				ClassLoaderUtil.forName(getClass(), className);
+				Class.forName(className);
 				return className;
 			}
 			catch (ClassNotFoundException ex) {				
@@ -2418,8 +2411,7 @@ public class AnnotatedClassParser {
 			managedClassPackages = new HashSet<String>();			
 			for (String className: getManagedClassNames()) {
 				try {				
-					//Class clazz = Class.forName(className);
-					Class clazz = ClassLoaderUtil.forName(AnnotatedClassParser.class, className);
+					Class clazz = Class.forName(className);
 					managedClassPackages.add(Strings.noLastToken(className, "."));
 					clazz = clazz.getSuperclass();
 					while ((clazz != null) && clazz.isAnnotationPresent(MappedSuperclass.class)) {
@@ -2492,8 +2484,7 @@ public class AnnotatedClassParser {
 				String modelName = file.getName().substring(0, file.getName().length() - ".class".length());				
 				String className = basePackage + modelName;
 				try { 
-					//Class entityClass = Class.forName(className);
-					Class entityClass = ClassLoaderUtil.forName(AnnotatedClassParser.class, className);
+					Class entityClass = Class.forName(className);
 					if (entityClass.isAnnotationPresent(Entity.class)) {						
 						classNames.add(className);
 					}					

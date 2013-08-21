@@ -3,7 +3,6 @@ package org.openxava.model.meta;
 import java.util.*;
 
 import org.apache.commons.logging.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.mapping.*;
 import org.openxava.util.*;
 
@@ -34,8 +33,7 @@ public class MetaAggregateForReference extends MetaAggregate {
 		
 	public Class getPropertiesClass() throws XavaException {
 		try {
-			//return Class.forName(getBeanClass());
-			return ClassLoaderUtil.forName(getClass(), getBeanClass());
+			return Class.forName(getBeanClass());
 		} 
 		catch (ClassNotFoundException ex) {
 			log.error(ex.getMessage(), ex);

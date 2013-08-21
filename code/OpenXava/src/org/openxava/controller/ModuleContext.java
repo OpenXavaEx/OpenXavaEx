@@ -8,7 +8,6 @@ import javax.servlet.http.*;
 
 import org.apache.commons.logging.*;
 import org.openxava.controller.meta.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 
 /**
@@ -28,14 +27,6 @@ public class ModuleContext implements java.io.Serializable {
 	private transient Map contexts = null; 
 	private transient Map globalContext = null; 
 	
-
-	/**
-	 * FIXME: Add the reset function for DynamicClassLoader
-	 */
-	public final void reset4Reload(){
-		contexts = null;
-		globalContext = null;
-	}
 
 	/**
 	 * Return a object associated to the specified module
@@ -84,8 +75,7 @@ public class ModuleContext implements java.io.Serializable {
 
 	private Object createObjectFromClass(String className) throws XavaException {
 		try {
-			//return Class.forName(className).newInstance();
-			return ClassLoaderUtil.forName(getClass(), className).newInstance();
+			return Class.forName(className).newInstance();
 		}
 		catch (Exception ex) {
 			log.error(ex.getMessage(),ex);

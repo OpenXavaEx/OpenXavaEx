@@ -14,10 +14,11 @@
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/asm.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/jasperreports.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/antlr.jar"/>
-	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate3.jar" sourcepath="lib-src/hibernate-3.6.10.Final-core_envers_entitymanager-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate3.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate-validator.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/javassist.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-validator.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/mailapi.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/htmlunit.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/commons-io.jar"/>
 	<classpathentry kind="lib" path="lib/sac.jar"/>
@@ -30,12 +31,10 @@
 	<classpathentry exported="true" kind="lib" path="lib/jsp-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/dwr.jar" sourcepath="lib-src/dwr-2.0.5-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/slf4j-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/dwr.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/slf4j-jdk14.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
-	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/mail.jar"/>
-	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/poi-3.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.java"/>
@@ -50,7 +49,7 @@
 	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/xalan.jar"/>
 	<classpathentry kind="lib" path="lib/serializer.jar"/>
-	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/activation.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/hibernate-classic-validator.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/validation-api.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/jaxb-api.jar"/>
@@ -62,6 +61,5 @@
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/autobizlogic.jar"/>
 	<classpathentry kind="lib" path="lib/pdfbox.jar"/>
 	<classpathentry kind="lib" path="lib/fontbox.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/OpenXavaExBase"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -81,14 +81,6 @@ public class XPersistence {
 	final private static ThreadLocal currentPersistenceUnitProperties = new ThreadLocal();
 	private static Map defaultPersistenceUnitProperties;		
 
-	
-	/**
-	 * FIXME: Add the reset function for DynamicClassLoader
-	 */
-	public static final void reset4Reload(){
-		entityManagerFactories.clear();
-	}
-
 	/**
 	 * <code>EntityManager</code> associated to current thread. <p>
 	 * 

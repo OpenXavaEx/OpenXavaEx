@@ -4,7 +4,6 @@ import java.io.*;
 
 import org.apache.commons.logging.*;
 import org.openxava.calculators.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 import org.openxava.util.meta.*;
 
@@ -26,8 +25,7 @@ public class MetaCalculator extends MetaSetsContainer implements Serializable {
 	 */
 	public ICalculator createCalculator() throws XavaException {		
 		try {			
-			//Object o = Class.forName(getClassName()).newInstance();
-			Object o = ClassLoaderUtil.forName(getClass(), getClassName()).newInstance();
+			Object o = Class.forName(getClassName()).newInstance();
 			if (!(o instanceof ICalculator)) {
 				throw new XavaException("calculator_implements_icalculator", getClassName());
 			}
@@ -52,8 +50,7 @@ public class MetaCalculator extends MetaSetsContainer implements Serializable {
 	 */
 	public IHibernateIdGeneratorCalculator createHibernateIdGeneratorCalculator() throws XavaException { 		
 		try {
-			//Object o = Class.forName(getClassName()).newInstance();
-			Object o = ClassLoaderUtil.forName(getClass(), getClassName()).newInstance();
+			Object o = Class.forName(getClassName()).newInstance();
 			IHibernateIdGeneratorCalculator calculator = (IHibernateIdGeneratorCalculator) o;
 			if (containsMetaSets()) {
 				assignPropertiesValues(calculator);

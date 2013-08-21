@@ -3,8 +3,6 @@ package org.openxava.util;
 import java.io.*;
 import java.net.*;
 
-import org.openxava.ex.cl.ClassLoaderUtil;
-
 /**
  * @author Javier Paniza
  */
@@ -17,8 +15,7 @@ public class Resources {
 	 * @param resourceName 
 	 */
 	public static String loadAsString(Class baseClass, String resourceName) throws IOException {
-		//URL resource = baseClass.getClassLoader().getResource(resourceName);		
-		URL resource = ClassLoaderUtil.getClassLoader(baseClass).getResource(resourceName);		
+		URL resource = baseClass.getClassLoader().getResource(resourceName);		
 		if (resource == null) {
 			throw new IOException(XavaResources.getString("resource_not_found", resourceName));
 		}

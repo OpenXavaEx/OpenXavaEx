@@ -7,7 +7,6 @@ import java.util.*;
 import org.apache.commons.logging.*;
 import org.hibernate.*;
 import org.hibernate.usertype.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 
 /**
@@ -54,8 +53,7 @@ public class Base1EnumType implements UserType, ParameterizedType {
 		if (idx == 0) return null;
 		assertParameters();
 		try {
-			//Object values = Class.forName(enumType).getMethod("values", null).invoke(null, null);
-			Object values = ClassLoaderUtil.forName(getClass(), enumType).getMethod("values", null).invoke(null, null);
+			Object values = Class.forName(enumType).getMethod("values", null).invoke(null, null);
 			return ((Object []) values)[idx - 1];
 		} 
 		catch (Exception ex) {

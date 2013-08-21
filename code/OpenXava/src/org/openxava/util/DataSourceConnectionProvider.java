@@ -9,7 +9,6 @@ import javax.naming.*;
 import javax.sql.*;
 import javax.xml.parsers.*;
 
-import org.apache.commons.lang3.text.StrSubstitutor;
 import org.apache.commons.logging.*;
 import org.openxava.component.*;
 import org.openxava.hibernate.*;
@@ -102,7 +101,6 @@ public class DataSourceConnectionProvider implements IConnectionProvider, Serial
 				Element unit = (Element) units.item(iUnits);
 				String unitName = unit.getAttribute("name");
 				String dataSource = getDataSourceFromElement(unit);
-				dataSource = StrSubstitutor.replaceSystemProperties(dataSource);
 				if (jpaDataSources.isEmpty()) { // first time
 					jpaDataSources.put(DEFAULT_JPA_PERSISTENCE_UNIT, dataSource); // The first is the default one
 				}

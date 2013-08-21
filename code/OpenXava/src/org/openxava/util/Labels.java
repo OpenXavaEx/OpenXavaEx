@@ -6,7 +6,6 @@ import java.util.*;
 
 import org.apache.commons.logging.*;
 import org.openxava.application.meta.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 
 /**
  * Utility class for obtain the i18n of the labels. <p>
@@ -237,19 +236,19 @@ public class Labels {
 			while (it.hasNext()) {
 				name = (String) it.next();
 				try {
-					ResourceBundle rb = ResourceBundle.getBundle(name + "-labels", locale, ClassLoaderUtil.getClassLoader(Labels.class));
+					ResourceBundle rb = ResourceBundle.getBundle(name + "-labels", locale);
 					return rb.getString(id);
 				}
 				catch (MissingResourceException ex) {
 				}						
 				try {
-					ResourceBundle rb = ResourceBundle.getBundle("Etiquetas" + name, locale, ClassLoaderUtil.getClassLoader(Labels.class));
+					ResourceBundle rb = ResourceBundle.getBundle("Etiquetas" + name, locale);
 					return rb.getString(id);
 				}
 				catch (MissingResourceException ex) {
 				}			
 			}		
-			ResourceBundle rb = ResourceBundle.getBundle("Labels", locale, ClassLoaderUtil.getClassLoader(Labels.class));
+			ResourceBundle rb = ResourceBundle.getBundle("Labels", locale);
 			return rb.getString(id);
 		}
 		catch (MissingResourceException ex) {

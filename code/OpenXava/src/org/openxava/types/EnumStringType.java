@@ -8,7 +8,6 @@ import org.apache.commons.logging.*;
 import org.hibernate.*;
 import org.hibernate.usertype.UserType;
 import org.hibernate.usertype.ParameterizedType;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 
 /**
@@ -77,8 +76,7 @@ public class EnumStringType implements UserType, ParameterizedType {
             throw new HibernateException(XavaResources.getString("conversion_java_valid_values", value,  strings));
         }
         try {
-            //Object values = Class.forName(enumType).getMethod("values", null).invoke(null, null);
-            Object values = ClassLoaderUtil.forName(getClass(), enumType).getMethod("values", null).invoke(null, null);
+            Object values = Class.forName(enumType).getMethod("values", null).invoke(null, null);
             return ((Object []) values)[idx];
         } 
         catch (Exception ex) {

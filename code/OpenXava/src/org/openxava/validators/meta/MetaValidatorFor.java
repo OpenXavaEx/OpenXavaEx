@@ -3,7 +3,6 @@ package org.openxava.validators.meta;
 
 
 import org.apache.commons.logging.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 import org.openxava.validators.*;
 
@@ -41,8 +40,7 @@ public class MetaValidatorFor {
 	 */
 	private IPropertyValidator createPropertyValidator() throws XavaException { 
 		try {
-			//Object o = Class.forName(getValidatorClass()).newInstance();
-			Object o = ClassLoaderUtil.forName(getClass(), getValidatorClass()).newInstance();
+			Object o = Class.forName(getValidatorClass()).newInstance();
 			if (!(o instanceof IPropertyValidator)) {
 				throw new XavaException("property_validator_invalid_class", getValidatorClass());
 			}

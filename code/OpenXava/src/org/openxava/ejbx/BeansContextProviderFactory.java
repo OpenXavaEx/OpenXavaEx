@@ -3,7 +3,6 @@ package org.openxava.ejbx;
 import javax.naming.*;
 
 import org.apache.commons.logging.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 import java.util.*;
 
@@ -52,8 +51,7 @@ public class BeansContextProviderFactory {
   private static String subcontext;  
   
   private static Factory impl = new Factory( // In all CLASSPATH
-	//BeansContextProviderFactory.class.getClassLoader().getResource(PROPERTIES_FILE));
-	ClassLoaderUtil.getClassLoader(BeansContextProviderFactory.class).getResource(PROPERTIES_FILE));
+	BeansContextProviderFactory.class.getClassLoader().getResource(PROPERTIES_FILE));
 //  private static Factory impl = new Factory( // Where is the class
 //    BeansContextProviderFactory.class.getResource(PROPERTIES_FILE));
 
@@ -97,8 +95,7 @@ public class BeansContextProviderFactory {
 		if (!subcontextReaded) { 
 			try {
 				Properties pro = new Properties();			
-				//pro.load(BeansContextProviderFactory.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE));
-				pro.load(ClassLoaderUtil.getClassLoader(BeansContextProviderFactory.class).getResourceAsStream(PROPERTIES_FILE));
+				pro.load(BeansContextProviderFactory.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE));
 				subcontext = pro.getProperty(SUBCONTEXT_PROPERTY_EN);
 				if (Is.emptyString(subcontext)) subcontext = pro.getProperty(SUBCONTEXT_PROPERTY_ES);
 				if (Is.emptyString(subcontext)) subcontext = null;

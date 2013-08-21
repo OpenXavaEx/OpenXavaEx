@@ -25,7 +25,6 @@ import org.apache.commons.logging.LogFactory;
 import org.openxava.calculators.ICalculator;
 import org.openxava.calculators.IHibernateIdGeneratorCalculator;
 import org.openxava.component.MetaComponent;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.mapping.ModelMapping;
 import org.openxava.mapping.PropertyMapping;
 import org.openxava.model.IModel;
@@ -218,8 +217,7 @@ public class MetaProperty extends MetaMember implements Cloneable {
 				return new TolerantValidator();
 			}
 			validatorClass = vr.getValidatorClass();
-			//IPropertyValidator validator = (IPropertyValidator) Class.forName(validatorClass).newInstance();
-			IPropertyValidator validator = (IPropertyValidator) ClassLoaderUtil.forName(getClass(), validatorClass).newInstance();
+			IPropertyValidator validator = (IPropertyValidator) Class.forName(validatorClass).newInstance();
 			if (validator instanceof IWithMessage) {
 				((IWithMessage) validator).setMessage(requiredMessage); 
 			}
@@ -245,8 +243,7 @@ public class MetaProperty extends MetaMember implements Cloneable {
 			}
 			if (vr == null) return null; 
 			validatorClass = vr.getValidatorClass();
-			//return (IPropertyValidator) Class.forName(validatorClass).newInstance();
-			return (IPropertyValidator) ClassLoaderUtil.forName(getClass(), validatorClass).newInstance();
+			return (IPropertyValidator) Class.forName(validatorClass).newInstance();
 		} catch (ClassCastException ex) {
 			log.error(ex.getMessage(), ex);
 			throw new XavaException("property_validator_invalid_class", validatorClass); 
@@ -457,8 +454,7 @@ public class MetaProperty extends MetaMember implements Cloneable {
 	public boolean isDefaultCalculatorHibernateIdGenerator() throws XavaException {
 		try {
 			if (!hasCalculatorDefaultValueOnCreate()) return false;		
-			//Class calculatorClass = Class.forName(getMetaCalculatorDefaultValue().getClassName()); 
-			Class calculatorClass = ClassLoaderUtil.forName(getClass(), getMetaCalculatorDefaultValue().getClassName()); 
+			Class calculatorClass = Class.forName(getMetaCalculatorDefaultValue().getClassName()); 
 			return IHibernateIdGeneratorCalculator.class.isAssignableFrom(calculatorClass);
 		}
 		catch (Exception ex) {

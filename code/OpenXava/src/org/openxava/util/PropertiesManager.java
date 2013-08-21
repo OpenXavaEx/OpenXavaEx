@@ -5,7 +5,6 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import org.apache.commons.logging.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.model.*;
 
 /**
@@ -227,8 +226,7 @@ public class PropertiesManager implements java.io.Serializable {
 		Class objectClass = null;
 		if (propertyType.isInterface()) {
 			String className = Strings.change(propertyType.getName(), ".I", ".");
-			//objectClass = Class.forName(className);
-			objectClass = ClassLoaderUtil.forName(getClass(), className);
+			objectClass = Class.forName(className);
 		}
 		else {
 			objectClass = propertyType;

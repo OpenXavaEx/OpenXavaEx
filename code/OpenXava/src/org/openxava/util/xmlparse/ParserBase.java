@@ -7,7 +7,6 @@ import java.util.*;
 import javax.xml.parsers.*;
 
 import org.apache.commons.logging.*;
-import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.util.*;
 import org.w3c.dom.*;
 
@@ -72,8 +71,7 @@ abstract public class ParserBase extends XmlElementsNames {
 	public void parse() throws XavaException {
 		String xmlFileCompleteURL = null;
 		try {						
-			//Enumeration resources = getClass().getClassLoader().getResources(xmlFileURL);
-			Enumeration resources = ClassLoaderUtil.getClassLoader(getClass()).getResources(xmlFileURL);
+			Enumeration resources = getClass().getClassLoader().getResources(xmlFileURL);
 			while (resources.hasMoreElements()) {
 				URL resource = (URL) resources.nextElement();
 				xmlFileCompleteURL = resource.toExternalForm();				
