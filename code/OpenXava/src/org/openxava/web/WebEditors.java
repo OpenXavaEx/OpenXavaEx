@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openxava.ex.patch.web.WebEditorsEx;
 import org.openxava.model.meta.MetaMember;
 import org.openxava.model.meta.MetaModel;
 import org.openxava.model.meta.MetaProperty;
@@ -67,6 +68,9 @@ public class WebEditors {
 			String string = strings == null?null:strings[0];						
 			if (!(p.isKey() && p.isHidden())) { 
 				MetaEditor ed = getMetaEditorFor(p, viewName);
+				//EX: Wrapper request to make Formatter can read the editor's properties using request.getParameter(...)
+				request = WebEditorsEx.wrapRequest4Formatter(request, ed);
+				//EX: End
 				if (ed.hasFormatter()) { 								
 					return ed.getFormatter().parse(request, string);
 				}
@@ -143,6 +147,9 @@ public class WebEditors {
 	public static Object formatToStringOrArrayImpl(HttpServletRequest request, MetaProperty p, Object object, Messages errors, String viewName, boolean fromList) throws XavaException {  
 		try {
 			MetaEditor ed = getMetaEditorFor(p, viewName);
+			//EX: Wrapper request to make Formatter can read the editor's properties using request.getParameter(...)
+			request = WebEditorsEx.wrapRequest4Formatter(request, ed);
+			//EX: End
 			if (fromList && p.hasValidValues()){
 				return p.getValidValueLabel(object);
 			}

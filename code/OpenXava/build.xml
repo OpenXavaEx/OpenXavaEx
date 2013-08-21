@@ -1109,6 +1109,7 @@
 		<javac destdir="../OpenXava/bin" includeantruntime="false"
 			   source="1.5" target="1.5" debug="on" fork="no" encoding="UTF-8">
 			<src path="../OpenXava/src"/>
+            <src path="../OpenXava/patch"/>
 			<classpath>
                 <pathelement path="../OpenXavaExBase/bin"/>
 				<fileset dir="../OpenXava/web/WEB-INF/lib">

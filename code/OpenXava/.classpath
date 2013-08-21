@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="properties"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="i18n"/>
+	<classpathentry kind="src" path="patch"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/commons-fileupload.jar"/>
 	<classpathentry exported="true" kind="lib" path="web/WEB-INF/lib/itext.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/portlet-api-1.0.jar"/>
