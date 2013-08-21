@@ -15,6 +15,9 @@ response.setDateHeader("Expires", -10);
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>SKU Info Page</title>
 </head>
+
+<body>
+
 <%
 IConnectionProvider cp = DataSourceConnectionProvider.getByComponent(SKU.class.getSimpleName());
 List<Map<String, Object>> data = DBUtils.findAndClose(
@@ -38,7 +41,5 @@ if (data.size()>0){
 	%><h2>Data not found</h2><%
 }
 %>
-<body>
-
 </body>
 </html>
