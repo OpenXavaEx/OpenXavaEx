@@ -32,7 +32,8 @@ if (descriptionsFormatterClass != null) {
 	formatter = (IFormatter) request.getSession().getAttribute(descriptionsFormatterKey);	
 	if (formatter == null) {
 		try {
-			formatter = (IFormatter) Class.forName(descriptionsFormatterClass).newInstance();
+			//formatter = (IFormatter) Class.forName(descriptionsFormatterClass).newInstance();
+			formatter = (IFormatter) org.openxava.ex.cl.ClassLoaderUtil.forName(this.getClass(), descriptionsFormatterClass).newInstance();
 			request.getSession().setAttribute(descriptionsFormatterKey, formatter);	
 		}
 		catch (Exception ex) {

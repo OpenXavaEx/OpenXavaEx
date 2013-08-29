@@ -42,7 +42,8 @@ if (!Is.emptyString(filterClass)) {
 	filter = (IFilter) request.getSession().getAttribute(filterKey);
 	if (filter == null) {
 		try {
-			filter = (IFilter) Class.forName(filterClass).newInstance();
+			//filter = (IFilter) Class.forName(filterClass).newInstance();
+			filter = (IFilter) org.openxava.ex.cl.ClassLoaderUtil.forName(this.getClass(), filterClass).newInstance();
 			request.getSession().setAttribute(filterKey, filter);	
 		}
 		catch (Exception ex) {
@@ -66,7 +67,8 @@ if (descriptionsFormatterClass != null) {
 	formatter = (IFormatter) request.getSession().getAttribute(descriptionsFormatterKey);	
 	if (formatter == null) {
 		try {
-			formatter = (IFormatter) Class.forName(descriptionsFormatterClass).newInstance();
+            //formatter = (IFormatter) Class.forName(descriptionsFormatterClass).newInstance();
+            formatter = (IFormatter) org.openxava.ex.cl.ClassLoaderUtil.forName(this.getClass(), descriptionsFormatterClass).newInstance();
 			request.getSession().setAttribute(descriptionsFormatterKey, formatter);	
 		}
 		catch (Exception ex) {
