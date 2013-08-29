@@ -6,33 +6,25 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title></title>
-	<base href="../.."/>
-	<!--[if IE]><script type="text/javascript">
-	    // Fix for IE ignoring relative base tags.
-	    (function() {
-	        var baseTag = document.getElementsByTagName('base')[0];
-	        baseTag.href = baseTag.href;
-	    })();
-	</script><![endif]-->
 
-    <script src="libs/jquery/jquery-1.10.2.js"></script>
-    <link href="libs/jquery-ui/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" />
-    <script src="libs/jquery-ui/jquery-ui-1.10.3/ui/jquery-ui.js"></script>
+    <script src="../../libs/jquery/jquery-1.10.2.js"></script>
+    <link href="../../libs/jquery-ui/jquery-ui-1.10.3/themes/base/jquery-ui.css" rel="stylesheet" />
+    <script src="../../libs/jquery-ui/jquery-ui-1.10.3/ui/jquery-ui.js"></script>
     
-    <link href="libs/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.css" rel="stylesheet" />
-    <script src="libs/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.js"></script>
+    <link href="../../libs/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.css" rel="stylesheet" />
+    <script src="../../libs/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.js"></script>
     
-    <script src="libs/accounting.js/accounting.js"></script>
-    <script src="libs/autoNumeric/autoNumeric.js"></script>
+    <script src="../../libs/accounting.js/accounting.js"></script>
+    <script src="../../libs/autoNumeric/autoNumeric.js"></script>
 
-    <link href="libs/PQGrid/pqgrid.dev.css" rel="stylesheet" />
-    <script src="libs/PQGrid/pqgrid.dev.js"></script>
-    <link rel="stylesheet" href="libs/PQGrid/themes/office/pqgrid.css" />
+    <link href="../../libs/PQGrid/pqgrid.dev.css" rel="stylesheet" />
+    <script src="../../libs/PQGrid/pqgrid.dev.js"></script>
+    <link rel="stylesheet" href="../../libs/PQGrid/themes/office/pqgrid.css" />
 
-    <script src="libs/Moment.js/moment-2.1.0.js"></script>
+    <script src="../../libs/Moment.js/moment-2.1.0.js"></script>
 
-    <script src="libs/a/xava-ex.js"></script>
-    <script src="libs/a/xava-ex.PQGrid.js"></script>
+    <script src="../../libs/a/xava-ex.js"></script>
+    <script src="../../libs/a/xava-ex.PQGrid.js"></script>
 </head>
 <body style="padding:0px;margin:0px">
     <div id="pgGrid"></div>
