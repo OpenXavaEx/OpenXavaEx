@@ -1,13 +1,14 @@
-<servlet>
-    <servlet-name>SchemaUpdateServlet</servlet-name>
-    <servlet-class>org.openxava.ex.tools.SchemaUpdateServlet</servlet-class>
-    <init-param>
-        <param-name>PERSISTENCE_UNIT_LIST</param-name>
-        <param-value>default</param-value>
-    </init-param>
-</servlet>
-<servlet-mapping>
-    <servlet-name>SchemaUpdateServlet</servlet-name>
-    <url-pattern>/schema-update/*</url-pattern>
-</servlet-mapping>	
-	
+<!-- OpenXavaEx extended Servlets -->
+        <servlet>
+            <servlet-name>SchemaUpdateServlet</servlet-name>
+            <servlet-class>org.openxava.ex.tools.SchemaUpdateServlet</servlet-class>
+            <init-param>
+                <param-name>PERSISTENCE_UNIT_LIST</param-name>
+                <param-value>default</param-value>
+            </init-param>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>SchemaUpdateServlet</servlet-name>
+            <url-pattern>/schema-update/*</url-pattern>
+        </servlet-mapping>
+<!-- OpenXavaEx extended Servlets: END -->

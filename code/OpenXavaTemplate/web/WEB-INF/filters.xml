@@ -1,0 +1,41 @@
+<!-- OpenXavaEx extended Filters -->
+        <filter><!-- Filter to read OpenXava context info and put into ThreadLocal -->
+            <filter-name>OpenXavaContextFilter</filter-name>
+            <filter-class>org.openxava.ex.ctx.OpenXavaContextFilter</filter-class>
+        </filter>
+        <filter><!-- Filter to check SSO token and complete SSO process -->
+            <filter-name>TokenCookieSSOFilter_DO_SSO</filter-name>
+            <filter-class>org.openxava.ex.tools.TokenCookieSSOFilter</filter-class>
+            <init-param>
+                <param-name>TOKEN_CHECK_URL</param-name>
+                <param-value>http://localhost:8080/main/bridge.jsp?token=</param-value>
+            </init-param>
+        </filter>
+        <filter><!-- Filter to put SSO UserInfo into OpenXava Current User -->
+            <filter-name>TokenCookieSSOFilter_Info</filter-name>
+            <filter-class>org.openxava.ex.tools.TokenCookieSSOFilter</filter-class>
+        </filter>
+        <filter-mapping>
+            <filter-name>OpenXavaContextFilter</filter-name>
+            <url-pattern>*.jsp</url-pattern>
+            <dispatcher>FORWARD</dispatcher>
+            <dispatcher>REQUEST</dispatcher>
+            <dispatcher>INCLUDE</dispatcher>
+        </filter-mapping>
+        <filter-mapping>
+            <filter-name>TokenCookieSSOFilter_DO_SSO</filter-name>
+            <url-pattern>/index.jsp</url-pattern>
+        </filter-mapping>
+        <filter-mapping>
+            <filter-name>TokenCookieSSOFilter_DO_SSO</filter-name>
+            <url-pattern>/modules/*</url-pattern>
+        </filter-mapping>
+        <filter-mapping>
+            <filter-name>TokenCookieSSOFilter_Info</filter-name>
+            <url-pattern>*.jsp</url-pattern>
+        </filter-mapping>
+        <filter-mapping>
+            <filter-name>TokenCookieSSOFilter_Info</filter-name>
+            <url-pattern>/dwr/*</url-pattern>
+        </filter-mapping>
+<!-- OpenXavaEx extended Filters: END -->
