@@ -159,9 +159,18 @@ public class JPATabProvider extends TabProviderBase {
 		Object [] key = getKey(); 
 		for (int i = 0; i < key.length; i++) {
 			query.setParameter("p" + i, key[i]);
+			/* EX: 01-Make parameters' display more clear //
 			message.append(key[i]);
 			if (i < key.length - 1)
 				message.append(", ");
+			*/
+			if (i == 0){
+				message.append(": ");
+			}else{
+				message.append(", ");
+			}
+			message.append(key[i]);
+			/* EX: 01-END */
 		}
 		log.debug(message);
 		
