@@ -12,6 +12,7 @@ import org.openxava.ex.cl.impl.DynamicClassLoader;
  */
 public class ClassLoaderUtil {
 	private static DynamicClassLoader currentDcl = null;
+	private static ClassModifyChecker checker = new ClassModifyChecker();
 	
 	/**
 	 * To replace the original class and resource load method in OpenXava, use Thread Context ClassLoader first
@@ -46,7 +47,7 @@ public class ClassLoaderUtil {
 	/**
 	 * Inject DynamicClassLoader into ContextClassLoader
 	 */
-	public static void injectIntoContextClassLoader(List<File> initClassPath, ClassModifyChecker checker, WhenClassReload reloader){
+	public static void injectIntoContextClassLoader(List<File> initClassPath, boolean enableReloadCheck, WhenClassReload reloader){
 		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 		if (null==contextClassLoader){
 			return;
@@ -54,7 +55,7 @@ public class ClassLoaderUtil {
 
 		if (null==currentDcl){				//First request ...
 			currentDcl = new DynamicClassLoader(contextClassLoader, initClassPath, checker);
-		}else if (checker.isFileChanged() || checker.isNewFiles()){	//Reload needed ...
+		}else if ( enableReloadCheck && (checker.isFileChanged() || checker.isNewFiles()) ){	//Reload needed ...
 			if (null!=reloader){
 				reloader.doReload();
 			}

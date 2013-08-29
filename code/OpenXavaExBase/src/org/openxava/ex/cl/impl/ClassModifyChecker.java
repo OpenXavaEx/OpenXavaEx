@@ -24,6 +24,11 @@ public class ClassModifyChecker {
     private Map<String, Long> memory = new HashMap<String, Long>();
     private Map<String, Long> newFileDetectMemory = new HashMap<String, Long>();
     
+    public synchronized void reset(){
+    	memory.clear();
+    	newFileDetectMemory.clear();
+    }
+    
     public synchronized void rememberFile(final String fileUrl, Long timestamp){
         memory.put(fileUrl, timestamp);
     }

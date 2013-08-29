@@ -23,7 +23,15 @@ public class MetaControllers {
 	private static Map<String, MetaObject> mapMetaObjects;
 	private static Collection<String> objectPrefixes; 
 	private static String context = SWING;
-	
+
+	/**
+	 * FIXME: Add the reset function for DynamicClassLoader
+	 */
+	public static final void reset4Reload(){
+		metaControllers = null;
+		mapMetaObjects = null;
+		objectPrefixes = null;
+	}
 	
 	public static void _addMetaController(MetaController newController) throws XavaException {
 		if (metaControllers == null) {

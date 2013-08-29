@@ -48,6 +48,7 @@ public class DynamicClassLoader extends ClassLoader {
 	public DynamicClassLoader(ClassLoader parent, List<File> classpath, ClassModifyChecker checker) {
 		super(parent);
         this.checker = checker;
+		this.checker.reset();
         this.classpath = classpath;
         
         refreshClassPath4Display(classpath);
@@ -82,7 +83,7 @@ public class DynamicClassLoader extends ClassLoader {
                 throw new ClassNotFoundException(
                         "Can't find ["+className+"] in ["+this.classpath4Disp+"]");
             }
-            checker.rememberFile(classFile.getSourceFile(), classFile.getTimestamp());
+            this.checker.rememberFile(classFile.getSourceFile(), classFile.getTimestamp());
             return classFile.getClassBytes();
 		} catch (IOException ex) {
 			throw new ClassNotFoundException(className, ex);

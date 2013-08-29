@@ -15,9 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.openxava.component.MetaComponent;
 import org.openxava.controller.ModuleContext;
+import org.openxava.controller.meta.MetaControllers;
 import org.openxava.ex.cl.ClassLoaderUtil;
 import org.openxava.ex.cl.ClassLoaderUtil.WhenClassReload;
-import org.openxava.ex.cl.impl.ClassModifyChecker;
+import org.openxava.ex.utils.JspUtils;
 import org.openxava.jpa.XPersistence;
 
 /**
@@ -25,16 +26,25 @@ import org.openxava.jpa.XPersistence;
  * @author root
  */
 public class DynamicLoaderFilter implements Filter {
+	/** The path(String split by ";") to detect class change and reload */
 	public static final String INIT_PARAM_NAME_CLASSPATH = "CLASSPATH";
+	/** Url list(String split by ";") to detect and reload */
+	public static final String INIT_PARAM_NAME_RELOAD_URI_LIST = "RELOAD_URI_LIST";
 	
 	private List<File> classpath = new ArrayList<File>();
-	private ClassModifyChecker checker = new ClassModifyChecker();
+	private List<String> reloadChkUri = new ArrayList<String>();
 
 	public void init(FilterConfig cfg) throws ServletException {
 		String pathList = cfg.getInitParameter(INIT_PARAM_NAME_CLASSPATH);
 		String[] pathArray = pathList.split(";");
 		for (int i = 0; i < pathArray.length; i++) {
 			classpath.add(new File(pathArray[i]));
+		}
+		
+		String uris = cfg.getInitParameter(INIT_PARAM_NAME_RELOAD_URI_LIST);
+		String[] uriArray = uris.split(";");
+		for (int i = 0; i < uriArray.length; i++) {
+			reloadChkUri.add(uriArray[i]);
 		}
 	}
 
@@ -46,27 +56,44 @@ public class DynamicLoaderFilter implements Filter {
 		ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
 		try{
 			//Make class reloadable, and clean application context when class reloaded
-			ClassLoaderUtil.injectIntoContextClassLoader(classpath, checker, new WhenClassReload(){
+			ClassLoaderUtil.injectIntoContextClassLoader(
+					classpath, (shouldCheck((HttpServletRequest)request)), new WhenClassReload(){
 				public void doReload() {
-					XPersistence.reset4Reload();
-					MetaComponent.reset4Reload();
-					//In jsp: <jsp:useBean id="context" class="org.openxava.controller.ModuleContext" scope="session"/>
-					HttpServletRequest hreq = (HttpServletRequest)request;
-					ModuleContext mc = (ModuleContext)hreq.getSession().getAttribute("context");
-					if (null!=mc){
-						mc.reset4Reload();
-					}
+					contextReload(request);
 				}
 			});
-			
-			//Check and update schema
-			
-			
 			chain.doFilter(request, response);
 		}finally{
 			Thread.currentThread().setContextClassLoader(oldCL);
 		}
 
+	}
+
+	/**
+	 * Reset OpenXava Context
+	 * @param request
+	 */
+	private void contextReload(final ServletRequest request) {		
+		HttpServletRequest hreq = (HttpServletRequest)request;
+		
+		MetaComponent.reset4Reload();
+		MetaControllers.reset4Reload();
+		XPersistence.reset4Reload();
+		//In jsp: <jsp:useBean id="context" class="org.openxava.controller.ModuleContext" scope="session"/>
+		ModuleContext mc = (ModuleContext) JspUtils.useBeanSession(hreq, "context", ModuleContext.class);
+		if (null!=mc){
+			mc.reset4Reload();
+		}
+	}
+
+	private boolean shouldCheck(HttpServletRequest hreq) {
+		String uri = hreq.getRequestURI();
+		String cp = hreq.getContextPath();
+		for(String s: this.reloadChkUri){
+			String withCtxPath = cp + s;
+			if (uri.startsWith(withCtxPath)) return true;
+		}
+		return false;
 	}
 
 }
