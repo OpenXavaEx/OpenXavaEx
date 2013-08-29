@@ -166,10 +166,20 @@ if (descriptionsList) {
 <%
 }
 else {
+	/* EX: 01 - Bug when editor have properties // 
 	String editorURL = "editors/" + WebEditors.getMetaEditorFor(ref, view.getViewName()).getUrl()
 		+ "?script=" + script
 		+ "&propertyKey=" + propertyKey	
 		+ "&editable=" + editable;
+	*/
+	String editorURL = "editors/" + WebEditors.getMetaEditorFor(ref, view.getViewName()).getUrl();
+	if (editorURL.indexOf('?') > 0){
+		editorURL += "&";
+	}else{
+		editorURL += "?";
+	}
+	editorURL += "script=" + script + "&propertyKey=" + propertyKey + "&editable=" + editable;
+	/* EX: 01 - END */
 %>
 	<jsp:include page="<%=editorURL%>" />
 <%	
