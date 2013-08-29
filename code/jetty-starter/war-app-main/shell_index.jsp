@@ -11,7 +11,7 @@ if (null==userInfo || null==userInfo.get("id")){
 }else{
 	//Redirect to index page of App
 	appCtx = System.getProperty("CTX_PATH");
-	redirUrl = "/" + appCtx + "/"+appCtx+".jsp?mainApp=/main";
+	redirUrl = "/" + appCtx + "/index.jsp?mainApp=/main";
 	redirUrl = "/main/bridge.jsp?to=" + URLEncoder.encode(redirUrl, "UTF-8");
 }
 response.sendRedirect(redirUrl);

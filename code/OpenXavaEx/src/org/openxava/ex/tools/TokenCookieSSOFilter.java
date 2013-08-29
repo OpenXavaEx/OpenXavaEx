@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openxava.util.UserInfo;
 import org.openxava.util.Users;
 
@@ -29,6 +31,9 @@ import org.openxava.util.Users;
 public class TokenCookieSSOFilter implements Filter {
 	/** Filter init-param, specify the url to check the SSO token. for example: http://localhost:8080/main/bridge.jsp?token= */
 	public static final String TOKEN_CHECK_URL_INIT_PARAME = "TOKEN_CHECK_URL";
+
+	/** The system property which should overwrite init-param(NOTE: take effect only when init-param is not null) */
+	public static final String TOKEN_CHECK_URL_SYSTEM_PROPERTY = "PROP_TOKEN_CHECK_URL";
 	
 	/** The cookie name which store the token */
 	public static final String SSO_TOKEN_COOKIE = "SSO_TOKEN";
@@ -38,10 +43,18 @@ public class TokenCookieSSOFilter implements Filter {
 	/** The url to make current application logout(session invalidate) */
 	public static final String SSO_LOGOUT_URL = "/SSO+LOGOUT+NOW+.jsp";
 	
+	private static final Log log = LogFactory.getLog(TokenCookieSSOFilter.class);
+	
 	private String checkUrl;
 	
 	public void init(FilterConfig cfg) throws ServletException {
 		checkUrl = cfg.getInitParameter(TOKEN_CHECK_URL_INIT_PARAME);
+		if ( null!=checkUrl && checkUrl.trim().length() > 0){
+			String prop = System.getProperty(TOKEN_CHECK_URL_SYSTEM_PROPERTY);
+			if ( null!=prop && prop.trim().length() > 0){
+				checkUrl = prop;
+			}
+		}
 	}
 	public void destroy() {
 		//Do nothing
@@ -64,19 +77,21 @@ public class TokenCookieSSOFilter implements Filter {
 				doCookieSSO(req, resp);
 			}
 			//Integrate UserInfo with OpenXava
-			UserInfo ui = (UserInfo)req.getSession().getAttribute(SSO_USERINFO_IN_SESSION);
+			SSOUserInfo ui = (SSOUserInfo)req.getSession().getAttribute(SSO_USERINFO_IN_SESSION);
 			if (null!=ui && null!=ui.getId()){
-				System.out.println(">>> ["+this.getClass().getSimpleName() + "] SSO User id='" + ui.getId() + "' .");
+				log.info(">>> ["+this.getClass().getSimpleName() + "] SSO User id='" + ui.getId() + "' .");
 				//ref: org.openxava.util.Users#setCurrent(HttpServletRequest)
 				req.getSession().setAttribute("xava.user", ui.getId());
 				req.getSession().setAttribute("xava.portal.user", ui.getId());
 				req.getSession().setAttribute("xava.portal.userinfo", ui);
+				Users.setCurrent(ui.getId());
 				Users.setCurrentUserInfo(ui);
 			}else{
 				req.getSession().removeAttribute("xava.user");
 				req.getSession().removeAttribute("xava.portal.user");
 				req.getSession().removeAttribute("xava.portal.userinfo");
-				Users.setCurrentUserInfo(new UserInfo());
+				Users.setCurrent((String)null);
+				Users.setCurrentUserInfo(new SSOUserInfo());
 			}
 			
 			chain.doFilter(request, response);
@@ -92,7 +107,7 @@ public class TokenCookieSSOFilter implements Filter {
 			Cookie cookie = cookies[i];
 			if (null!=cookie && SSO_TOKEN_COOKIE.equalsIgnoreCase(cookie.getName()) && cookie.getMaxAge()!=0 ){
 				String cv = cookie.getValue();
-				System.out.println(">>> ["+this.getClass().getSimpleName() + "] Check cookie '"+SSO_TOKEN_COOKIE+"' with value='" + cv + "' ...");
+				log.info(">>> ["+this.getClass().getSimpleName() + "] Check cookie '"+SSO_TOKEN_COOKIE+"' with value='" + cv + "' ...");
 				if (null==cv || cv.trim().length()==0){
 					return;
 				}
@@ -126,9 +141,10 @@ public class TokenCookieSSOFilter implements Filter {
 				}
 				//Fill UserInfo Bean with Properties
 				//TODO - complete all fields of UserInfo
-				UserInfo ui = new UserInfo();
+				SSOUserInfo ui = new SSOUserInfo();
 				ui.setId(p.getProperty("id"));
 				ui.setGivenName(p.getProperty("givenName"));
+				ui.setProperties(p);
 				//Remember UserInfo into Session
 				if (null!=ui.getId()){
 					req.getSession().setAttribute(SSO_USERINFO_IN_SESSION, ui);
@@ -139,4 +155,23 @@ public class TokenCookieSSOFilter implements Filter {
 		}
 	}
 
+	public static final class SSOUserInfo extends UserInfo {
+		private static final long serialVersionUID = 20130826L;
+		
+		private Properties properties = new Properties();
+
+		public Properties getProperties() {
+			return new Properties(properties);
+		}
+		private void setProperties(Properties properties) {
+			this.properties = properties;
+		}
+		public Object getProperty(String key){
+			return this.properties.get(key);
+		}
+		public void setProperty(String key, String value){
+			this.properties.put(key, value);
+		}
+		
+	}
 }

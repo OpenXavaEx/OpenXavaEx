@@ -8,18 +8,52 @@ If you want to add filters add them in filters.xml file in WEB-INF.
 	filters.xml must be in WEB-INF and can have several <filter> and <filter-mapping>.
 -->
 
-
 <web-app version="2.4" 
 	xmlns="http://java.sun.com/xml/ns/j2ee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-
 	
 	<display-name>OpenXava Application</display-name>
-	
-	 
-	
-	
+
+    <filter><!-- Filter to read OpenXava context info and put into ThreadLocal -->
+        <filter-name>OpenXavaContextFilter</filter-name>
+        <filter-class>org.openxava.ex.ctx.OpenXavaContextFilter</filter-class>
+    </filter>
+    <filter><!-- Filter to check SSO token and complete SSO process -->
+        <filter-name>TokenCookieSSOFilter_DO_SSO</filter-name>
+        <filter-class>org.openxava.ex.tools.TokenCookieSSOFilter</filter-class>
+        <init-param>
+            <param-name>TOKEN_CHECK_URL</param-name>
+            <param-value>http://localhost:8080/main/bridge.jsp?token=</param-value>
+        </init-param>
+    </filter>
+    <filter><!-- Filter to put SSO UserInfo into OpenXava Current User -->
+        <filter-name>TokenCookieSSOFilter_Info</filter-name>
+        <filter-class>org.openxava.ex.tools.TokenCookieSSOFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>OpenXavaContextFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>TokenCookieSSOFilter_DO_SSO</filter-name>
+        <url-pattern>/index.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>TokenCookieSSOFilter_DO_SSO</filter-name>
+        <url-pattern>/modules/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>TokenCookieSSOFilter_Info</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>TokenCookieSSOFilter_Info</filter-name>
+        <url-pattern>/dwr/*</url-pattern>
+    </filter-mapping>
 	
 	<servlet>
 		<servlet-name>module</servlet-name>
@@ -55,7 +89,10 @@ If you want to add filters add them in filters.xml file in WEB-INF.
 	</servlet>				
 	<servlet>
 		<servlet-name>dwrInvoker</servlet-name>
-		<servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>    
+        <!-- 
+        <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+         -->
+        <servlet-class>org.openxava.ex.dwr.ForceUtf8DwrServlet</servlet-class><!-- Fix UTF-8 encoding problem -->
 		<init-param>
 			<param-name>debug</param-name>
 			<param-value>false</param-value>
@@ -65,9 +102,20 @@ If you want to add filters add them in filters.xml file in WEB-INF.
 			<param-value>false</param-value> 
 		</init-param> 		
 		<load-on-startup>12</load-on-startup>
-	</servlet>	
-		
-	
+	</servlet>
+
+    <servlet><!-- Servlet to handle schema check and update request -->
+        <servlet-name>SchemaUpdateServlet</servlet-name>       
+        <servlet-class>org.openxava.ex.tools.SchemaUpdateServlet</servlet-class>
+        <init-param>
+            <param-name>PERSISTENCE_UNIT_LIST</param-name>
+            <param-value>default</param-value>
+        </init-param>
+    </servlet>              
+    <servlet-mapping>
+        <servlet-name>SchemaUpdateServlet</servlet-name>
+        <url-pattern>/schema-update/*</url-pattern>
+    </servlet-mapping>      
 	
 	<servlet-mapping>
 		<servlet-name>module</servlet-name>
@@ -110,12 +158,8 @@ If you want to add filters add them in filters.xml file in WEB-INF.
 		<url-pattern>/dwr/*</url-pattern>
 	</servlet-mapping>	
 	
-  <mime-mapping>
-        <extension>
-            jnlp
-        </extension>
-        <mime-type>
-            application/x-java-jnlp-file
-        </mime-type>
-    </mime-mapping>	
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
 </web-app>
