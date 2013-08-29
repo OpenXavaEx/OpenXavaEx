@@ -42,6 +42,7 @@ public class BaseMasterDataModel {
 	private Timestamp version;
 	
 	//FIXME: You can't use @ReadOnly here, that should cause always store FALSE to database
+	//FIXME: And you shouldn't remove this field in @View, else default value should be disabled
 	@Column
 	@DefaultValueCalculator(TrueCalculator.class)
 	private boolean enabled;

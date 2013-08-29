@@ -26,4 +26,21 @@
         <formatter class="org.openxava.ex.formatter.date.SmartDateFormatter" />
     </editor>
 
+    <!-- BP: Use Filter and Formatter in @DescriptionsList -->
+    <editor name="TestApp_DescriptionsList_Capital" url="descriptionsEditor.jsp">
+        <property name="model" value="AdminDivTestCase" />
+        <property name="keyProperty" value="id"/>
+        <property name="descriptionProperties" value="code, name" />
+        <property name="condition" value="e.owner.id = ?" />
+        <property name="order" value="e.code" />
+        <property name="filter" value="org.openxava.demoapp.model.testcase.AdminDivTestCase$CapitalFilter" />
+    </editor>
+    <editor name="TestApp_DescriptionsList_Owner" url="descriptionsEditor.jsp">
+        <property name="model" value="AdminDivTestCase" />
+        <property name="keyProperty" value="id"/>
+        <property name="descriptionProperties" value="code, name" />
+        <property name="condition" value="(e.id != ? AND (e.owner.id != ? OR e.owner.id IS NULL))" />
+        <property name="order" value="e.code" />
+        <property name="filter" value="org.openxava.demoapp.model.testcase.AdminDivTestCase$OwnerFilter" />
+    </editor>
 </editors>

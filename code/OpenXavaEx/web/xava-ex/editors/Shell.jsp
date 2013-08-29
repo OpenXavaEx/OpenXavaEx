@@ -29,7 +29,7 @@ String script = request.getParameter("script");
 boolean readOnlyAsLabel = org.openxava.util.XavaPreferences.getInstance().isReadOnlyAsLabel();
 
 //Get the editor class and render it
-ShellEditorContext ctx = new ShellEditorContext(propertyKey, context, view, p, fvalue, errors, request);
+ShellEditorContext ctx = new ShellEditorContext(request);
 if (editable || !readOnlyAsLabel) { 
 %>
 <div><%=ShellEditorContext.render(ctx)%></div>
