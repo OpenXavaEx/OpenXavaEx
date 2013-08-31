@@ -27,7 +27,7 @@ CREATE TABLE `customer` (
   `name` varchar(40) default NULL,
   `photo` tinyblob,
   PRIMARY KEY  (`number`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -51,7 +51,7 @@ CREATE TABLE `images` (
   `GALLERY` varchar(255) default NULL,
   `IMAGE` mediumblob,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -80,7 +80,7 @@ CREATE TABLE `invoice` (
   `customer_number` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FKD80EDB0D3D6769C9` (`customer_number`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -107,7 +107,7 @@ CREATE TABLE `invoicedetail` (
   PRIMARY KEY  (`id`),
   KEY `FK33BEA1BE48069759` (`invoice_id`),
   KEY `FK33BEA1BE475FCE47` (`product_number`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -134,7 +134,7 @@ CREATE TABLE `log_sku_change` (
   `skuName` varchar(255) default NULL,
   `userName` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -170,7 +170,7 @@ CREATE TABLE `md_sku` (
   UNIQUE KEY `name` (`name`),
   KEY `FK874FD655B6473876` (`vendor_id`),
   KEY `FK874FD655B1DEBE9E` (`uom_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -201,7 +201,7 @@ CREATE TABLE `md_uom` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `code` (`code`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -232,7 +232,7 @@ CREATE TABLE `md_vendor` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `code` (`code`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -256,7 +256,7 @@ CREATE TABLE `ox_sys_dummy` (
   `DTYPE` varchar(31) NOT NULL,
   `id` varchar(31) NOT NULL default 'OK',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -284,7 +284,7 @@ CREATE TABLE `po_prd` (
   PRIMARY KEY  (`dtlid`),
   KEY `FK8D095842AE404A5E` (`sku_id`),
   KEY `FK8D095842437CC488` (`billHead_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -314,7 +314,7 @@ CREATE TABLE `po_prh` (
   `reason` varchar(64) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `billNo` (`billNo`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -341,7 +341,7 @@ CREATE TABLE `po_prr` (
   `billHead_id` varchar(32) default NULL,
   PRIMARY KEY  (`dtlid`),
   KEY `FK8D095850437CC488` (`billHead_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -366,7 +366,7 @@ CREATE TABLE `product` (
   `description` varchar(40) default NULL,
   `unitPrice` decimal(19,2) default NULL,
   PRIMARY KEY  (`number`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --

@@ -2,3 +2,5 @@
 /*.err
 /*.txt
 /*.pid
+ib_logfile*
+ibdata*
