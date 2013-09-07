@@ -13,6 +13,9 @@ import javax.persistence.TableGenerator;
 
 import org.openxava.annotations.Editor;
 
+/**
+ * Test case for many kind of date/time format
+ */
 @Entity
 @Table(name="TEST_DateTime")
 public class DateTimeTestCase {
