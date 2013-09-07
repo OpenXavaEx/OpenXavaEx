@@ -42,8 +42,6 @@ if (null!=mainApp){
 						name:"Vendor", 	_url:"<%=modulesUrl%>/Vendor"
 					},{
 						name:"SKU", 	_url:"<%=modulesUrl%>/SKU"
-					},{
-                        name:"SKU Change Log",     _url:"<%=modulesUrl%>/SkuChangeLog"
                     }]
 				},{
 					name:"Purchase", open:true,
@@ -79,11 +77,19 @@ if (null!=mainApp){
             },{
                 name:"TestCases", open:true,
                 children: [{
-                    name:"DateTimeTestCase", _url:"<%=modulesUrl%>/DateTimeTestCase"
+                    name:"DateTimeTestCase",                       _url:"<%=modulesUrl%>/DateTimeTestCase"
                 }, {
-                    name:"Administrative divisions(All)", _url:"<%=modulesUrl%>/AdminDivTestCase"
+                    name:"Administrative divisions(All)",          _url:"<%=modulesUrl%>/AdminDivTestCase"
                 }, {
                     name:"Administrative divisions(Country only)", _url:"<%=modulesUrl%>/AdminDivTestCaseCountry"
+                },{
+                    name:"SKU With Persist Callback",              _url:"<%=modulesUrl%>/SKUAccessTrackTestCase"
+                },{
+                    name:"SKU Change Log",                         _url:"<%=modulesUrl%>/SKUChangeLog"
+                },{
+                    name:"SKU Change Log(VPD)",                    _url:"<%=modulesUrl%>/SKUChangeLogVPD"
+                }, {
+                    name:"Order with Templaye(Order)",             _url:"<%=modulesUrl%>/OrderWithTemplateTestCase"
                 }]
             },{
 				name:"System", open:true,

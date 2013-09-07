@@ -14,7 +14,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSourceFactory;
 import org.apache.jasper.servlet.JspServlet;
 import org.eclipse.jetty.jndi.NamingUtil;
 import org.eclipse.jetty.server.Handler;
@@ -29,6 +28,7 @@ import org.eclipse.jetty.util.resource.FileResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.openxava.ex.datasource.MonitoredDataSourceFactory;
 import org.openxava.ex.tools.DynamicLoaderFilter;
 import org.openxava.ex.tools.TokenCookieSSOFilter;
 import org.openxava.ex.utils.VersionInfo;
@@ -233,7 +233,7 @@ public class ContextApp {
             p.put("maxIdle", "1");
             
             p.put("validationQuery", es.getValidationQuery());
-            DataSource ds = BasicDataSourceFactory.createDataSource(p);
+            DataSource ds = MonitoredDataSourceFactory.createDataSource(p);
             
             NamingUtil.bind(envContext, es.getJndiName(), ds);
         }
