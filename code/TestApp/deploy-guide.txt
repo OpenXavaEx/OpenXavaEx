@@ -1,0 +1,42 @@
+Prepare
+========
+ 1. Install databse;
+ 2. Install Tomcat;
+
+Build
+========
+ - Run build.bat, a war should be build in directory: ../build/TestApp.war ;
+
+Delpoy
+========
+ 1. Register Tomcat WebApp:
+  - create file `<TOMCAT_HOME>/conf/Catalina/localhost/TestApp.xml` . for example:
+    --------------------------------------------------------------------------------
+    <?xml version="1.0" encoding="UTF-8"?>
+    <Context path="/TestApp" docBase="I:\OpenXavaEx\code\build\TestApp.war"
+             reloadable="true" allowLinking="true"/>
+    --------------------------------------------------------------------------------
+
+ 2. Create DataSource:
+  - Modify `<TOMCAT_HOME>/conf/context.xml` , create `<Resource/>` section. for example:
+    --------------------------------------------------------------------------------
+    <Resource name="jdbc/TestAppDS" auth="Container" type="javax.sql.DataSource"
+        maxActive="20" maxIdle="5" maxWait="10000"
+        factory="org.openxava.ex.datasource.MonitoredDataSourceFactory"
+        username="openxava" password="openxava" driverClassName="oracle.jdbc.driver.OracleDriver"
+        url="jdbc:oracle:thin:@10.0.2.2:1521:XE"/>
+    --------------------------------------------------------------------------------
+
+ 3. Setup `JAVA_OPTS` before startup:
+  - Create a batch file: `<TOMCAT_HOME>/start-TestApp.bat` . for example:
+    --------------------------------------------------------------------------------
+    set JAVA_OPTS=%JAVA_OPTS% -DPROP_DATASOURCE_JNDI_NAME=java:comp/env/jdbc/TestAppDS
+    set JAVA_OPTS=%JAVA_OPTS% -DPROP_HIBERNATE_DIALECT=org.hibernate.dialect.Oracle10gDialect
+    set JAVA_OPTS=%JAVA_OPTS% -DPROP_HIBERNATE_DEFAULT_SCHEMA=openxava
+    set JAVA_OPTS=%JAVA_OPTS% -Dorg.openxava.ex.datasource.MonitoredDataSourceFactory_MONITOR_CLASSNAME=org.openxava.demoapp.system.DemoDataSourceMonitor
+
+    cd bin
+    call startup.bat
+    --------------------------------------------------------------------------------
+
+Then run `start-TestApp.bat` to startup.
