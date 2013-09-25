@@ -30,6 +30,17 @@
 
     <script src="./a/xava-ex.js"></script>
     <script src="./a/xava-ex.PQGrid.js"></script>
+    
+    <script>
+    xavaEx.PQGrid.registerPrototype("image-weekday", {
+        basePrototype: "date",
+        render: function(ui, ctx){
+            var date = ctx.rawValue;
+            var wd = date.getDay();
+            return '<img src="./@.test/weekdays/'+wd+'.png"/>';
+        }
+    });
+    </script>
 </head>
 
 <body style="padding:24px;">
@@ -44,26 +55,26 @@
 	    		return new Date(target);
 	    	}
 	        var data = [
-                {rank:1,  company:'Exxon Mobil',          statDate:$d(), revenues:339938.0, profits:36130.0,  dateTs:$d()},
-                {rank:2,  company:'Wal-Mart Stores',      statDate:$d(), revenues:315654.0, profits:11231.0,  dateTs:$d()},
-                {rank:3,  company:'Royal Dutch Shell',    statDate:$d(), revenues:306731.0, profits:25311.0,  dateTs:$d()},
-                {rank:4,  company:'BP',                   statDate:$d(), revenues:267600.0, profits:22341.0,  dateTs:$d()},
-                {rank:5,  company:'General Motors',       statDate:$d(), revenues:192604.0, profits:-10567.0, dateTs:$d()},
-                {rank:6,  company:'Chevron',              statDate:$d(), revenues:189481.0, profits:14099.0,  dateTs:$d()},
-                {rank:7,  company:'DaimlerChrysler',      statDate:$d(), revenues:186106.3, profits:3536.3,   dateTs:$d()},
-                {rank:8,  company:'Toyota Motor',         statDate:$d(), revenues:185805.0, profits:12119.6,  dateTs:$d()},
-                {rank:9,  company:'Ford Motor',           statDate:$d(), revenues:177210.0, profits:2024.0,   dateTs:$d()},
-                {rank:10, company:'ConocoPhillips',       statDate:$d(), revenues:166683.0, profits:13529.0,  dateTs:$d()},
-                {rank:11, company:'General Electric',     statDate:$d(), revenues:157153.0, profits:16353.0,  dateTs:$d()},
-                {rank:12, company:'Total',                statDate:$d(), revenues:152360.7, profits:15250.0,  dateTs:$d()},
-                {rank:13, company:'ING Group',            statDate:$d(), revenues:138235.3, profits:8958.9,   dateTs:$d()},
-                {rank:14, company:'Citigroup',            statDate:$d(), revenues:131045.0, profits:24589.0,  dateTs:$d()},
-                {rank:15, company:'AXA',                  statDate:$d(), revenues:129839.2, profits:5186.5,   dateTs:$d()},
-                {rank:16, company:'Allianz',              statDate:$d(), revenues:121406.0, profits:5442.4,   dateTs:$d()},
-                {rank:17, company:'Volkswagen',           statDate:$d(), revenues:118376.6, profits:1391.7,   dateTs:$d()},
-                {rank:18, company:'Fortis',               statDate:$d(), revenues:112351.4, profits:4896.3,   dateTs:$d()},
-                {rank:19, company:'Credit Agricole',      statDate:$d(), revenues:110764.6, profits:7434.3,   dateTs:$d()},
-                {rank:20, company:'American Intl. Group', statDate:$d(), revenues:108905.0, profits:10477.0,  dateTs:$d()}
+                {rank:1,  company:'Exxon Mobil',          statDate:$d(), revenues:339938.0, profits:36130.0,  dateTs:$d(), dateWeek:$d()},
+                {rank:2,  company:'Wal-Mart Stores',      statDate:$d(), revenues:315654.0, profits:11231.0,  dateTs:$d(), dateWeek:$d()},
+                {rank:3,  company:'Royal Dutch Shell',    statDate:$d(), revenues:306731.0, profits:25311.0,  dateTs:$d(), dateWeek:$d()},
+                {rank:4,  company:'BP',                   statDate:$d(), revenues:267600.0, profits:22341.0,  dateTs:$d(), dateWeek:$d()},
+                {rank:5,  company:'General Motors',       statDate:$d(), revenues:192604.0, profits:-10567.0, dateTs:$d(), dateWeek:$d()},
+                {rank:6,  company:'Chevron',              statDate:$d(), revenues:189481.0, profits:14099.0,  dateTs:$d(), dateWeek:$d()},
+                {rank:7,  company:'DaimlerChrysler',      statDate:$d(), revenues:186106.3, profits:3536.3,   dateTs:$d(), dateWeek:$d()},
+                {rank:8,  company:'Toyota Motor',         statDate:$d(), revenues:185805.0, profits:12119.6,  dateTs:$d(), dateWeek:$d()},
+                {rank:9,  company:'Ford Motor',           statDate:$d(), revenues:177210.0, profits:2024.0,   dateTs:$d(), dateWeek:$d()},
+                {rank:10, company:'ConocoPhillips',       statDate:$d(), revenues:166683.0, profits:13529.0,  dateTs:$d(), dateWeek:$d()},
+                {rank:11, company:'General Electric',     statDate:$d(), revenues:157153.0, profits:16353.0,  dateTs:$d(), dateWeek:$d()},
+                {rank:12, company:'Total',                statDate:$d(), revenues:152360.7, profits:15250.0,  dateTs:$d(), dateWeek:$d()},
+                {rank:13, company:'ING Group',            statDate:$d(), revenues:138235.3, profits:8958.9,   dateTs:$d(), dateWeek:$d()},
+                {rank:14, company:'Citigroup',            statDate:$d(), revenues:131045.0, profits:24589.0,  dateTs:$d(), dateWeek:$d()},
+                {rank:15, company:'AXA',                  statDate:$d(), revenues:129839.2, profits:5186.5,   dateTs:$d(), dateWeek:$d()},
+                {rank:16, company:'Allianz',              statDate:$d(), revenues:121406.0, profits:5442.4,   dateTs:$d(), dateWeek:$d()},
+                {rank:17, company:'Volkswagen',           statDate:$d(), revenues:118376.6, profits:1391.7,   dateTs:$d(), dateWeek:$d()},
+                {rank:18, company:'Fortis',               statDate:$d(), revenues:112351.4, profits:4896.3,   dateTs:$d(), dateWeek:$d()},
+                {rank:19, company:'Credit Agricole',      statDate:$d(), revenues:110764.6, profits:7434.3,   dateTs:$d(), dateWeek:$d()},
+                {rank:20, company:'American Intl. Group', statDate:$d(), revenues:108905.0, profits:10477.0,  dateTs:$d(), dateWeek:$d()}
 	        ];
 	
 	        var gridModel = {
@@ -92,8 +103,10 @@
 	        		    numberPrecision: 2, prototype: "number", action:"unknown:alert('OK')"},
 	        	{ dataIndx:"profits", title: "Profits ($ millions)", width: 150, dataType: "float", align: "right", editable: false,
 	        			action:"client:alert('Current value is ['+ui.dataModel.data[ui.rowIndx][ui.dataIndx]+']')"},
-	        	{ dataIndx:"dateTs", title: "Data Timestamp", width: 150, dataType: "string", align: "center",
-	        			prototype: "datetime"}
+                { dataIndx:"dateTs", title: "Data Timestamp", width: 150, dataType: "string", align: "center",
+                        prototype: "datetime"},
+                { dataIndx:"dateWeek", title: "WeekDay", width: 150, dataType: "string", align: "center",
+                        prototype: "image-weekday"}
 	        ];
 	        gridModel.dataModel = {
 	        	data: data,

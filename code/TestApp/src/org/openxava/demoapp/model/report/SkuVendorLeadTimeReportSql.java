@@ -36,7 +36,7 @@ import org.openxava.ex.model.pqgrid.PQGridClientModel.ColModelDetail;
 	@FieldTmpl(fieldName="skuName", value={
 			@FieldProp(name=PQGridClientModel.WIDTH, value="220"),
 			//FIXME: Can't support related url in IE9
-			@FieldProp(name=PQGridClientModel.ACTION, value="client:window.parent.TestApp.openJspAction(ui, 'skuId', '/TestApp/TestApp/SkuInfo.jsp?skuId=')")
+			@FieldProp(name=PQGridClientModel.ACTION, value="client:window.TestApp.openJspAction(ui, 'skuId', '/TestApp/TestApp/SkuInfo.jsp?skuId=')")
 		}),
 	@FieldTmpl(fieldName="VendorName", value={
 			@FieldProp(name=PQGridClientModel.WIDTH, value="180"),

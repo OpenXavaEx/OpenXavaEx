@@ -8,20 +8,57 @@
         alert(err); throw(err);
     }
     
-    var _getUiData = function(ui){
-        var data = ui.data, rowIndx = ui.rowIndxPage, dataIndx = ui.dataIndx||ui.colIndx;
-        var d = data[rowIndx][dataIndx];
-        return d;
+    /** Mapping of prototype name and it's handler */
+    var prototypeMapping = {};
+    
+    /**
+     * Register prototype handler;
+     * A handler has following properties:
+     *   1. render: render(ui, ctx) of PQGrid colModel
+     *     - ctx: {rawValue: ...}
+     *   2. editor: editor(ui, ctx) of PQGrid colModel
+     *     - ctx: {rawValue: ...}
+     *   3. getEditCellData: getEditCellData(ui, ctx) of PQGrid colModel
+     *     - ctx: {//BLANK}
+     *   4. basePrototype: the base prototype which this handler override
+     */
+    var registerPrototype = function(name, handler){
+        prototypeMapping[name] = handler;
     }
+    var _getByPrototype = function(prototype, field, defValue){
+        if (! prototype){
+            return defValue;
+        }
+        
+        var hdl = prototypeMapping[prototype];
+        if (! hdl){
+            return defValue;
+        }
+        var fld = hdl[field];
+        if (fld){
+            return fld;
+        }
+        
+        var baseName = hdl.basePrototype;
+        if (baseName){
+        	var bHdl = prototypeMapping[baseName];
+        	if (bHdl){
+                var bFld = bHdl[field];
+                if (bFld){
+                    return bFld;
+                }
+        	}
+        }
+        
+        return defValue;
+    }
+    
     var _doRealRender = function(ui){
         var cm = ui.column;
-        var val = "";
-        if (cm.prototype){
-            var render = eval(cm.prototype+"Render");
-            val = render.call(this, ui);
-        }else{
-            val = _getUiData(ui);
-        }
+        
+        var render = _getByPrototype(cm.prototype, "render", theDefaultRender);
+        var val = render.call(this, ui, {rawValue: _getUiData(ui)});
+
         if (cm.action){
             var actStyle = cm.actionStyle?cm.actionStyle:"";
             val = '<a href="javascript:void(0)" class="xava-ex-pqgrid-action"'+actStyle+'>' + val + '</a>';
@@ -30,27 +67,34 @@
     }
     var _doRealEditor = function(ui){
         var cm = this;
-        if (cm.prototype){
-            var editor = eval(cm.prototype+"Editor");
-            editor.call(this, ui);
-        }else{
-            var $cell = ui.$cell, data = ui.data, rowIndx = ui.rowIndxPage, colIndx = ui.colIndx;
-            var val = _getUiData(ui);
-            var input = _createEditInput($cell, val);
-            input.select();
-        }
+        var editor = _getByPrototype(cm.prototype, "editor", theDefaultEditor);
+        editor.call(this, ui, {rawValue: _getUiData(ui)});
     }
     var _doRealGetEditCellData =function(ui){
         var cm = this;
-        if (cm.prototype){
-            var getEditCellData = eval(cm.prototype+"GetEditCellData");
-            var text = getEditCellData.call(this, ui);
-            return text;
-        }else{
-            var $cell = ui.$cell;
-            var text = $cell.children().val();
-            return text;
-        }
+        var getEditCellData = _getByPrototype(cm.prototype, "getEditCellData", theDefaultGetEditCellData);
+        var text = getEditCellData.call(this, ui, {});
+        return text;
+    }
+    
+    var _getUiData = function(ui){
+        var data = ui.data, rowIndx = ui.rowIndxPage, dataIndx = ui.dataIndx||ui.colIndx;
+        var d = data[rowIndx][dataIndx];
+        return d;
+    }
+    var theDefaultRender = function(ui){
+        return _getUiData(ui);
+    }
+    var theDefaultEditor = function(ui){
+        var $cell = ui.$cell, data = ui.data, rowIndx = ui.rowIndxPage, colIndx = ui.colIndx;
+        var val = _getUiData(ui);
+        var input = _createEditInput($cell, val);
+        input.select();
+    }
+    var theDefaultGetEditCellData =function(ui){
+        var $cell = ui.$cell;
+        var text = $cell.children().val();
+        return text;
     }
     
     var _createEditInput = function($cell, textValue){
@@ -93,9 +137,9 @@
         var colModel = gridModel.colModel;
         for(var i=0; i<colModel.length; i++){
             var cm = colModel[i];
-            cm.render = defaultRender;
-            cm.editor = defaultEditor;
-            cm.getEditCellData = defaultGetEditCellData;
+            cm.render = autoRender;
+            cm.editor = autoEditor;
+            cm.getEditCellData = autoGetEditCellData;
         }
     }
     
@@ -130,13 +174,13 @@
         }
     }
     
-    var defaultRender = function(ui){
+    var autoRender = function(ui){
         return _doRealRender.call(this, ui);
     }
-    var defaultEditor = function(ui){
+    var autoEditor = function(ui){
         _doRealEditor.call(this, ui)
     }
-    var defaultGetEditCellData =function(ui){
+    var autoGetEditCellData =function(ui){
         return _doRealGetEditCellData.call(this, ui);
     }
     
@@ -215,10 +259,31 @@
         return number;
     }
     
+    //Register default handlers
+    registerPrototype("date", {
+        render: dateRender,
+        editor: dateEditor,
+        getEditCellData: dateGetEditCellData,
+        baseHandler: null
+    });
+    registerPrototype("datetime", {
+        render: datetimeRender,
+        editor: datetimeEditor,
+        getEditCellData: datetimeGetEditCellData,
+        baseHandler: null
+    });
+    registerPrototype("number", {
+        render: numberRender,
+        editor: numberEditor,
+        getEditCellData: numberGetEditCellData,
+        baseHandler: null
+    });
+    
     //Export ...
     global.xavaEx.PQGrid = {
             prepare: prepare,
             doAction: doAction,
+            registerPrototype: registerPrototype,
             "":""    //The END
     };
 })(this);

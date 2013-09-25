@@ -29,8 +29,11 @@ import org.openxava.ex.utils.Misc;
 @View(members="#recordCount; sku, vendor; queryResult")
 @Tab(properties="skuCode, skuName, VendorCode, VendorName, leadTimeDays, *")
 @FieldTmpls({
+	@FieldTmpl(fieldName="VendorCode", value={
+		@FieldProp(name=PQGridClientModel.PROTOTYPE, value="vendor-logo")
+	}),
 	@FieldTmpl(fieldName="VendorName", value={
-		@FieldProp(name=PQGridClientModel.WIDTH, value="180")
+			@FieldProp(name=PQGridClientModel.WIDTH, value="180")
 	})
 })
 public class SkuVendorLeadTimeReport extends BaseReportQuery{
@@ -71,7 +74,7 @@ public class SkuVendorLeadTimeReport extends BaseReportQuery{
 		Map<String, Map<String,Object>> randomData = new TreeMap<String, Map<String,Object>>();
 		for(int i=0; i<this.recordCount; i++){
 			randomData.put(UUID.randomUUID().toString(), Misc.$attrs(
-					"skuCode", "001", "skuName", "电脑", "VendorCode", "HP", "VendorName", "惠普", "leadTimeDays", 30,
+					"skuCode", "001", "skuName", "电脑", "VendorCode", "DELL", "VendorName", "戴尔", "leadTimeDays", 34,
 					"modifyTime", new Date(System.currentTimeMillis()-new Double(Math.random() * 100D).intValue()*24*60*60*1000),
 					"credit", Math.random() * 100000D));
 			randomData.put(UUID.randomUUID().toString(), Misc.$attrs(

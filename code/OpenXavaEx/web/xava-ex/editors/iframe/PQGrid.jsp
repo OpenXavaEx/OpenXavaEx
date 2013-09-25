@@ -1,3 +1,4 @@
+<%@page import="java.util.Arrays"%>
 <%@page import="org.openxava.ex.utils.VersionInfo"%>
 <%@page import="org.openxava.ex.model.pqgrid.PQGrid"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -25,6 +26,20 @@
 
     <script src="../../libs/a/xava-ex.js"></script>
     <script src="../../libs/a/xava-ex.PQGrid.js"></script>
+
+    <!-- The project bootstarp javascript libs (In [project name]/js folder) -->
+    <%
+    String contextPath = (String) request.getAttribute("xava.contextPath");
+    if (contextPath == null) contextPath = request.getContextPath();
+
+    String[] prjJses = (String[])application.getResourcePaths(contextPath + "/js").toArray(new String[0]);
+    Arrays.sort(prjJses);
+    for (int i = 0; i < prjJses.length; i++) {
+        if (prjJses[i].endsWith(".js")) {
+        %><script type="text/javascript" src="<%=contextPath%><%=prjJses[i]%>"></script><%
+        }
+    }
+    %>
 </head>
 <body style="padding:0px;margin:0px">
     <div id="pgGrid"></div>
