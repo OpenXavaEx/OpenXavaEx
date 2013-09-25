@@ -82,6 +82,10 @@ public class SkuVendorLeadTimeReport extends BaseReportQuery{
 					"skuCode", "011", "skuName", "存储", "VendorCode", "IBM", "VendorName", "IBM", "leadTimeDays", 60,
 					"modifyTime", new Date(System.currentTimeMillis()-new Double(Math.random() * 100D).intValue()*24*60*60*1000),
 					"credit", Math.random() * 100000D));
+			randomData.put(UUID.randomUUID().toString(), Misc.$attrs(
+					"skuCode", "000", "skuName", null, "VendorCode", null, "VendorName", null, "leadTimeDays", 0,
+					"modifyTime", new Date(System.currentTimeMillis()-new Double(Math.random() * 100D).intValue()*24*60*60*1000),
+					"credit", 0D));
 		}
 		for(Map<String,Object> line: randomData.values()){
 			data.add(line);

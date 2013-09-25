@@ -12,7 +12,7 @@ import org.openxava.ex.model.utils.ReportQueryUtils;
 public class BaseReportSqlQuery extends BaseReportQuery {
 
 	protected QueryResult doQuery(_ReportQueryAction action) {
-		return ReportQueryUtils.runSqlQuery(action.getConnectionProvider(), this);
+		return ReportQueryUtils.runSqlQuery(action.getConnectionProvider(), this, this);
 	}
 
 }

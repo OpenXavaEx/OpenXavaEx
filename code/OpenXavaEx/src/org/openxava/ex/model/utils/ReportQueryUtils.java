@@ -23,8 +23,6 @@ import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.cfg.Environment;
-import org.hibernate.dialect.MySQLDialect;
-import org.hibernate.dialect.Oracle8iDialect;
 import org.openxava.annotations.Tab;
 import org.openxava.ex.annotation.query.Condition;
 import org.openxava.ex.annotation.query.FieldProp;
@@ -59,7 +57,23 @@ public class ReportQueryUtils {
         protected FieldProp[] props;
     }
         
-    public static final QueryResult runSqlQuery(IConnectionProvider connProvider, Object condition){
+    public static final QueryResult runSqlQuery(IConnectionProvider connProvider, Object condition, Object template){
+        //Create the "UpperCase Field Name" and "Field Name" mapping table for template,
+        //to store query result with "case-sensitive" field name defined in template class
+        List<String> fieldsInTemplate = getAllAnnotatedFields(template.getClass());
+        Map<String, String> upperVsOrig = new HashMap<String, String>();
+        for (String fldName: fieldsInTemplate){
+            String upper = fldName.toUpperCase();
+            
+            String orig = upperVsOrig.get(upper);	//Check same field defined in different case
+            if (null!=orig && (!fldName.equals(orig))){
+                throw new RuntimeException(
+                        "Inconsistent field name in @"+Tab.class.getSimpleName()+" and @"+FieldTmpl.class.getSimpleName()+": " +
+                        fldName + " / " + orig);
+            }
+            upperVsOrig.put(upper, fldName);
+        }
+        
         Connection conn = null;
         PreparedStatement pstmtData = null;
         PreparedStatement pstmtCnt = null;
@@ -100,27 +114,36 @@ public class ReportQueryUtils {
             ResultSetMetaData md = rsData.getMetaData();
             int columnCount = md.getColumnCount();
             for(int i=0; i<columnCount; i++){
-                String colName = md.getColumnLabel(i+1);
+                String tmp = md.getColumnLabel(i+1);
+                
+                String colName = upperVsOrig.get(tmp.toUpperCase());
+                if (null==colName){
+                    colName = tmp;
+                }
+                
                 fields.add(colName);
                 Class<?> colClass = getColumnClass(md, i+1);
                 if (null==colClass){
-                	colClass = Object.class;	//Object means can't find the Class
+                    colClass = Object.class;    //Object means can't find the Class
                 }
-				fieldClassMap.put(colName, colClass);
+                fieldClassMap.put(colName, colClass);
             }
             //Fill data
             List<Map<String,Object>> data = new ArrayList<Map<String,Object>>();
-            //rsData.beforeFirst();	//Some kinds of ResultSet is "forward only"
+            //rsData.beforeFirst();    //Some kinds of ResultSet is "forward only"
             while(rsData.next()){
                 Map<String,Object> line = new HashMap<String,Object>();
                 for(String colName: fields){
-                    line.put(colName, rsData.getObject(colName));
+                    Object val = rsData.getObject(colName);
+                    val = DBSpecifiedUtils.unwrapResultSetObject(val);
+					line.put(colName, val);
                 }
                 data.add(line);
             }
             //Return ...
             Class<?> tmplClass = condition.getClass();
-            return new QueryResult(tmplClass, fieldClassMap, data, recordsCnt);
+            QueryResult qr = new QueryResult(tmplClass, fieldClassMap, data, recordsCnt);
+            return qr;
         } catch (Exception e) {
             Misc.throwRuntime(e);
             return null;
@@ -130,51 +153,67 @@ public class ReportQueryUtils {
             if (null!=conn){ try {conn.close();}catch(SQLException ex){/*Ignore it*/} }
         }
     }
+    private static final List<String> getAllAnnotatedFields(Class<?> template){
+        List<String> tmplFlds = new ArrayList<String>();
+        
+        //First search FieldTmpls annotation
+        FieldTmpls t = template.getAnnotation(FieldTmpls.class);
+        for(FieldTmpl ft: t.value()){
+            tmplFlds.add(ft.fieldName());
+        }
+        
+        //Add the Tab annotation
+        tmplFlds.addAll(getTabAnnotatedFields(template));
+        
+        return tmplFlds;
+    }
     protected static final Class<?> getColumnClass(ResultSetMetaData md, int index) throws SQLException{
-    	try{
-    		String clz = md.getColumnClassName(index);
-    		return ClassLoaderUtil.forName(ReportQueryUtils.class, clz);
-    	}catch(Exception ex){
-    		//Some driver may be notImplemented
-    	}
-    	int jdbcType = md.getColumnType(index);
+        try{
+            String clz = md.getColumnClassName(index);
+            Class<?> cClass = ClassLoaderUtil.forName(ReportQueryUtils.class, clz);
+            cClass = DBSpecifiedUtils.unwrapResultSetColumnClass(cClass);
+			return cClass;
+        }catch(Exception ex){
+            //Some driver may be notImplemented
+        }
+        int jdbcType = md.getColumnType(index);
         switch (jdbcType) {
-        case Types.ARRAY:         	return null;
-        case Types.BIGINT:         	return Long.class;
-        case Types.BINARY:         	return byte[].class;
-        case Types.BIT:         	return Boolean.class;
-        case Types.BLOB:         	return null;
-        case Types.BOOLEAN:     	return Boolean.class;
-        case Types.CHAR:         	return String.class;
-        case Types.CLOB:         	return String.class;
-        case Types.DATALINK:    	return null;
-        case Types.DATE:        	return Date.class;
-        case Types.DECIMAL:        	return BigDecimal.class;
-        case Types.DISTINCT:     	return null;
-        case Types.DOUBLE:        	return Double.class;
-        case Types.FLOAT:        	return Double.class;
-        case Types.INTEGER:        	return Integer.class;
-        case Types.JAVA_OBJECT:    	return null;
-        case Types.LONGNVARCHAR:	return String.class;
-        case Types.LONGVARBINARY:	return byte[].class;
-        case Types.LONGVARCHAR:		return String.class;
-        case Types.NCHAR:			return String.class;
-        case Types.NCLOB:			return String.class;
-        case Types.NULL:			return null;
-        case Types.NUMERIC:			return BigDecimal.class;
-        case Types.NVARCHAR:		return String.class;
-        case Types.OTHER:			return null;
-        case Types.REAL:			return Float.class;
-        case Types.REF:				return null;
-        case Types.ROWID:			return null;
-        case Types.SMALLINT:		return Integer.class;
-        case Types.SQLXML:			return null;
-        case Types.STRUCT:			return null;
-        case Types.TIME:			return Time.class;
-        case Types.TIMESTAMP:		return Timestamp.class;
-        case Types.TINYINT:			return Integer.class;
-        case Types.VARBINARY:		return byte[].class;
-        case Types.VARCHAR:			return String.class;
+        case Types.ARRAY:           return null;
+        case Types.BIGINT:          return Long.class;
+        case Types.BINARY:          return byte[].class;
+        case Types.BIT:             return Boolean.class;
+        case Types.BLOB:            return null;
+        case Types.BOOLEAN:         return Boolean.class;
+        case Types.CHAR:            return String.class;
+        case Types.CLOB:            return String.class;
+        case Types.DATALINK:        return null;
+        case Types.DATE:            return Date.class;
+        case Types.DECIMAL:         return BigDecimal.class;
+        case Types.DISTINCT:        return null;
+        case Types.DOUBLE:          return Double.class;
+        case Types.FLOAT:           return Double.class;
+        case Types.INTEGER:         return Integer.class;
+        case Types.JAVA_OBJECT:     return null;
+        case Types.LONGNVARCHAR:    return String.class;
+        case Types.LONGVARBINARY:   return byte[].class;
+        case Types.LONGVARCHAR:     return String.class;
+        case Types.NCHAR:           return String.class;
+        case Types.NCLOB:           return String.class;
+        case Types.NULL:            return null;
+        case Types.NUMERIC:         return BigDecimal.class;
+        case Types.NVARCHAR:        return String.class;
+        case Types.OTHER:           return null;
+        case Types.REAL:            return Float.class;
+        case Types.REF:             return null;
+        case Types.ROWID:           return null;
+        case Types.SMALLINT:        return Integer.class;
+        case Types.SQLXML:          return null;
+        case Types.STRUCT:          return null;
+        case Types.TIME:            return Time.class;
+        case Types.TIMESTAMP:       return Timestamp.class;
+        case Types.TINYINT:         return Integer.class;
+        case Types.VARBINARY:       return byte[].class;
+        case Types.VARCHAR:         return String.class;
         default: return null;
         }
     }
@@ -191,7 +230,7 @@ public class ReportQueryUtils {
         for (Field f: flds) {
             Condition cond = f.getAnnotation(Condition.class);
             if (null==cond){
-            	continue;
+                continue;
             }
             String fragment = cond.value();
             if (null==fragment || fragment.trim().length() <= 0){
@@ -205,7 +244,7 @@ public class ReportQueryUtils {
             }
         }
         if (fragments.size()<1){
-        	fragments.add("1=1");
+            fragments.add("1=1");
         }
         sql = sql.replace(sqlAnno.conditionTag(), StringUtils.join(fragments, " AND "));
         //Parse sql AS prepareStatement
@@ -220,7 +259,7 @@ public class ReportQueryUtils {
                 if (null==propVal) propVal = "";
                 st.setVariable(var, propVal.toString());
             }else{
-            	String xpath = var.replace('.', '/');	//You can use the property as vendor.id, but JXPath need vendor/id
+                String xpath = var.replace('.', '/');    //You can use the property as vendor.id, but JXPath need vendor/id
                 Object propVal = context.getValue(xpath);
                 st.setVariable(var, "?");
                 sr.parameters.add(propVal);
@@ -230,60 +269,49 @@ public class ReportQueryUtils {
         sr.sql4count = "SELECT COUNT(*) AS CNT FROM ("+sql+") \"$paging_countTable\"";
         //Make paging sql
         if (null!=pageNo && null!=pageSize && pageSize >= 0){
-            sql = fixSql2Paging(sql, dialectName, pageSize, pageNo);
+            sql = DBSpecifiedUtils.fixSql2Paging(sql, dialectName, pageSize, pageNo);
         }
         //Return
         sr.sql4data = sql;
         return sr;
     }
-    private static final String fixSql2Paging(String sql, String dialectClassName, int pageSize, int pageNo){
-        Object dialect;
-		try {
-			dialect = ClassLoaderUtil.forName(ReportQueryUtils.class, dialectClassName).newInstance();
-		} catch (Exception e) {
-			Misc.throwRuntime(e);
-			return sql;
-		}
-        int offset = (pageNo * pageSize) + 1;
-        int limit = (pageNo * pageSize) + pageSize;
-        if (dialect instanceof Oracle8iDialect){
-            return "SELECT * FROM (" +
-                    "   SELECT \"$paging_rawTable\".*, ROWNUM \"$paging_rowNo\"" + 
-                    "     FROM ("+sql+") \"$paging_rawTable\" WHERE ROWNUM <= " + limit +
-                    ") WHERE \"$paging_rowNo\" >= " + offset;
-        }else if (dialect instanceof MySQLDialect){
-            return sql + " LIMIT "+ offset + ", " + limit;
-        }else{
-            throw new UnsupportedOperationException("Unsupported Dialect: "+dialect.getClass().getName());
-        }
-    }
     public static final List<String> mergeFields(Class<?> template, List<String> resultFields){
-        List<String> tmplFlds = new ArrayList<String>();
+        List<String> tmplFlds = getTabAnnotatedFields(template);
 
+        if (tmplFlds.size()<=0){
+            return resultFields;
+        }
+        
+        return mergeFields(tmplFlds, resultFields);
+    }
+    private static final List<String> getTabAnnotatedFields(Class<?> template){
+        List<String> tmplFlds = new ArrayList<String>();
+        
         Tab t = template.getAnnotation(Tab.class);
         if (null==t){
-            return resultFields;
+            return tmplFlds;    //Return BLANK List
         }
         //Fields depends on the annotation "@Tab" properties string
         String props = t.properties();
         props = StringUtils.replace(props, " ", "");
         String[] pList = StringUtils.split(props, ',');
+
         tmplFlds.addAll(Arrays.asList(pList));
-        
-        return mergeFields(tmplFlds, resultFields);
+        return tmplFlds;
     }
     /**
      * Merge the result fields into template({@link ReportQueryUtilsTest#testMergeFields()})
-     * @param template
-     * @param resultFields
+     * @param followedTmpl
+     * @param followed
      * @return
      */
     protected static final List<String> mergeFields(List<String> template, List<String> resultFields){
+        List<String> followedResult = followCaseSensitive(template, resultFields);
         //Indexer, store 1)[from,to], 2)fieldName
         List<Object> indexer = new ArrayList<Object>();
         //Parse template to create the indexer
         int tmplSize = template.size();
-        int resSize = resultFields.size();
+        int resSize = followedResult.size();
         for (int i=0; i<tmplSize; i++){
             String cur = template.get(i);
             if ("*".equals(cur)){
@@ -291,11 +319,11 @@ public class ReportQueryUtils {
                 String after = i<(tmplSize-1)?template.get(i+1):null;
                 int indexBefore = 0;
                 if (null!=before){
-                    indexBefore = resultFields.indexOf(before)+1;
+                    indexBefore = followedResult.indexOf(before)+1;
                 }
                 int indexAfter = resSize;
                 if (null!=after){
-                    indexAfter = resultFields.indexOf(after);
+                    indexAfter = followedResult.indexOf(after);
                 }
                 indexer.add(new int[]{indexBefore, indexAfter});
             }else{
@@ -310,7 +338,7 @@ public class ReportQueryUtils {
             }else {
                 int[] fromTo = (int[])o;
                 if (fromTo[0] <= fromTo[1]){
-                    merged.addAll(resultFields.subList(fromTo[0], fromTo[1]));
+                    merged.addAll(followedResult.subList(fromTo[0], fromTo[1]));
                 }else{
                     //fromIndex > toIndex, means nothing to add
                 }
@@ -318,6 +346,29 @@ public class ReportQueryUtils {
         }
         
         return merged;
+    }
+    /**
+     * Make Strings' case sensitive follow the standards
+     * @param standards
+     * @param toFollow
+     * @return
+     */
+    private static List<String> followCaseSensitive(List<String> standards, List<String> toFollow){
+        Map<String, String> upperVsOrig = new HashMap<String, String>();
+        for(String s: standards){
+            upperVsOrig.put(s.toUpperCase(), s);
+        }
+        List<String> result = new ArrayList<String>();
+        for(String s: toFollow){
+            String up = s.toUpperCase();
+            String orig = upperVsOrig.get(up);
+            if (null!=orig){
+                result.add(orig);
+            }else{
+                result.add(s);
+            }
+        }
+        return result;
     }
     
     public static final Map<String, Map<String, String>> getFieldsProperties(Class<?> baseTmpl, Class<?> tmplClass, Map<String, Class<?>> fields){
@@ -354,26 +405,26 @@ public class ReportQueryUtils {
         }
     }
     protected static final Map<String, String> readFieldProps(Class<?> fldClass, String field, List<ClassPropsPair> classPorps, List<FidlePropsPair> fldNamePorps){
-    	Map<String, String> result = new HashMap<String, String>();
-    	
-    	for(ClassPropsPair cpp: classPorps){
-    		Class<?> clz = cpp.tmplClass;
-    		if (clz.isAssignableFrom(fldClass)){
-    			for(int i=0; i<cpp.props.length; i++){
-    				result.put(cpp.props[i].name(), cpp.props[i].value());
-    			}
-    		}
-    	}
-    	
-    	for(FidlePropsPair fpp: fldNamePorps){
-    		if (fpp.fieldName.equalsIgnoreCase(field)){
-       			for(int i=0; i<fpp.props.length; i++){
-    				result.put(fpp.props[i].name(), fpp.props[i].value());
-    			}
-    		}
-    	}
-    	
-    	return result;
+        Map<String, String> result = new HashMap<String, String>();
+        
+        for(ClassPropsPair cpp: classPorps){
+            Class<?> clz = cpp.tmplClass;
+            if (clz.isAssignableFrom(fldClass)){
+                for(int i=0; i<cpp.props.length; i++){
+                    result.put(cpp.props[i].name(), cpp.props[i].value());
+                }
+            }
+        }
+        
+        for(FidlePropsPair fpp: fldNamePorps){
+            if (fpp.fieldName.equalsIgnoreCase(field)){
+                   for(int i=0; i<fpp.props.length; i++){
+                    result.put(fpp.props[i].name(), fpp.props[i].value());
+                }
+            }
+        }
+        
+        return result;
     }
 
 }

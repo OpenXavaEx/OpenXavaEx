@@ -44,4 +44,11 @@ public class ReportQueryUtilsTest extends TestCase {
 		assertEquals("[C, I]", result.toString());
 	}
 
+	public void testMergeFieldsFollowing() {
+		List<String> result;
+		List<String> fields = Misc.$list("A", "B", "C", "D", "e", "F", "G", "H", "I", "J", "K");
+		
+		result = ReportQueryUtils.mergeFields(Misc.$list("*", "E", "f", "*"), fields);
+		assertEquals("[A, B, C, D, E, f, G, H, I, J, K]", result.toString());
+	}
 }
