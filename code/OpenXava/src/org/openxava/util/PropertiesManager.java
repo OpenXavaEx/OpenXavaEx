@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.apache.commons.logging.*;
 import org.openxava.ex.cl.ClassLoaderUtil;
+import org.openxava.ex.patch.PropertiesManagerPatch;
 import org.openxava.model.*;
 
 /**
@@ -77,8 +78,15 @@ public class PropertiesManager implements java.io.Serializable {
 			if (met == null) {
 				throw new PropertiesManagerException(
 					XavaResources.getString("write_only_property", propertyName, getTheClass()));
-			}			
-			return met.invoke(object, null);
+			}
+			//PATCH 20131009: Catch javax.persistence.EntityNotFoundException for referenced property
+			//return met.invoke(object, null);
+			try{
+				return met.invoke(object, null);
+			}catch(InvocationTargetException ive){
+				return PropertiesManagerPatch.tryReadPropertyFromProxyObject(object, propertyName);
+			}
+			//PATCH 20131009: End
 		}
 		catch (PropertiesManagerException ex) {
 			throw ex;

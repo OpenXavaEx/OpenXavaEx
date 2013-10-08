@@ -6,11 +6,13 @@ import java.util.*;
 
 import javax.ejb.*;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.logging.*;
 import org.hibernate.Hibernate;
 import org.openxava.calculators.*;
 import org.openxava.component.*;
 import org.openxava.ex.cl.ClassLoaderUtil;
+import org.openxava.ex.utils.Misc;
 import org.openxava.jpa.*;
 import org.openxava.model.*;
 import org.openxava.model.meta.*;
@@ -900,7 +902,10 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 				}
 			}			
 			result.putAll(r.executeGets(names.toString()));
-			if (includeModelName) result.put(MapFacade.MODEL_NAME, Hibernate.getClass(modelObject).getSimpleName()); 
+			//PATCH 20131009: Catch javax.persistence.EntityNotFoundException for referenced property
+			//if (includeModelName) result.put(MapFacade.MODEL_NAME, Hibernate.getClass(modelObject).getSimpleName()); 
+			if (includeModelName) result.put(MapFacade.MODEL_NAME, metaModel.getPOJOClass().getSimpleName()); 
+			////PATCH 20131009: END
 			return result;
 		} catch (RemoteException ex) {			
 			log.error(ex.getMessage(), ex);
@@ -1012,7 +1017,7 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 			if (r.isAggregate()) {
 				return getAggregateValues((MetaAggregate) r.getMetaModelReferenced(), object, submembersNames);
 			} 
-			else {				
+			else {
 				return getAssociatedEntityValues((MetaEntity) r.getMetaModelReferenced(), object, submembersNames);
 			}
 		} catch (XavaException ex) {
@@ -1145,7 +1150,28 @@ public class MapFacadeBean implements IMapFacadeImpl, SessionBean {
 	private Object findAssociatedEntity(MetaEntity metaEntity, Map values)
 		throws FinderException, XavaException, RemoteException {
 		Map keyValues = extractKeyValues(metaEntity, values);		
-		return findEntity(metaEntity.getName(), keyValues);
+		//PATCH 20131009: Catch javax.persistence.EntityNotFoundException for referenced property
+		//return findEntity(metaEntity.getName(), keyValues);
+		try{
+			return findEntity(metaEntity.getName(), keyValues);
+		}catch(ObjectNotFoundException ex){
+			try {
+				Class pojoClass = ClassLoaderUtil.forName(this.getClass(), metaEntity.getPOJOClassName());
+				Object pojo = pojoClass.newInstance();
+				for(Object key: values.keySet()){
+					Object prop = values.get(key);
+					if (null!=prop){
+						FieldUtils.writeField(pojo, key.toString(), prop, true);
+					}
+				}
+				return pojo;
+				//FIXME: This pojo can't save: org.hibernate.TransientObjectException: object references an unsaved transient instance - save the transient instance before flushing
+			} catch (Exception e) {
+				Misc.throwRuntime(e);
+				return null;
+			}
+		}
+		//PATCH 20131009: END
 	}
 
 	private Map extractKeyValues(MetaModel metaModel, Map values)

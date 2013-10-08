@@ -161,6 +161,23 @@ String title = (p == null)?"":p.getDescription(request);
 String fvalue = (String) request.getAttribute(propertyKey + ".fvalue");
 boolean editable = "true".equals(request.getParameter("editable"));
 boolean label = org.openxava.util.XavaPreferences.getInstance().isReadOnlyAsLabel() || "true".equalsIgnoreCase(request.getParameter("readOnlyAsLabel"));
+
+//PATCH 20131009: Catch javax.persistence.EntityNotFoundException for referenced property
+java.util.Iterator itDesc = descriptions.iterator();
+boolean valueInList = false;  
+while (itDesc.hasNext()) {
+    KeyAndDescription cl = (KeyAndDescription) itDesc.next();   
+    if (Is.equalAsStringIgnoreCase(fvalue, cl.getKey())) {
+    	valueInList = true;
+    	break;
+    }       
+}
+if (!valueInList && !Is.empty(fvalue)){
+	KeyAndDescription invalidDesc = new KeyAndDescription(fvalue, fvalue);
+	descriptions.add(invalidDesc);
+}
+//PATCH 20131009: END
+
 if (editable) { 
 %>
 <select id="<%=propertyKey%>" name="<%=propertyKey%>" tabindex="1" class=<%=style.getEditor()%> <%=script%> title="<%=title%>">
@@ -193,7 +210,7 @@ if (editable) {
 			description = formatter==null?cl.getDescription().toString():formatter.format(request, cl.getDescription());
 			break;
 		}
-	}	
+	}
 	if (label) {
 %>
 

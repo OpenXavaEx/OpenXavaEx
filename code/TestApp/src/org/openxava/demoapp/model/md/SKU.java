@@ -33,10 +33,12 @@ import org.openxava.ex.model.base.BaseMasterDataModel;
 	@View(name="V-SKU-code-name", members="code; nameWithUom")
 })
 public class SKU extends BaseMasterDataModel{
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
+	//BP: @ManyToOne, optional=true(default) make LEFT JOIN
+	@ManyToOne(fetch=FetchType.LAZY, optional=true)
 	@ReferenceView("V-UOM-code-name")	//Code and name
 	private UOM uom;
 	
+	//BP: use @ManyToOne, optional=false to force INNER JOIN
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
 	//BP: use @DescriptionsList to present a combobox to select
 	@DescriptionsList(descriptionProperties="code, name")

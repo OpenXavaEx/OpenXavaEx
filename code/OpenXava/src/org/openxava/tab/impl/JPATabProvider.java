@@ -1,10 +1,12 @@
 package org.openxava.tab.impl;
 
+import java.lang.reflect.Field;
 import java.rmi.*;
 import java.util.*;
 
 import javax.persistence.*;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.logging.*;
 import org.openxava.jpa.*;
 import org.openxava.mapping.*;
@@ -63,7 +65,17 @@ public class JPATabProvider extends TabProviderBase {
 					// In the case of reference to entity in aggregate only we will take the last reference name
 					reference = reference.substring(idx + 1);
 				}								 			
-				entityAndJoins.append(" left join e");
+				//PATCH 20131009: Catch javax.persistence.EntityNotFoundException for referenced property
+				//entityAndJoins.append(" left join e");
+				String refJoin = " left join e";
+				Class<?> mainPojo = referenceMapping.getContainer().getMetaModel().getPOJOClass();
+				Field refField = FieldUtils.getField(mainPojo, reference, true);
+				ManyToOne m2o = refField.getAnnotation(ManyToOne.class);
+				if (null!=m2o && !m2o.optional()){	//If @ManyToOne.optional() is NOT optional, Force INNER JOIN
+					refJoin = " inner join e";
+				}
+				entityAndJoins.append(refJoin);
+				//PATCH 20131009: END
 				String nestedReference = (String) getEntityReferencesReferenceNames().get(referenceMapping);
 				if (!Is.emptyString(nestedReference)) {					
 					entityAndJoins.append(isAggregate(nestedReference)?".":"_");
