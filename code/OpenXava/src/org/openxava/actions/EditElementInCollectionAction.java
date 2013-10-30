@@ -36,8 +36,13 @@ public class EditElementInCollectionAction extends CollectionElementViewBaseActi
 			keys = (Map) getCollectionElementView().getCollectionTab().getTableModel().getObjectAt(row);
 		}
 		if (keys != null) {
-			values = MapFacade.getValues(getCollectionElementView().getModelName(), keys, getCollectionElementView().getMembersNames());
-			getCollectionElementView().setValues(values);						
+			//PATCH 20131030: Fire propertyChange event when detail edit dialog loading
+			//values = MapFacade.getValues(getCollectionElementView().getModelName(), keys, getCollectionElementView().getMembersNames());
+			//getCollectionElementView().setValues(values);						
+			values = MapFacade.getValues(
+					getCollectionElementView().getModelName(), keys, getCollectionElementView().getMembersNamesWithHidden());
+			getCollectionElementView().setValuesExecutingOnChangeActions(values);
+			//PATCH 20131030 END
 			getCollectionElementView().setCollectionEditingRow(getRow());
 		} else {
 			throw new XavaException("only_list_collection_for_aggregates");
