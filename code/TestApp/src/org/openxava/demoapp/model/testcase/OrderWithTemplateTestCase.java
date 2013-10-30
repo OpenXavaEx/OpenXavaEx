@@ -40,7 +40,7 @@ public class OrderWithTemplateTestCase extends BaseBillModelWithTrace {
 	
 	@OneToMany(mappedBy=BaseBillModel.RELATIONSHIP_FIELD_BILLHEAD, cascade=CascadeType.ALL)
 	@OrderBy("planCompleteDate")
-	@ListProperties("taskName, planCompleteDate")
+	@ListProperties("taskName, planType, planCompleteDate, planCompleteDays")
 	private Collection<OrderWithTemplateTestCaseLine> details = new ArrayList<OrderWithTemplateTestCaseLine>();
 	
 	public static enum DataType {

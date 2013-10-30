@@ -89,7 +89,7 @@ if (null!=mainApp){
                 },{
                     name:"SKU Change Log(VPD)",                    _url:"<%=modulesUrl%>/SKUChangeLogVPD"
                 }, {
-                    name:"Order with Templaye(Order)",             _url:"<%=modulesUrl%>/OrderWithTemplateTestCase"
+                    name:"Order with Template(Order)",             _url:"<%=modulesUrl%>/OrderWithTemplateTestCase"
                 }]
             },{
 				name:"System", open:true,
