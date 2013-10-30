@@ -31,14 +31,16 @@
 
 //User-defined prototype for PQGrid
 (function(global){
-    xavaEx.PQGrid.registerPrototype("vendor-logo", {
-    	render: function(ui, ctx){
-    		var vendorCode = ctx.rawValue;
-    		if (vendorCode){
-        		return '<img width="32px" height="32px" src="../../../TestApp/images/'+vendorCode+'.png"/>';
-    		}else{
-    			return "";
-    		}
-    	}
-    });
+    if (xavaEx && xavaEx.PQGrid){
+        xavaEx.PQGrid.registerPrototype("vendor-logo", {
+        	render: function(ui, ctx){
+        		var vendorCode = ctx.rawValue;
+        		if (vendorCode){
+            		return '<img width="32px" height="32px" src="../../../TestApp/images/'+vendorCode+'.png"/>';
+        		}else{
+        			return "";
+        		}
+        	}
+        });
+    }
 })(this);
