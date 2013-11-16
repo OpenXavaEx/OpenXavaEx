@@ -28,6 +28,7 @@ import org.apache.commons.dbcp.BasicDataSourceFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openxava.ex.cl.ClassLoaderUtil;
+import org.openxava.ex.datasource.ConnectionTrace.TraceInfo;
 import org.openxava.ex.utils.Misc;
 
 public class MonitoredDataSourceFactory extends BasicDataSourceFactory {
@@ -61,6 +62,8 @@ public class MonitoredDataSourceFactory extends BasicDataSourceFactory {
 				this.monitor.onConnectionClosing(this.inner, this.context);
 			}
 			inner.close();
+			//Manage the connection trace
+			ConnectionTrace.detachTraceInfo(this.context.getTraceInfo());
 		}
 
 		public <T> T unwrap(Class<T> iface) throws SQLException {
@@ -289,7 +292,11 @@ public class MonitoredDataSourceFactory extends BasicDataSourceFactory {
 				initMonitor();
 			}
 			if (null!=this.monitor){
-				IDataSourceMonitor.Context context = new IDataSourceMonitor.Context();
+				//Manage the connection trace
+				TraceInfo traceInfo = new ConnectionTrace.TraceInfo(Thread.currentThread().getStackTrace());
+				ConnectionTrace.attachTraceInfo(traceInfo);
+
+				IDataSourceMonitor.Context context = new IDataSourceMonitor.Context(traceInfo);
 				this.monitor.onConnectionCreated(conn, context);
 				return new ConnectionWrapper(conn, this.monitor, context);
 			}else{
