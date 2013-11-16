@@ -26,6 +26,7 @@ import org.openxava.calculators.ICalculator;
 import org.openxava.calculators.IHibernateIdGeneratorCalculator;
 import org.openxava.component.MetaComponent;
 import org.openxava.ex.cl.ClassLoaderUtil;
+import org.openxava.ex.utils.DateUtils;
 import org.openxava.mapping.ModelMapping;
 import org.openxava.mapping.PropertyMapping;
 import org.openxava.model.IModel;
@@ -878,7 +879,10 @@ public class MetaProperty extends MetaMember implements Cloneable {
 			
 			if (java.sql.Timestamp.class.isAssignableFrom(type)) {
 				if (emptyString) return null;
-				java.util.Date date = DateFormat.getDateInstance(DateFormat.SHORT, locale).parse(value);
+				//PATCH-20131116-2: Fix "Tab Filter can't parse Date correctly"
+				//java.util.Date date = DateFormat.getDateInstance(DateFormat.SHORT, locale).parse(value);
+				java.util.Date date = DateUtils.stdParseDate(value);
+				//PATCH-20131116-2: End
 				return new Timestamp(date.getTime());
 			}		
 			
@@ -889,7 +893,10 @@ public class MetaProperty extends MetaMember implements Cloneable {
 			}
 			
 			if (java.util.Date.class.isAssignableFrom(type)) {
-				return emptyString?null:DateFormat.getDateInstance(DateFormat.SHORT, locale).parse(value);
+				//PATCH-20131116-2: Fix "Tab Filter can't parse Date correctly"
+				//return emptyString?null:DateFormat.getDateInstance(DateFormat.SHORT, locale).parse(value);
+				return emptyString?null:DateUtils.stdParseDate(value);
+				//PATCH-20131116-2: End
 			}
 			
 			if (Long.class.isAssignableFrom(type) || long.class.isAssignableFrom(type)) {
