@@ -57,7 +57,11 @@ public class Tab implements java.io.Serializable {
 	private final static String FILTER_VISIBLE = "filterVisible";
 	private final static String PAGE_ROW_COUNT = "pageRowCount"; 
 	private final static String COLUMN_WIDTH = "columnWidth."; 
-	private final static int MAX_PAGE_ROW_COUNT = 20; 
+
+	//PATCH-20131115.2: Support 100 records pre page
+	//private final static int MAX_PAGE_ROW_COUNT = 20; 
+	private final static int MAX_PAGE_ROW_COUNT = 200;
+	//PATCH-20131115.2: End
 	
 	private int pageRowCount = XavaPreferences.getInstance().getPageRowCount();
 	private int addColumnsPageRowCount = XavaPreferences.getInstance().getAddColumnsPageRowCount();

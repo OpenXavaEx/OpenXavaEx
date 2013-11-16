@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@page import="org.openxava.util.Labels"%>
 <%@ include file="imports.jsp"%>
 
 <%@page import="java.io.File"%>
@@ -83,6 +84,14 @@ response.setDateHeader("Expires", -10);
 	String version = org.openxava.controller.ModuleManager.getVersion();
 	//"getRealPath" can't support the multi-resource container setting
 	//String realPath = request.getSession().getServletContext().getRealPath("/");			
+	
+	//PATCH-20131116: Customize the page title with request parameter
+	String title = "title/" + module;
+	String titleLabel = Labels.get(title);
+	if (! titleLabel.equals(Strings.javaIdentifierToNaturalLabel(title))){
+		managerHome.setModuleDescription(titleLabel);
+	}
+	//PATCH-20131116: End
 %>
 <jsp:include page="execute.jsp"/>
 <%
@@ -295,7 +304,17 @@ if (manager.isResetFormPostNeeded()) {
 		openxava.closeDialogOnEscape = <%=browser != null && browser.indexOf("Firefox") >= 0 ? "false":"true"%>;		  
 		openxava.calendarAlign = '<%=browser != null && browser.indexOf("MSIE 6") >= 0 ? "tr"
 					: "Br"%>';
-		openxava.setHtml = <%=style.getSetHtmlFunction()%>;			
+		//PATCH-20131115: in some case, jQuery-1.5.2's "$(...).html(...)" works incorrect on IE8/9
+		//openxava.setHtml = <%=style.getSetHtmlFunction()%>;		
+		openxava.setHtml = function(id, content){
+			var elm = document.getElementById(id);
+			if (elm.innerHTML){
+				elm.innerHTML = content;
+			}else{
+				$("#"+id).html(content);
+			}
+		}
+		//PATCH-20131115: End
 		<%String initThemeScript = style.getInitThemeScript();
 			if (initThemeScript != null) {%>
 		openxava.initTheme = function () { <%=style.getInitThemeScript()%> }; 
