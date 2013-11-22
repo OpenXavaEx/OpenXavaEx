@@ -48,6 +48,18 @@ public class MonitoredDataSourceFactory extends BasicDataSourceFactory {
 		return new InnerDataSource(ds);
 	}
 	
+	private static void slienceCloseConn(Connection conn, TraceInfo traceInfo) {
+		if (null!=conn){
+			try{
+				conn.close();
+			}catch(Exception e){
+				/*Ignore it*/
+			}
+		}
+		if (null!=traceInfo){
+			ConnectionTrace.detachTraceInfo(traceInfo);
+		}
+	}
 	public static class ConnectionWrapper implements Connection{
 		private IDataSourceMonitor.Context context;
 		private IDataSourceMonitor monitor;
@@ -57,13 +69,15 @@ public class MonitoredDataSourceFactory extends BasicDataSourceFactory {
 			this.monitor = monitor;
 			this.context = context;
 		}
+		
 		public void close() throws SQLException {
-			if (null!=this.monitor){
-				this.monitor.onConnectionClosing(this.inner, this.context);
+			try{
+				if (null!=this.monitor){
+					this.monitor.onConnectionClosing(this.inner, this.context);
+				}
+			}finally{
+				slienceCloseConn(this.inner, this.context.getTraceInfo());
 			}
-			inner.close();
-			//Manage the connection trace
-			ConnectionTrace.detachTraceInfo(this.context.getTraceInfo());
 		}
 
 		public <T> T unwrap(Class<T> iface) throws SQLException {
@@ -214,8 +228,6 @@ public class MonitoredDataSourceFactory extends BasicDataSourceFactory {
 		public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
 			return inner.createStruct(typeName, attributes);
 		}
-
-		
 	}
 	
 	public static class InnerDataSource implements DataSource{
@@ -276,32 +288,39 @@ public class MonitoredDataSourceFactory extends BasicDataSourceFactory {
 		}
 
 		public Connection getConnection() throws SQLException {
-			Connection conn = inner.getConnection();
-			conn = handleCreated(conn);
-			return conn;
+			return getConnection(null, null);
 		}
-
 		public Connection getConnection(String username, String password) throws SQLException {
-			Connection conn = inner.getConnection(username, password);
-			conn = handleCreated(conn);
+			TraceInfo traceInfo = null;
+			Connection conn = null;
+			try{
+				if (null==username){
+					conn = inner.getConnection();
+				}else{
+					conn = inner.getConnection(username, password);
+				}
+				traceInfo = new ConnectionTrace.TraceInfo(Thread.currentThread().getStackTrace());
+				ConnectionTrace.attachTraceInfo(traceInfo);
+				conn = handleCreated(conn, traceInfo);
+			}catch(SQLException se){
+				slienceCloseConn(conn, traceInfo);
+				throw se;
+			}catch(Exception ex){
+				slienceCloseConn(conn, traceInfo);
+				throw new SQLException(ex);
+			}
 			return conn;
 		}
 		
-		private Connection handleCreated(Connection conn){
+		private Connection handleCreated(Connection conn, TraceInfo traceInfo){
 			if (null==this.monitor){
 				initMonitor();
 			}
+			IDataSourceMonitor.Context context = new IDataSourceMonitor.Context(traceInfo);
 			if (null!=this.monitor){
-				//Manage the connection trace
-				TraceInfo traceInfo = new ConnectionTrace.TraceInfo(Thread.currentThread().getStackTrace());
-				ConnectionTrace.attachTraceInfo(traceInfo);
-
-				IDataSourceMonitor.Context context = new IDataSourceMonitor.Context(traceInfo);
 				this.monitor.onConnectionCreated(conn, context);
-				return new ConnectionWrapper(conn, this.monitor, context);
-			}else{
-				return conn;
 			}
+			return new ConnectionWrapper(conn, this.monitor, context);
 		}
 	}
 }
