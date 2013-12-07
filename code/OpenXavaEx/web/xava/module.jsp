@@ -308,11 +308,11 @@ if (manager.isResetFormPostNeeded()) {
 		//openxava.setHtml = <%=style.getSetHtmlFunction()%>;		
 		openxava.setHtml = function(id, content){
 			var elm = document.getElementById(id);
-			if (elm.innerHTML){
-				elm.innerHTML = content;
-			}else{
-				$("#"+id).html(content);
-			}
+            if (elm && (null!=elm.innerHTML) ){
+                xavaEx.insertHtmlWithScript(id, content);
+            }else{
+                $("#"+id).html(content);
+            }
 		}
 		//PATCH-20131115: End
 		<%String initThemeScript = style.getInitThemeScript();

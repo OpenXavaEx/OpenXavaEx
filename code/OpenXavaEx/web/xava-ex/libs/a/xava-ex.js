@@ -98,13 +98,23 @@
     	}
     }
     
+    var insertHtmlWithScript = function(id, html) {
+		var ele = document.getElementById(id);
+		ele.innerHTML = html;
+		var codes = ele.getElementsByTagName("script");
+		for ( var i = 0; i < codes.length; i++) {
+			eval(codes[i].text);
+		}
+    }
+    
 	global.xavaEx = {
 			getWindowSize: getWindowSize,
 			loadCSS: loadCSS,
 			fillIFrame: fillIFrame,
 			setIFrameAutoHeight: setIFrameAutoHeight,
 			isDependenceExists: isDependenceExists,
-			checkDependence: checkDependence
+			checkDependence: checkDependence,
+			insertHtmlWithScript: insertHtmlWithScript
 	};
 	
 })(this);
