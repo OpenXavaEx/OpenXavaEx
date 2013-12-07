@@ -1161,6 +1161,9 @@
 				<pathelement path="../OpenXavaExBase/bin"/>
 				<pathelement path="../OpenXavaEx/bin"/>
 				<pathelement path="../OpenXava/bin"/>
+				<fileset dir="../${project}/web/WEB-INF/lib">
+					<include name="**/*.jar"/>
+				</fileset>
 				<fileset dir="../OpenXavaExBase/lib">
 					<include name="**/*.jar"/>
 				</fileset>
