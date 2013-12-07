@@ -56,6 +56,9 @@ public class SearchByViewKeyAction extends ViewBaseAction {
 				values = MapFacade.getValues(getModelName(), keys, getMemberNames());				
 			}
 			
+			//core-20131207 Fire propertyChange event when detail view loading
+			//getView().setValuesExecutingOnChangeActions(values);
+			
 			getView().setEditable(true);	
 			getView().setKeyEditable(false);			
 			setValuesToView(values); 		
