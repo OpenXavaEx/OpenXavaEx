@@ -57,7 +57,7 @@ public class SearchByViewKeyAction extends ViewBaseAction {
 			}
 			
 			//core-20131207 Fire propertyChange event when detail view loading
-			//getView().setValuesExecutingOnChangeActions(values);
+			getView().setValuesExecutingOnChangeActions(values);
 			
 			getView().setEditable(true);	
 			getView().setKeyEditable(false);			
