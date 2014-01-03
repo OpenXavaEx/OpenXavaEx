@@ -108,7 +108,8 @@ public class PQGrid {
 				model._setFields(qrFlds);
 				
 				model.dataModel.data = qr.getData();
-				model.title = getLabel(qr.getClass().getSimpleName(), qr, true);
+				//model.title = getLabel(qr.getClass().getSimpleName(), qr, true);
+				model.title = "";
 				model.editable = false;		//TODO: Support edit
 				
 				//Mix the fields from the template class

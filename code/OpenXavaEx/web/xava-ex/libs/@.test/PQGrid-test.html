@@ -44,7 +44,13 @@
 </head>
 
 <body style="padding:24px;">
+    <h2>Line 1</h2>
+    <h2>Line 2</h2>
 	<div id="grid_div"></div>
+	<div id="pq-freeze-columns-select-div" style="display:none">
+		Select number of columns to freeze:
+		<select><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+	</div>
 	<a id="a_show_data" href="javascript:void(0)">Show Data ...</a>
 	<script>
 	    $(function () {
@@ -76,10 +82,21 @@
                 {rank:19, company:'Credit Agricole',      statDate:$d(), revenues:110764.6, profits:7434.3,   dateTs:$d(), dateWeek:$d()},
                 {rank:20, company:'American Intl. Group', statDate:$d(), revenues:108905.0, profits:10477.0,  dateTs:$d(), dateWeek:$d()}
 	        ];
-	
+
+            var perfectWidth = "99.7%"; //The width to display all table content
+            
+            var _divTop = $("#grid_div").position().top;
+            var _winHi = $(window).height();
+            var prefectHeight = _winHi - _divTop;
+            if (prefectHeight < _winHi/2){
+            	prefectHeight = _winHi/2;
+            }
+	        
 	        var gridModel = {
-	        	//width: "100%", height: 400,
-	        	flexHeight: true, flexWidth: true,
+	        	width: perfectWidth,
+	        	height: prefectHeight,
+	        	//flexHeight: true,
+	        	//flexWidth: true,
 	        	//title: "ParamQuery Grid Example",
 	        	numberCellWidth: 30,
 	        	//resizable:true,
@@ -90,7 +107,15 @@
 	        	},
 	        	cellClick: function( event, ui ) {
 	        		return xavaEx.PQGrid.doAction(event, ui);
-	        	}
+	        	},
+	        	render: function (evt, ui) {
+	        	    $("#pq-freeze-columns-select-div")
+	                    .css({ position: "absolute",left:"0px",top:"0px",padding:"3px", display:"block" })
+	                    .appendTo($("div.pq-grid-top", this).css({ position: "relative" }))
+	                    .find("select").change(function (evt) {
+	                        $("#grid_div").pqGrid("option", "freezeCols", $(this).val());
+	                    });
+	            }
 	        };
 	        gridModel.colModel = [
 	            { dataIndx:"rank", title: "Rank", width: 100, dataType: "integer",

@@ -1,3 +1,4 @@
+<%@page import="org.openxava.util.Labels"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="org.openxava.ex.utils.VersionInfo"%>
 <%@page import="org.openxava.ex.model.pqgrid.PQGrid"%>
@@ -40,10 +41,22 @@
         }
     }
     %>
+    
+    <!-- The labels -->
+    <%
+    String lblFreeze = Labels.getQualified("PQGrid.label.freeze");
+    String optionNone = Labels.getQualified("PQGrid.option.freeze.none");;
+    String lblBlankResult = Labels.getQualified("PQGrid.label.blankResult");;
+    %>
 </head>
 <body style="padding:0px;margin:0px">
-    <div id="pgGrid"></div>
+    <div id="pgGrid" class="pq-grid"></div>
+    <div id="pq-freeze-columns-select-div" style="display:none">
+        <%=lblFreeze%>
+        <select></select>
+    </div>
     <script>
+	//(document).ready
         $(function () {
             //Patch: make grid area all page width, and hide some useless element
             var iframe = window.frameElement;
@@ -64,13 +77,23 @@
             <%}%>
 
             var perfectWidth = "99.7%"; //The width to display all table content
+            
+            var getPrefectHeight = function(){
+                var _iframeTop = parent.$(iframe).position().top;
+                var _winHi = parent.$(parent).height();
+                var prefectHeight = _winHi - _iframeTop;
+                if (prefectHeight < _winHi/2){
+                    prefectHeight = _winHi/2;
+                }
+                return prefectHeight;
+            }
         	
         	//Build PQGrid
             var gridModel = <%=PQGrid.getModelData(request)%>;
             
             if (gridModel){
-                gridModel.flexHeight = true;
-                gridModel.width = perfectWidth;   //gridModel.flexWidth = true;
+            	gridModel.height = getPrefectHeight();  //gridModel.flexHeight = true;
+                gridModel.width = perfectWidth;         //gridModel.flexWidth = true;
                 gridModel.numberCellWidth = 30;
                 gridModel.editModel = {clicksToEdit: 1, saveKey: 13};
                 gridModel.quitEditMode = function( event, ui ) {
@@ -78,23 +101,40 @@
                 }
                 gridModel.dataModel.paging = "local";
                 gridModel.dataModel.rPP = 10;
-                gridModel.dataModel.rPPOptions = [10, 20, 30, 40, 50, 100, 500, 1000];
+                gridModel.dataModel.rPPOptions = [10, 20, 50, 100, 500, 1000];
                 
                 gridModel.cellClick = function( event, ui ) {
                     return xavaEx.PQGrid.doAction(event, ui);
+                }
+                
+                gridModel.render = function (evt, ui) {
+                    $("div.pq-grid-title").css("height", "22px");
+                    var _sel = $("#pq-freeze-columns-select-div")
+                        .css({ position: "absolute",left:"0px",top:"0px",padding:"6px", display:"block" })
+                        .appendTo($("div.pq-grid-top", this).css({ position: "relative" }))
+                        .find("select");
+                    
+                    var cols = gridModel.colModel;
+                    _sel.append("<option value='0'><%=optionNone%></option>"); 
+                    for (var i=0; i<cols.length-1; i++){
+                    	_sel.append("<option value='"+(i+1)+"'>"+cols[i].title+"</option>"); 
+                    }
+                    _sel.change(function (evt) {
+                        $("#pgGrid").pqGrid("option", "freezeCols", $(this).val());
+                    });
                 }
                 
                 xavaEx.PQGrid.prepare(gridModel);
                 $("#pgGrid").pqGrid(gridModel);
                 $("#pgGrid").pqGrid( {width: perfectWidth} );  //Parent page's scrollbar may change after table render
             }else{
-            	$("#pgGrid").append("<h2>Resule not found</h2>");
+            	$("#pgGrid").append('<div class="pq-grid-title"><%=lblBlankResult%></div>');
             }
             
             //Window and iframe auto height
             var window_onresize=function(){
+                $( "#pgGrid" ).pqGrid( {height: getPrefectHeight()} );
                 xavaEx.setIFrameAutoHeight(window);
-                
             }
             window.onresize = window_onresize;
             window_onresize();
