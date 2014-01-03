@@ -22,6 +22,8 @@ import java.util.Map.Entry;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 import org.hibernate.cfg.Environment;
 import org.openxava.annotations.Tab;
 import org.openxava.ex.annotation.query.Condition;
@@ -35,7 +37,10 @@ import org.openxava.ex.model.base.BaseReportQuery.QueryResult;
 import org.openxava.ex.utils.Misc;
 import org.openxava.ex.utils.StringTemplate;
 import org.openxava.jpa.XPersistence;
+import org.openxava.types.EnumLetterType;
 import org.openxava.util.IConnectionProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utils for {@link BaseReportQuery}
@@ -43,6 +48,8 @@ import org.openxava.util.IConnectionProvider;
  *
  */
 public class ReportQueryUtils {
+	private final static Logger logger = LoggerFactory.getLogger(ReportQueryUtils.class);
+	
     public static class Statement2Run {
         protected String sql4data;
         protected String sql4count;
@@ -103,11 +110,13 @@ public class ReportQueryUtils {
             //Get records count
             Integer recordsCnt = null;
             if (null!=pageNo && null!=pageSize){
+            	logger.info("SQL: \n" + s2r.sql4count + " (" + s2r.parameters + ")");
                 rsCnt = pstmtCnt.executeQuery();
                 rsCnt.first();
                 recordsCnt = rsCnt.getInt(1);
             }
             //run query, get fields
+        	logger.info("SQL: \n" + s2r.sql4data + " (" + s2r.parameters + ")");
             rsData = pstmtData.executeQuery();
             List<String> fields = new ArrayList<String>();
             Map<String, Class<?>> fieldClassMap = new LinkedHashMap<String, Class<?>>();
@@ -249,18 +258,16 @@ public class ReportQueryUtils {
         sql = sql.replace(sqlAnno.conditionTag(), StringUtils.join(fragments, " AND "));
         //Parse sql AS prepareStatement
         Statement2Run sr = new Statement2Run();
-        JXPathContext context = JXPathContext.newContext(condObj);
         StringTemplate st = new StringTemplate(sql, StringTemplate.REGEX_PATTERN_JAVA_STYLE);
         String[] vars = st.getVariablesInOrder();
         for (int i = 0; i < vars.length; i++) {
             String var = vars[i];
             if (var.startsWith("#")){    //"#" means direct replacement, else means jdbc parameter
-                Object propVal = context.getValue(var.substring(1));
+                Object propVal = readPropertyValue(condObj, var.substring(1));
                 if (null==propVal) propVal = "";
                 st.setVariable(var, propVal.toString());
             }else{
-                String xpath = var.replace('.', '/');    //You can use the property as vendor.id, but JXPath need vendor/id
-                Object propVal = context.getValue(xpath);
+                Object propVal = readPropertyValue(condObj, var);
                 st.setVariable(var, "?");
                 sr.parameters.add(propVal);
             }
@@ -275,6 +282,56 @@ public class ReportQueryUtils {
         sr.sql4data = sql;
         return sr;
     }
+	private static Object readPropertyValue(Object condObj, String propString) {
+		JXPathContext context = JXPathContext.newContext(condObj);
+		String xpath = propString.replace('.', '/');    //You can use the property as vendor.id, but JXPath need vendor/id
+		Object propVal = context.getValue(xpath);
+		
+		//Check if the propString is an enum
+		if (null!=propVal && propVal.getClass().isEnum()){
+			Object parent = condObj;
+			String selfPropName = propString;
+			if (propString.lastIndexOf('.')!=-1){	   //For property like vendor.id, parent = vender
+				String parentProp = propString.substring(0, propString.lastIndexOf('.'));
+				parent = context.getValue(parentProp.replace('.', '/'));
+				selfPropName = propString.substring(propString.lastIndexOf('.')+1);
+			}
+			//Replace the property's value from Enum to it's "letter"
+			propVal = readEnumLetter(parent, selfPropName, propVal);
+		}
+		
+		return propVal;
+	}
+	
+	/**
+	 * Read an Enum Type Field of Model, and replace it's value with "Enum Letter";
+	 * @see {@link EnumLetterType#nullSafeSet(PreparedStatement, Object, int)}.
+	 * @param theObject
+	 * @param propertyName
+	 * @param propertyValue
+	 * @return
+	 */
+	private static Object readEnumLetter(Object theObject, String propertyName, Object propertyValue) {
+		Field f = FieldUtils.getField(theObject.getClass(), propertyName, true);
+		if (null!=f){
+			Type annoType = f.getAnnotation(Type.class);
+			if (null!=annoType && EnumLetterType.class.getName().equals(annoType.type())){
+				Parameter[] params = annoType.parameters();
+				for (int i = 0; i < params.length; i++) {
+					Parameter p = params[i];
+					if ("letters".equals(p.name())){
+						String letters = p.value();
+						@SuppressWarnings("rawtypes")
+						int enumIndex = ((Enum) propertyValue).ordinal();
+						String letter = String.valueOf(letters.charAt(enumIndex));
+						return letter;
+					}
+				}
+			}
+		}
+		return propertyValue;
+	}
+	
     public static final List<String> mergeFields(Class<?> template, List<String> resultFields){
         List<String> tmplFlds = getTabAnnotatedFields(template);
 

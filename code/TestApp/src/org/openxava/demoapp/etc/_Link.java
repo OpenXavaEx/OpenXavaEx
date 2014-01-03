@@ -7,5 +7,5 @@ package org.openxava.demoapp.etc;
  */
 public class _Link {
 	public static final String EnumLetterType = "org.openxava.types.EnumLetterType";
-	public static final String MeasureCatogory = "org.openxava.demoapp.model.md.enums.MeasureCatogory";
+	public static final String MeasureCatogory = "org.openxava.demoapp.model.md.enums.MeasureCategory";
 }
