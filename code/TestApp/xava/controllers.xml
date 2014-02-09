@@ -53,6 +53,12 @@
 			class="org.openxava.actions.OpenSearchDialogAction" 
 			image="find.gif" 
 			keystroke="control B"/> 
+        <action name="generatePdf" mode="list"
+            class="org.openxava.actions.GenerateReportAction"
+            image="pdf.gif"
+            keystroke="Control Alt P">
+            <set property="type" value="pdf"/>
+        </action>
 	</controller>
 	
 	<controller name="ReportEx">
