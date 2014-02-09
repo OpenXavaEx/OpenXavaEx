@@ -155,10 +155,10 @@ else {
 	<%
 	String fontPath=request.getSession().getServletContext().getRealPath("/WEB-INF/fonts/").concat(System.getProperty("file.separator"));
 	String fontName="DejaVu Sans";
-	String fontNameExt="DejaVuSans.ttf";
-	String boldFontNameExt="DejaVuSans-Bold.ttf";	
+	String fontNameExt="SIMSUN.ttf";
+	String boldFontNameExt="simhei.ttf";
 	String pdfEncoding="Identity-H";
-	%>	
+	%>
 	<reportFont name="Arial_Normal" isDefault="true" fontName="<%=fontName%>" size="8" pdfFontName="<%=fontPath.concat(fontNameExt)%>" pdfEncoding="<%=pdfEncoding%>" isPdfEmbedded="true"/>
 	<reportFont name="Arial_Bold" isDefault="false" fontName="<%=fontName%>" size="8" isBold="true" pdfFontName="<%=fontPath.concat(boldFontNameExt)%>" pdfEncoding="<%=pdfEncoding%>" isPdfEmbedded="true"/>
 	<reportFont name="Arial_Italic" isDefault="false" fontName="<%=fontName%>" size="8" isItalic="true" pdfFontName="<%=fontPath.concat(fontNameExt)%>" pdfEncoding="<%=pdfEncoding%>" isPdfEmbedded="true"/>
