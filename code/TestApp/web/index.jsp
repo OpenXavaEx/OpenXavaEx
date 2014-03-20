@@ -90,6 +90,8 @@ if (null!=mainApp){
                     name:"SKU Change Log(VPD)",                    _url:"<%=modulesUrl%>/SKUChangeLogVPD"
                 }, {
                     name:"Order with Template(Order)",             _url:"<%=modulesUrl%>/OrderWithTemplateTestCase"
+                }, {
+                    name:"RequiredMask Test",                      _url:"<%=modulesUrl%>/SKU4RequiredMaskTest"
                 }]
             },{
 				name:"System", open:true,

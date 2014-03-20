@@ -1,9 +1,15 @@
+<%@page import="org.openxava.ex.editor.RequiredMasksHelper"%>
 <%@page import="org.openxava.util.XavaPreferences"%>
 
 <%if (view.isEditable() || 
 		!(!view.isEditable() && !XavaPreferences.getInstance().isShowIconForViewReadOnly())
-	) { %>
-	<% if (ref.isKey()) { %>
+	) {
+	Boolean requiredMask = RequiredMasksHelper.isRequired(ref, view);
+	if (null!=requiredMask) {
+        if (requiredMask.booleanValue()){
+            %><img data-ex-notes="masked" src="<%=request.getContextPath()%>/xava/images/required.gif"/><%
+        }
+    } else if (ref.isKey()) { %>
 	<img src="<%=request.getContextPath()%>/xava/images/key.gif"/>
 	<% } else if (ref.isRequired()) {  %>	
 	<img src="<%=request.getContextPath()%>/xava/images/required.gif"/>
