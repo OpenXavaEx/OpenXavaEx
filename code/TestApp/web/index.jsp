@@ -94,6 +94,11 @@ if (null!=mainApp){
                     name:"RequiredMask Test",                      _url:"<%=modulesUrl%>/SKU4RequiredMaskTest"
                 }]
             },{
+                name:"Access Tracking", open:true,
+                children: [{
+                    name:"OnlyReadAccessTracking",                   _url:"<%=modulesUrl%>/OnlyReadAccessTracking"
+                }]
+            },{
 				name:"System", open:true,
 				children: [{
 					name:"Schema Update", open:true,

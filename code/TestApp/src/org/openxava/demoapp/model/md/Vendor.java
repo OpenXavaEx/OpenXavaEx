@@ -2,11 +2,13 @@ package org.openxava.demoapp.model.md;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 
 import org.openxava.annotations.Tab;
 import org.openxava.annotations.View;
 import org.openxava.annotations.Views;
+import org.openxava.demoapp.tracking.SimpleAccessTrackingListener;
 import org.openxava.ex.model.base.BaseMasterDataModel;
 
 /**
@@ -15,6 +17,7 @@ import org.openxava.ex.model.base.BaseMasterDataModel;
  *
  */
 @Entity
+@EntityListeners(SimpleAccessTrackingListener.class)
 @Table(name="MD_Vendor")
 @Tab(baseCondition = "enabled=true", properties="code, name, leadTimeDays, descr")
 @Views({

@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -24,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openxava.annotations.PostCreate;
 import org.openxava.annotations.PreCreate;
 import org.openxava.annotations.PreDelete;
+import org.openxava.ex.utils.Misc;
 import org.openxava.util.Classes;
 import org.openxava.util.XavaException;
 import org.openxava.validators.ValidationException;
@@ -51,10 +53,31 @@ public class EntityManagerDecorator implements EntityManager {
 	 * These calls occurs within a transaction.
 	 * @param object Object to be persisted
 	 */
+	@SuppressWarnings("rawtypes")
 	public void persist(Object object) {
 		executeCallbacks(object, PreCreate.class);
 		decoratedManager.persist(object);
 		executeCallbacks(object, PostCreate.class);
+		//PATCH 20140403 - Support OpenXava PostCreate for @EntityListeners, JUST for AccessTracking
+		//So, the behavior of PostCreate of here is same as JPA(The annotation on parent class is useless) 
+		try{
+			EntityListeners el = object.getClass().getAnnotation(EntityListeners.class);
+			if (null!=el){
+				Class[] clss = el.value();
+				for (int i = 0; i < clss.length; i++) {
+					Class cls = clss[i];
+					Object listener = cls.newInstance();
+					for (Method method : listener.getClass().getDeclaredMethods()) {
+						if (null!=method.getAnnotation(PostCreate.class)){
+							method.invoke(listener, new Object[]{object});
+						}
+					}
+				}
+			}
+		}catch(Exception ex){
+			Misc.throwRuntime(ex);
+		}
+		//PATCH 20140403 - END
 	}
 
 	/**

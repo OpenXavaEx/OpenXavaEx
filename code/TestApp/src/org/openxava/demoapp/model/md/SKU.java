@@ -3,6 +3,7 @@ package org.openxava.demoapp.model.md;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -18,9 +19,11 @@ import org.openxava.annotations.Tabs;
 import org.openxava.annotations.View;
 import org.openxava.annotations.Views;
 import org.openxava.demoapp.model.purchase.RequirementFormDetail;
+import org.openxava.demoapp.tracking.SimpleAccessTrackingListener;
 import org.openxava.ex.model.base.BaseMasterDataModel;
 
 @Entity
+@EntityListeners(SimpleAccessTrackingListener.class)	//BP: Define entity listener for Access Tracking
 @Table(name="MD_SKU")
 //BP: Can use a non-persistence property(field) in @Tab and @View
 //BP: in @Tab baseCondition, "e" means the main data table

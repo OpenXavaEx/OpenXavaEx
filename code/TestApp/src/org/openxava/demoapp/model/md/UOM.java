@@ -2,6 +2,7 @@ package org.openxava.demoapp.model.md;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -13,6 +14,7 @@ import org.openxava.annotations.Tab;
 import org.openxava.annotations.View;
 import org.openxava.demoapp.etc._Link;
 import org.openxava.demoapp.model.md.enums.MeasureCategory;
+import org.openxava.demoapp.tracking.SimpleAccessTrackingListener;
 import org.openxava.ex.model.base.BaseMasterDataModel;
 
 /**
@@ -21,6 +23,7 @@ import org.openxava.ex.model.base.BaseMasterDataModel;
  *
  */
 @Entity
+@EntityListeners(SimpleAccessTrackingListener.class)
 @Table(name="MD_UOM")
 @Tab(baseCondition = "enabled=true", properties="code, name, category, descr")
 @View(name="V-UOM-code-name", members="code; name")

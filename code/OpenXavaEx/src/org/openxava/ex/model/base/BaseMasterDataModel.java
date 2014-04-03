@@ -14,6 +14,7 @@ import org.openxava.annotations.Hidden;
 import org.openxava.annotations.Required;
 import org.openxava.annotations.Stereotype;
 import org.openxava.calculators.TrueCalculator;
+import org.openxava.ex.at.EntityDescribable;
 
 /**
  * The base model for all kinds of MasterData
@@ -21,7 +22,7 @@ import org.openxava.calculators.TrueCalculator;
  *
  */
 @MappedSuperclass
-public class BaseMasterDataModel {
+public class BaseMasterDataModel implements EntityDescribable {
 	@Id @GeneratedValue(generator="system-uuid") @Hidden
 	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	@Column(length=32)
@@ -93,6 +94,10 @@ public class BaseMasterDataModel {
 
 	public void setEnabled(boolean deleted) {
 		this.enabled = deleted;
+	}
+
+	public String getDescribableRecordId() {
+		return this.code;
 	}
 
 }
