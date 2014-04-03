@@ -1,16 +1,26 @@
 package org.openxava.ex.at.model;
 
 import java.sql.Timestamp;
+import java.util.LinkedList;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
+import name.fraser.neil.plaintext.diff_match_patch;
+import name.fraser.neil.plaintext.diff_match_patch.Diff;
+
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.annotations.GenericGenerator;
+import org.openxava.actions.OnChangePropertyBaseAction;
+import org.openxava.annotations.Editor;
 import org.openxava.annotations.Hidden;
+import org.openxava.annotations.OnChange;
 import org.openxava.annotations.Stereotype;
+import org.openxava.view.View;
 
 @MappedSuperclass
 public abstract class AccessTrackingEntityBase {
@@ -19,6 +29,7 @@ public abstract class AccessTrackingEntityBase {
 	@Column(name="ID", length=32)
 	private String id;
 
+	@OnChange(InitChangeAction.class)
 	@Column(name="MODEL_TYPE", length=255)
 	private String modelType;
 
@@ -41,11 +52,13 @@ public abstract class AccessTrackingEntityBase {
 	private String operationType;
 
 	@Column(name="BEFORE_OBJ", columnDefinition="CLOB")
+	@Hidden
 	@Stereotype("MEMO")
 	@Lob
 	private String beforeObj;
 
 	@Column(name="AFTER_OBJ", columnDefinition="CLOB")
+	@Hidden
 	@Stereotype("MEMO")
 	@Lob
 	private String afterObj;
@@ -118,5 +131,35 @@ public abstract class AccessTrackingEntityBase {
 	}
 	public void setRawRecordId(String rawRecordId) {
 		this.rawRecordId = rawRecordId;
+	}
+
+	@Transient
+	@Editor("HtmlText")
+	public String getDiff(){
+		String after = this.afterObj;
+		String before = this.beforeObj;
+		if (null!=after){
+			if (null==before) before=after;
+		}else if (null!=before){
+			if (null==after) after=before;
+		}else{
+			before = "";
+			after = "";
+		}
+
+		diff_match_patch d = new diff_match_patch();
+		LinkedList<Diff> ds = d.diff_main(before, after);
+		d.diff_cleanupSemantic(ds);
+		String html = d.diff_prettyHtml(ds);
+		return "<pre>" + html + "</pre>";
+	}
+
+	public static class InitChangeAction extends OnChangePropertyBaseAction{
+		public void execute() throws Exception {
+			View v = this.getView();
+			if (null==v.getViewName()){	//ReadOnly for default view
+				FieldUtils.writeDeclaredField(v, "readOnly", Boolean.TRUE, true);
+			}
+		}
 	}
 }

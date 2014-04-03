@@ -76,7 +76,7 @@ public class EntityUtil {
 		ate.setRawRecordId(pk);
 		if (currentModel instanceof EntityDescribable){
 			EntityDescribable d = (EntityDescribable)currentModel;
-			ate.setRecordId(d.getDescribableRecordId());
+			ate.setRecordId(d.describableRecordId());
 		}else{
 			ate.setRecordId(pk);
 		}

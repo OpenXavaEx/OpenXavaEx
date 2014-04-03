@@ -1,5 +1,9 @@
 package org.openxava.ex.at;
 
 public interface EntityDescribable {
-	public String getDescribableRecordId();
+	/**
+	 * Return the describable (means business) record id
+	 * @return
+	 */
+	public String describableRecordId();
 }

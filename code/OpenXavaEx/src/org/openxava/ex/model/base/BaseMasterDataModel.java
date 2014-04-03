@@ -96,7 +96,7 @@ public class BaseMasterDataModel implements EntityDescribable {
 		this.enabled = deleted;
 	}
 
-	public String getDescribableRecordId() {
+	public String describableRecordId() {
 		return this.code;
 	}
 

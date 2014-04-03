@@ -3,10 +3,13 @@ package org.openxava.oxdemo.model;
 import javax.persistence.*;
 
 import org.openxava.annotations.*;
+import org.openxava.demoapp.tracking.SimpleAccessTrackingListener;
+import org.openxava.ex.at.EntityDescribable;
 
 @Entity
+@EntityListeners(SimpleAccessTrackingListener.class)
 @Table(name="DEMO_CUSTOMER")
-public class Customer {
+public class Customer implements EntityDescribable{
 	
 	@Id @Column(name="cNo")
 	private int number;
@@ -15,6 +18,7 @@ public class Customer {
 	private String name;
 	
 	@Stereotype("PHOTO")
+	@Lob
 	private byte [] photo;
 
 	public int getNumber() {
@@ -39,6 +43,10 @@ public class Customer {
 
 	public void setPhoto(byte [] photo) {
 		this.photo = photo;
+	}
+
+	public String describableRecordId() {
+		return "Customer: " + this.number;
 	}
 	
 }
