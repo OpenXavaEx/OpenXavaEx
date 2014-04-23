@@ -92,6 +92,8 @@ if (null!=mainApp){
                     name:"Order with Template(Order)",             _url:"<%=modulesUrl%>/OrderWithTemplateTestCase"
                 }, {
                     name:"RequiredMask Test",                      _url:"<%=modulesUrl%>/SKU4RequiredMaskTest"
+                }, {
+                    name:"DecimalTestCase",                        _url:"<%=modulesUrl%>/DecimalTestCase"
                 }]
             },{
                 name:"Access Tracking", open:true,

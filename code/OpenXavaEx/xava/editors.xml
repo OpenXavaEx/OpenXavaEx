@@ -29,4 +29,11 @@
 	  <for-tabs/>
 	</editor>
 	 -->
+
+    <!-- Override the default MoneyFormatter for support max scale > 2 -->
+    <editor name="Money" url="moneyEditor.jsp"> 
+        <formatter class="org.openxava.ex.formatter.money.MoneyFormatter" />
+        <for-stereotype stereotype="DINERO" />
+        <for-stereotype stereotype="MONEY" />
+    </editor>
 </editors>

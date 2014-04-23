@@ -43,4 +43,5 @@
         <property name="order" value="e.code" />
         <property name="filter" value="org.openxava.demoapp.model.testcase.AdminDivTestCase$OwnerFilter" />
     </editor>
+
 </editors>

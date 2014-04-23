@@ -1,0 +1,21 @@
+<?xml version = "1.0" encoding = "ISO-8859-1"?>
+
+<!DOCTYPE validators SYSTEM "dtds/validators.dtd">
+
+<!--
+	In your project use the name 'validators.xml' or 'validadores.xml'
+	
+	Instead of modifying this file it's better to create your own validators.xml 
+	(or validadores.xml) in your project to override this default value
+	for your application.	
+-->
+
+<validators>
+    <!-- Override the default MoneyScaleValidator for support max scale > 2 -->
+	<default-validator>
+		<validator-class class="org.openxava.ex.validator.money.MoneyScaleValidator"/>
+		<for-stereotype stereotype="MONEY"/>
+		<for-stereotype stereotype="DINERO"/>
+	</default-validator>
+</validators>
+  
