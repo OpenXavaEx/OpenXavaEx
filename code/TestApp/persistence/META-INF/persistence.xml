@@ -16,6 +16,9 @@
             <property name="hibernate.default_schema" value="${PROP_HIBERNATE_DEFAULT_SCHEMA}"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/> 
+            
+            <property name="hibernate.ejb.event.post-collection-update"
+                      value="org.openxava.demoapp.model.testcase.acl.ACL_U_C_EX_PostCollectionUpdate" />
         </properties>
     </persistence-unit>
         

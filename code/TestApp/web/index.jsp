@@ -94,6 +94,15 @@ if (null!=mainApp){
                     name:"RequiredMask Test",                      _url:"<%=modulesUrl%>/SKU4RequiredMaskTest"
                 }, {
                     name:"DecimalTestCase",                        _url:"<%=modulesUrl%>/DecimalTestCase"
+                }, {
+                    name:"ACL", open:true,
+                    children: [{
+                        name:"ACL/Company",                        _url:"<%=modulesUrl%>/Company"
+                    }, {
+                        name:"ACL/User",                           _url:"<%=modulesUrl%>/User"
+                    }, {
+                        name:"ACL/UserShowCompanyWithExFields",    _url:"<%=modulesUrl%>/UserShowCompanyWithExFields"
+                    }]
                 }]
             },{
                 name:"Access Tracking", open:true,

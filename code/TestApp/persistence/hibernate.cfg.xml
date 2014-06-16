@@ -24,7 +24,6 @@ persistence.xml.
 		-->
 		
 		<!-- GalleryImage is needed only if you uses IMAGES_GALLERY/GALERIA_IMAGENES stereotype -->
-		<mapping resource="GalleryImage.hbm.xml"/>
-		
+		<mapping resource="GalleryImage.hbm.xml"/>		
 	</session-factory>
 	</hibernate-configuration>
