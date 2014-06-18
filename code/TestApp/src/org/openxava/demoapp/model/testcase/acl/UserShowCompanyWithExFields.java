@@ -46,7 +46,7 @@ public class UserShowCompanyWithExFields extends BaseMasterDataModel{
 	 * Every user has different TEST_ACL_U_C_EX informations, now cache it by company Id
 	 */
 	@Transient @Hidden
-	private Map<String, ACL_U_C_EX> exInfo4User = new HashMap<String, ACL_U_C_EX>();
+	protected Map<String, ACL_U_C_EX> exInfo4User = new HashMap<String, ACL_U_C_EX>();
 	
 	/**
 	 * Need refresh creator and createTime every loading

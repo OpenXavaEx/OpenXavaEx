@@ -44,16 +44,28 @@ public class ACL_U_C_EX_PostCollectionUpdate implements PostCollectionUpdateEven
 	            	CompanyWithExFields c = (CompanyWithExFields)o;
 	            	String uid = u.getId();
 	            	String cid = c.getId();
-	            	String userName = Users.getCurrent();
+	            	
+	            	String userName = null;
+	            	Timestamp time = null;
+	            	
+	            	ACL_U_C_EX info = u.exInfo4User.get(cid);
+	            	if (null!=info){
+	            		userName = info.getCreator();
+	            		time = info.getCreateTime();
+	            	}
+	            	
+	            	//For new added record, logging the creator and createTime
+	            	if (null==userName) userName = Users.getCurrent();
+	            	if (null==time) time = new Timestamp(System.currentTimeMillis());
 	            	if (null==userName){
 	            		throw new RuntimeException("Can't get current user when logging creator in table TEST_ACL_USER_EX");
 	            	}
 	            	
-	            	String sql = "UPDATE TEST_ACL_U_C_EX SET CREATOR=:creator, CREATETIME=:now WHERE USERID=:uid AND COMPANYID=:cid";
+	            	String sql = "UPDATE TEST_ACL_U_C_EX SET CREATOR=:creator, CREATETIME=:createTime WHERE USERID=:uid AND COMPANYID=:cid";
 	            	Session session = event.getSession();
 	            	SQLQuery query = session.createSQLQuery(sql);
 					query.setString("creator", userName);
-					query.setTimestamp("now", new Timestamp(System.currentTimeMillis()));
+					query.setTimestamp("createTime", time);
 					query.setString("uid", uid);
 					query.setString("cid", cid);
 	            	int cnt = query.executeUpdate();
