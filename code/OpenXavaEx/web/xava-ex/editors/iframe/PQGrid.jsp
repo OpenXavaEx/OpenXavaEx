@@ -100,7 +100,7 @@
                     $(this).pqGrid("saveEditCell");     //FIX: Use mouse to leave a cell shouldn't update value into data
                 }
                 gridModel.dataModel.paging = "local";
-                gridModel.dataModel.rPP = 10;
+                gridModel.dataModel.rPP = 50;
                 gridModel.dataModel.rPPOptions = [10, 20, 50, 100, 500, 1000];
                 
                 gridModel.cellClick = function( event, ui ) {
@@ -108,6 +108,7 @@
                 }
                 
                 gridModel.render = function (evt, ui) {
+                	
                     $("div.pq-grid-title").css("height", "22px");
                     var _sel = $("#pq-freeze-columns-select-div")
                         .css({ position: "absolute",left:"0px",top:"0px",padding:"6px", display:"block" })
@@ -122,10 +123,13 @@
                     _sel.change(function (evt) {
                         $("#pgGrid").pqGrid("option", "freezeCols", $(this).val());
                     });
+                    
                 }
                 
                 xavaEx.PQGrid.prepare(gridModel);
                 $("#pgGrid").pqGrid(gridModel);
+                $("#pgGrid").pqGrid({minWidth:5});
+                $("#pgGrid").pqGrid({editable:true});
                 $("#pgGrid").pqGrid( {width: perfectWidth} );  //Parent page's scrollbar may change after table render
             }else{
             	$("#pgGrid").append('<div class="pq-grid-title"><%=lblBlankResult%></div>');

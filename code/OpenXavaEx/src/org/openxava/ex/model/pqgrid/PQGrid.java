@@ -57,7 +57,7 @@ public class PQGrid {
 		if (null==o){
 			return "null";
 		}else{
-			o.editable = isEditable;
+			o.editable =isEditable;
 			SerializeConfig config = new SerializeConfig();
 			config.put(Date.class, new UdfDateSerializer());
 			String json = JSON.toJSONString(o, config, SerializerFeature.PrettyFormat);
@@ -110,7 +110,7 @@ public class PQGrid {
 				model.dataModel.data = qr.getData();
 				//model.title = getLabel(qr.getClass().getSimpleName(), qr, true);
 				model.title = "";
-				model.editable = false;		//TODO: Support edit
+				model.editable = true;		//TODO: Support edit
 				
 				//Mix the fields from the template class
 				List<String> fields = new ArrayList<String>(qrFlds.keySet());

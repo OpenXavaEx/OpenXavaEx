@@ -42,7 +42,7 @@ public class PQGridClientModel extends BaseReportQueryClientModel {
 		
 		public static final String DEFAULT_DATATYPE = DATATYPE_string;
 		public static final String DEFAULT_ALIGN = ALIGN_left;
-		public static final String DEFAULT_EDITBALE = EDITBALE_false;
+		public static final String DEFAULT_EDITBALE = EDITBALE_true;
 		public static final String DEFAULT_HIDDEN = HIDDEN_false;
 		public static final String DEFAULT_WIDTH = "100";
 		
