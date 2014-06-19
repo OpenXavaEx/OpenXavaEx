@@ -11,6 +11,7 @@ import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Savepoint;
@@ -19,6 +20,8 @@ import java.sql.Struct;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executor;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -228,6 +231,26 @@ public class MonitoredDataSourceFactory extends BasicDataSourceFactory {
 		public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
 			return inner.createStruct(typeName, attributes);
 		}
+
+		public void setSchema(String schema) throws SQLException {
+			inner.setSchema(schema);			
+		}
+
+		public String getSchema() throws SQLException {
+			return inner.getSchema();
+		}
+
+		public void abort(Executor executor) throws SQLException {
+			inner.abort(executor);
+		}
+
+		public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
+			inner.setNetworkTimeout(executor, milliseconds);
+		}
+
+		public int getNetworkTimeout() throws SQLException {
+			return inner.getNetworkTimeout();
+		}
 	}
 	
 	public static class InnerDataSource implements DataSource{
@@ -321,6 +344,10 @@ public class MonitoredDataSourceFactory extends BasicDataSourceFactory {
 				this.monitor.onConnectionCreated(conn, context);
 			}
 			return new ConnectionWrapper(conn, this.monitor, context);
+		}
+
+		public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+			return inner.getParentLogger();
 		}
 	}
 }
